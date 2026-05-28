@@ -1,11 +1,11 @@
 # Found Everywhere
 
-Source for [foundeverywhere.co.uk](https://foundeverywhere.co.uk) — an SEO and LLM-visibility agency. The site is its own proof of concept: near-perfect Lighthouse, complete schema, clean semantic HTML, and a maintained `llms.txt`.
+Source for [foundeverywhere.co.uk](https://foundeverywhere.co.uk), an SEO and LLM-visibility agency. The site is its own proof of concept: near-perfect Lighthouse, complete schema, clean semantic HTML, and a maintained `llms.txt`.
 
 ## Stack
 
-- **Astro 5** — zero-JS by default, islands where needed
-- **@astrojs/sitemap** — automatic XML sitemap
+- **Astro 5**: zero-JS by default, islands where needed
+- **@astrojs/sitemap**: automatic XML sitemap
 - **Vanilla JS** (deferred) for any interactivity
 - **Native `<details>/<summary>`** for accordions
 - No client framework

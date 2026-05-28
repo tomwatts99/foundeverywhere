@@ -1,6 +1,6 @@
 ---
 /**
- * Hero.astro — kinetic-type hero on a dark surface.
+ * Hero.astro: kinetic-type hero on a dark surface.
  *
  * Centred, full-width, dark `#0D1826` background.
  * Headline cycles a single word through six platform names; the
@@ -34,7 +34,7 @@ const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
 
     <p class="hero__lead">
       We audit and optimise your website so it ranks in Google and gets
-      cited by ChatGPT, Claude, Perplexity, and Gemini &mdash; wherever
+      cited by ChatGPT, Claude, Perplexity, and Gemini. Wherever
       your customers are searching.
     </p>
 
@@ -53,11 +53,11 @@ const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
 
 <script is:inline define:vars={{ words: CYCLE_WORDS }}>
   /**
-   * Word-cycle controller. setInterval per the brief — every 3000ms it
+   * Word-cycle controller. setInterval per the brief: every 3000ms it
    * toggles a CSS class that runs a single keyframe; text is swapped
    * at the mid-point when the word is invisible.
    *
-   * Bails out entirely under prefers-reduced-motion — the initial
+   * Bails out entirely under prefers-reduced-motion: the initial
    * "everywhere" fallback stays put.
    */
   (function () {
@@ -117,7 +117,7 @@ const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
   }
 
   /* ============================================================
-     TITLE — two stacked lines
+     TITLE: two stacked lines
      ============================================================ */
   .hero__title {
     font-family: var(--font-display);
@@ -248,7 +248,7 @@ const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
   }
 
   /* ============================================================
-     ANIMATION — gated on motion preference
+     ANIMATION: gated on motion preference
      ============================================================ */
   @media (prefers-reduced-motion: no-preference) {
     @keyframes hero-word-swap {

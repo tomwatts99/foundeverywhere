@@ -3,7 +3,7 @@
 User-agent: *
 Allow: /
 
-# AI crawlers — explicit allow. The site is meant to be read and cited.
+# AI crawlers: explicit allow. The site is meant to be read and cited.
 User-agent: GPTBot
 Allow: /
 

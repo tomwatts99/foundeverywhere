@@ -1,0 +1,396 @@
+---
+/**
+ * about.astro: who Found Everywhere is.
+ *
+ * Six stacked sections: hero, origin story, Tom, Mark, values, CTA.
+ * Two-column profile rows alternate image-left / image-right on
+ * desktop and stack image-on-top on mobile. Reuses CTABlock at the
+ * end; everything else is page-specific markup so the rhythm stays
+ * tight.
+ */
+import Page from '../layouts/Page.astro';
+import CTABlock from '../components/sections/CTABlock.astro';
+
+const VALUES = [
+  {
+    title: 'Honesty before polish',
+    body: 'We will tell you what is actually wrong with your site, not what you want to hear. The audit is the audit.',
+  },
+  {
+    title: 'The site is the proof',
+    body: 'Our own PageSpeed score is 98. Our schema is complete. Our llms.txt is live. We do not sell things we have not done ourselves.',
+  },
+  {
+    title: 'Results over reports',
+    body: 'We care about rankings, citations, and traffic. Not decks. Not vanity metrics. Not monthly PDFs that say very little.',
+  },
+] as const;
+---
+
+<Page
+  title="About Found Everywhere | Tom Watts and Mark Reynolds"
+  description="Found Everywhere is Tom Watts and Mark Reynolds. Two specialists in SEO and LLM visibility who started this because the search landscape changed and most agencies did not notice."
+  path="/about/"
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="about-hero" aria-labelledby="about-title">
+    <div class="container">
+      <p class="about-hero__eyebrow">Who we are</p>
+      <h1 id="about-title" class="about-hero__title">Two people. One obsession.</h1>
+      <p class="about-hero__sub">Being found everywhere search happens.</p>
+    </div>
+  </section>
+
+  <!-- ============ 2. ORIGIN STORY ============ -->
+  <section class="origin" aria-labelledby="origin-title">
+    <div class="container">
+      <div class="origin__inner">
+        <p class="eyebrow-teal">Why we started this</p>
+        <h2 id="origin-title" class="origin__title">
+          The SEO industry was slow to notice that search had fundamentally changed. We were not.
+        </h2>
+        <div class="origin__body">
+          <p>
+            We started Found Everywhere because we kept seeing the same problem.
+            Businesses investing in websites and SEO, then watching AI tools send
+            their customers to competitors who had never even heard of schema
+            markup. The search landscape changed faster than most agencies noticed.
+          </p>
+          <p>
+            Most SEO agencies are still optimising for 2019. They chase Google
+            rankings while ignoring the fact that a growing slice of their
+            clients&apos; customers never see a search results page at all. They
+            just ask ChatGPT. We think that is a problem worth solving properly.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. TOM ============ -->
+  <section class="bio bio--surface" aria-labelledby="bio-tom-title">
+    <div class="container">
+      <div class="bio__inner">
+        <div class="bio__media">
+          <img
+            class="bio__photo"
+            src="/images/tom.webp"
+            alt="Portrait of Tom Watts"
+            width="200"
+            height="200"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="bio__copy">
+          <p class="eyebrow-teal">The maker</p>
+          <h2 id="bio-tom-title" class="bio__title">Tom Watts</h2>
+          <div class="bio__body">
+            <p>
+              Tom has spent over a decade building websites, running digital
+              campaigns, and producing content for brands and publishers.
+              Through Digital Heroes Studio he has delivered everything from
+              full website builds to video and editorial work. He understands
+              both the creative and the operational side, which means projects
+              actually ship properly, not just look nice in a design file.
+            </p>
+            <p>
+              He brings the client acquisition, website builds, and brand
+              thinking to Found Everywhere.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. MARK ============ -->
+  <section class="bio bio--right" aria-labelledby="bio-mark-title">
+    <div class="container">
+      <div class="bio__inner">
+        <div class="bio__copy">
+          <p class="eyebrow-teal">The strategist</p>
+          <h2 id="bio-mark-title" class="bio__title">Mark Reynolds</h2>
+          <div class="bio__body">
+            <p>
+              Mark leads digital strategy, SEO and web performance for everyone
+              from blue-chip brands to growing SMEs. As Director of Clarus
+              Digital he has spent years making sure clients&apos; digital
+              activity actually drives growth, not just clicks.
+            </p>
+            <p>
+              Member of the Chartered Institute of Marketing, Advanced
+              Certificate in Marketing. Happiest with a spreadsheet, Search
+              Console, and a clear objective.
+            </p>
+            <p>
+              He brings the strategy, SEO programmes, and platform thinking to
+              Found Everywhere.
+            </p>
+          </div>
+        </div>
+        <div class="bio__media">
+          <img
+            class="bio__photo"
+            src="/images/mark.webp"
+            alt="Portrait of Mark Reynolds"
+            width="200"
+            height="200"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. VALUES ============ -->
+  <section class="values" aria-labelledby="values-title">
+    <div class="container">
+      <header class="values__head">
+        <p class="eyebrow-teal">How we work</p>
+        <h2 id="values-title" class="values__title">A few things we believe</h2>
+      </header>
+      <div class="values__grid">
+        {VALUES.map((value) => (
+          <article class="value-card">
+            <h3 class="value-card__title">{value.title}</h3>
+            <p class="value-card__body">{value.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. CTA ============ -->
+  <CTABlock />
+
+</Page>
+
+<style>
+  /* ============================================================
+     Shared eyebrow (used by every section header on this page)
+     ============================================================ */
+  .eyebrow-teal {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ============================================================
+     1. HERO
+     ============================================================ */
+  .about-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .about-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .about-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .about-hero__sub {
+    margin: 16px auto 0;
+    max-width: 36rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(18px, 1rem + 1vw, 24px);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0C7B82;
+    text-wrap: balance;
+  }
+
+  /* ============================================================
+     2. ORIGIN STORY
+     ============================================================ */
+  .origin {
+    background: #FFFFFF;
+    padding-block: 96px;
+  }
+  .origin__inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .origin__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 1.4rem + 1.6vw, 32px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .origin__body {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .origin__body p {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     3 + 4. BIO ROWS
+     Tom = surface, image-left. Mark = white, image-right.
+     ============================================================ */
+  .bio {
+    background: #FFFFFF;
+    padding-block: 96px;
+  }
+  .bio--surface { background: #F7F9FC; }
+
+  .bio__inner {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 64px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .bio--right .bio__inner {
+    grid-template-columns: 1fr auto;
+  }
+
+  .bio__media { justify-self: center; }
+  .bio__photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #0C7B82;
+    display: block;
+  }
+
+  .bio__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .bio__body {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .bio__body p {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     5. VALUES
+     ============================================================ */
+  .values {
+    background: #F7F9FC;
+    padding-block: 96px;
+  }
+  .values__head { text-align: center; margin-bottom: 56px; }
+  .values__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .values__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .value-card {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .value-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .value-card__body {
+    margin: 12px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 56rem) {
+    .bio { padding-block: 72px; }
+    .bio__inner,
+    .bio--right .bio__inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      text-align: center;
+    }
+    /* Image always on top regardless of section order */
+    .bio--right .bio__media { order: -1; }
+    .bio__title { margin-top: 4px; }
+  }
+
+  @media (max-width: 48rem) {
+    .about-hero { padding-block: 72px; }
+    .origin { padding-block: 72px; }
+    .values { padding-block: 72px; }
+    .values__head { margin-bottom: 40px; }
+    .values__grid {
+      grid-template-columns: 1fr;
+      max-width: 32rem;
+    }
+  }
+</style>

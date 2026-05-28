@@ -13,7 +13,7 @@
 
   <link rel="stylesheet" href="src/styles/global.css" />
 
-  <!-- FAQPage JSON-LD — preview only. In Astro this is emitted by
+  <!-- FAQPage JSON-LD: preview only. In Astro this is emitted by
        src/lib/schema.ts → faqPageSchema(HOME_FAQS), passed via the
        Page layout's schemaExtras prop, and folded into the single
        @graph that Base.astro writes to <head>. -->
@@ -23,12 +23,12 @@
     "@type": "FAQPage",
     "@id": "https://foundeverywhere.co.uk/#faq",
     "mainEntity": [
-      { "@type": "Question", "name": "What is LLM visibility?", "acceptedAnswer": { "@type": "Answer", "text": "LLM visibility means your website appears as a cited source when people use AI tools like ChatGPT, Perplexity, or Gemini to search for your services. We implement the technical signals — schema markup, structured content, and entity consistency — that these systems use to decide what to recommend." } },
+      { "@type": "Question", "name": "What is LLM visibility?", "acceptedAnswer": { "@type": "Answer", "text": "LLM visibility means your website appears as a cited source when people use AI tools like ChatGPT, Perplexity, or Gemini to search for your services. We implement the technical signals (schema markup, structured content, and entity consistency) that these systems use to decide what to recommend." } },
       { "@type": "Question", "name": "How long does an audit take?", "acceptedAnswer": { "@type": "Answer", "text": "Most audits are turned around within two weeks. You receive a full report with every issue scored by impact, a prioritised fix list, and a before score you can benchmark against." } },
-      { "@type": "Question", "name": "Do I need ongoing work or just a one-off fix?", "acceptedAnswer": { "@type": "Answer", "text": "The audit and fix is a standalone service — many clients start there. Ongoing retainers make sense once the foundations are solid and you want to monitor AI search visibility, track rankings, and keep your schema current as the standards evolve." } },
-      { "@type": "Question", "name": "Will this work for my industry?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The technical work — site speed, structured data, semantic HTML, entity signals — is universal. We work with service businesses, ecommerce, hospitality, professional services, and local businesses across the UK." } },
-      { "@type": "Question", "name": "What makes Found Everywhere different?", "acceptedAnswer": { "@type": "Answer", "text": "Most SEO agencies optimise for Google. We optimise for everywhere search happens — including ChatGPT, Perplexity, Gemini, and Copilot. That is not a future consideration. AI search is sending traffic right now." } },
-      { "@type": "Question", "name": "How do I know if I am showing up in AI search?", "acceptedAnswer": { "@type": "Answer", "text": "We include an AI visibility audit in every engagement — testing your brand and service across the major AI systems and documenting where you appear and where you do not. You will know exactly where you stand." } }
+      { "@type": "Question", "name": "Do I need ongoing work or just a one-off fix?", "acceptedAnswer": { "@type": "Answer", "text": "The audit and fix is a standalone service: many clients start there. Ongoing retainers make sense once the foundations are solid and you want to monitor AI search visibility, track rankings, and keep your schema current as the standards evolve." } },
+      { "@type": "Question", "name": "Will this work for my industry?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The technical work (site speed, structured data, semantic HTML, entity signals) is universal. We work with service businesses, ecommerce, hospitality, professional services, and local businesses across the UK." } },
+      { "@type": "Question", "name": "What makes Found Everywhere different?", "acceptedAnswer": { "@type": "Answer", "text": "Most SEO agencies optimise for Google. We optimise for everywhere search happens, including ChatGPT, Perplexity, Gemini, and Copilot. That is not a future consideration. AI search is sending traffic right now." } },
+      { "@type": "Question", "name": "How do I know if I am showing up in AI search?", "acceptedAnswer": { "@type": "Answer", "text": "We include an AI visibility audit in every engagement: testing your brand and service across the major AI systems and documenting where you appear and where you do not. You will know exactly where you stand." } }
     ]
   }
   </script>
@@ -39,7 +39,7 @@
   <!-- ============ NAV ============ -->
   <header class="nav" role="banner">
     <div class="container nav__inner">
-      <a href="/" class="nav__brand" aria-label="Found Everywhere — home">
+      <a href="/" class="nav__brand" aria-label="Found Everywhere, home">
         <span class="nav__mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="7" />
@@ -86,7 +86,7 @@
 
         <p class="hero__lead">
           We audit and optimise your website so it ranks in Google and gets
-          cited by ChatGPT, Claude, Perplexity, and Gemini &mdash; wherever
+          cited by ChatGPT, Claude, Perplexity, and Gemini. Wherever
           your customers are searching.
         </p>
 
@@ -179,7 +179,7 @@
             </span>
           </a>
 
-          <a href="/services/retainer/" class="ui-card" aria-label="Ongoing retainer">
+          <a href="/services/retainer/" class="ui-card" aria-label="Visibility that compounds">
             <span class="ui-card__icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="3,19 9,14 14,11 20,5" />
@@ -187,7 +187,7 @@
               </svg>
             </span>
             <span class="ui-card__num">03</span>
-            <h3 class="ui-card__title">Ongoing retainer</h3>
+            <h3 class="ui-card__title">Visibility that compounds</h3>
             <p class="ui-card__desc">Monthly monitoring, content updates, and AI search tracking so your visibility compounds over time.</p>
             <span class="ui-card__cta" aria-hidden="true">
               <span>Learn more</span>
@@ -248,7 +248,7 @@
         <div class="faqs__grid">
           <details class="ui-faq">
             <summary class="ui-faq__summary"><span class="ui-faq__q">What is LLM visibility?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
-            <div class="ui-faq__answer"><p>LLM visibility means your website appears as a cited source when people use AI tools like ChatGPT, Perplexity, or Gemini to search for your services. We implement the technical signals — schema markup, structured content, and entity consistency — that these systems use to decide what to recommend.</p></div>
+            <div class="ui-faq__answer"><p>LLM visibility means your website appears as a cited source when people use AI tools like ChatGPT, Perplexity, or Gemini to search for your services. We implement the technical signals (schema markup, structured content, and entity consistency) that these systems use to decide what to recommend.</p></div>
           </details>
           <details class="ui-faq">
             <summary class="ui-faq__summary"><span class="ui-faq__q">How long does an audit take?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
@@ -256,19 +256,19 @@
           </details>
           <details class="ui-faq">
             <summary class="ui-faq__summary"><span class="ui-faq__q">Do I need ongoing work or just a one-off fix?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
-            <div class="ui-faq__answer"><p>The audit and fix is a standalone service — many clients start there. Ongoing retainers make sense once the foundations are solid and you want to monitor AI search visibility, track rankings, and keep your schema current as the standards evolve.</p></div>
+            <div class="ui-faq__answer"><p>The audit and fix is a standalone service: many clients start there. Ongoing retainers make sense once the foundations are solid and you want to monitor AI search visibility, track rankings, and keep your schema current as the standards evolve.</p></div>
           </details>
           <details class="ui-faq">
             <summary class="ui-faq__summary"><span class="ui-faq__q">Will this work for my industry?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
-            <div class="ui-faq__answer"><p>Yes. The technical work — site speed, structured data, semantic HTML, entity signals — is universal. We work with service businesses, ecommerce, hospitality, professional services, and local businesses across the UK.</p></div>
+            <div class="ui-faq__answer"><p>Yes. The technical work (site speed, structured data, semantic HTML, entity signals) is universal. We work with service businesses, ecommerce, hospitality, professional services, and local businesses across the UK.</p></div>
           </details>
           <details class="ui-faq">
             <summary class="ui-faq__summary"><span class="ui-faq__q">What makes Found Everywhere different?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
-            <div class="ui-faq__answer"><p>Most SEO agencies optimise for Google. We optimise for everywhere search happens — including ChatGPT, Perplexity, Gemini, and Copilot. That is not a future consideration. AI search is sending traffic right now.</p></div>
+            <div class="ui-faq__answer"><p>Most SEO agencies optimise for Google. We optimise for everywhere search happens, including ChatGPT, Perplexity, Gemini, and Copilot. That is not a future consideration. AI search is sending traffic right now.</p></div>
           </details>
           <details class="ui-faq">
             <summary class="ui-faq__summary"><span class="ui-faq__q">How do I know if I am showing up in AI search?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
-            <div class="ui-faq__answer"><p>We include an AI visibility audit in every engagement — testing your brand and service across the major AI systems and documenting where you appear and where you do not. You will know exactly where you stand.</p></div>
+            <div class="ui-faq__answer"><p>We include an AI visibility audit in every engagement: testing your brand and service across the major AI systems and documenting where you appear and where you do not. You will know exactly where you stand.</p></div>
           </details>
         </div>
       </div>
@@ -285,14 +285,14 @@
 
         <div class="team__grid">
           <article class="team-card">
-            <img class="team-card__photo" src="public/images/tom.jpg" alt="Portrait of Tom Watts" width="120" height="120" loading="lazy" decoding="async" />
+            <img class="team-card__photo" src="public/images/tom.webp" alt="Portrait of Tom Watts" width="120" height="120" loading="lazy" decoding="async" />
             <h3 class="team-card__name">Tom Watts</h3>
             <p class="team-card__role">The maker</p>
             <p class="team-card__bio">Tom has spent over a decade building websites, running digital campaigns, and producing content for brands and publishers. Through Digital Heroes Studio he has delivered everything from full website builds to video and editorial work. He understands both the creative and the operational side, which means projects actually ship properly.</p>
           </article>
 
           <article class="team-card">
-            <img class="team-card__photo" src="public/images/mark.jpg" alt="Portrait of Mark Reynolds" width="120" height="120" loading="lazy" decoding="async" />
+            <img class="team-card__photo" src="public/images/mark.webp" alt="Portrait of Mark Reynolds" width="120" height="120" loading="lazy" decoding="async" />
             <h3 class="team-card__name">Mark Reynolds</h3>
             <p class="team-card__role">The strategist</p>
             <p class="team-card__bio">Mark leads digital strategy, SEO and web performance for everyone from blue-chip brands to growing SMEs. As Director of Clarus Digital he has spent years making sure clients’ digital activity actually drives growth, not just clicks. Member of the Chartered Institute of Marketing.</p>
@@ -318,7 +318,7 @@
   <footer class="footer" role="contentinfo">
     <div class="container footer__inner">
       <div class="footer__brand">
-        <a href="/" class="footer__brand-link" aria-label="Found Everywhere — home">
+        <a href="/" class="footer__brand-link" aria-label="Found Everywhere, home">
           <span class="footer__mark" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="11" cy="11" r="7" />
@@ -827,7 +827,7 @@
       margin: 12px 0 0;
       font-family: var(--font-body); font-weight: 400;
       font-size: 14px; line-height: 1.65; color: #64748B;
-      text-align: left; text-wrap: pretty;
+      text-align: center; text-wrap: pretty;
     }
     @media (max-width: 48rem) {
       .team { padding-block: 64px; }

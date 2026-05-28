@@ -1,6 +1,6 @@
 ---
 /**
- * StatsRow.astro — three-up animated stats band.
+ * StatsRow.astro: three-up animated stats band.
  *
  * Surface #F7F9FC, 48px top/bottom. Numbers count up from 0 to their
  * target the first time the section enters the viewport, using an
@@ -78,7 +78,7 @@ const STATS = [
       requestAnimationFrame(frame);
     }
 
-    // Fallback for very old browsers — run immediately.
+    // Fallback for very old browsers: run immediately.
     if (typeof IntersectionObserver === 'undefined') {
       cells.forEach(countUp);
       return;

@@ -1,5 +1,5 @@
 /* ============================================================
-   Found Everywhere — Design Tokens
+   Found Everywhere: Design Tokens
    Single source of truth. Everything else consumes these.
    ============================================================ */
 
@@ -25,7 +25,7 @@
   --color-dark-muted:    #94A3B8;          /* on-dark muted   */
   --color-dark-line:     #1F2A3A;
 
-  /* Semantic aliases — prefer these in components */
+  /* Semantic aliases: prefer these in components */
   --bg:                  var(--color-bg);
   --fg:                  var(--color-text);
   --accent:              var(--color-accent);
@@ -37,7 +37,7 @@
   --font-body:    'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  /* Modular scale — 1.250 (major third) anchored at 16px */
+  /* Modular scale: 1.250 (major third) anchored at 16px */
   --text-xs:    0.75rem;     /* 12 */
   --text-sm:    0.875rem;    /* 14 */
   --text-base:  1rem;        /* 16 */
@@ -49,7 +49,7 @@
   --text-4xl:   3.75rem;     /* 60 */
   --text-5xl:   4.5rem;      /* 72 */
 
-  /* Fluid display sizes — clamp(min, preferred, max) */
+  /* Fluid display sizes: clamp(min, preferred, max) */
   --text-fluid-xl: clamp(1.5rem,  1.2rem + 1.4vw, 2.25rem);
   --text-fluid-2xl: clamp(2rem,   1.4rem + 2.6vw, 3rem);
   --text-fluid-3xl: clamp(2.5rem, 1.6rem + 4vw,   4.5rem);
@@ -73,7 +73,7 @@
   --tracking-mono:   0.02em;
 
   /* --------------------------------------------------------
-     SPACING — strict 8px grid (with 4px half-step)
+     SPACING: strict 8px grid (with 4px half-step)
      -------------------------------------------------------- */
   --space-0:   0;
   --space-1:   0.25rem;   /*  4 */
@@ -89,15 +89,15 @@
   --space-11:  6rem;      /* 96 */
   --space-12:  8rem;      /* 128 */
 
-  /* Section rhythm — vertical padding for major sections */
+  /* Section rhythm: vertical padding for major sections */
   --section-y: clamp(4rem, 3rem + 4vw, 7rem);
 
   /* --------------------------------------------------------
      LAYOUT
      -------------------------------------------------------- */
   --container-max:    72rem;   /* 1152px */
-  --container-narrow: 48rem;   /*  768px — long-form text   */
-  --container-wide:   84rem;   /* 1344px — full-bleed feel  */
+  --container-narrow: 48rem;   /*  768px: long-form text   */
+  --container-wide:   84rem;   /* 1344px: full-bleed feel  */
   --gutter:           clamp(1rem, 0.5rem + 2vw, 2rem);
 
   /* --------------------------------------------------------
@@ -142,7 +142,7 @@
 }
 
 /* ============================================================
-   Reduced motion — collapse motion tokens
+   Reduced motion: collapse motion tokens
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   :root {

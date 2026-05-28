@@ -1,12 +1,12 @@
 /* ============================================================
-   Found Everywhere — Global CSS
+   Found Everywhere: Global CSS
    Order: reset → base → typography → layout primitives → utilities
    ============================================================ */
 
 @import './tokens.css';
 
 /* ============================================================
-   1. RESET — modern, minimal
+   1. RESET: modern, minimal
    ============================================================ */
 
 *,
@@ -64,7 +64,7 @@ p, h1, h2, h3, h4, h5, h6 {
 #root, #__next, main { isolation: isolate; }
 
 /* ============================================================
-   2. BASE — typographic foundation
+   2. BASE: typographic foundation
    ============================================================ */
 
 body {
@@ -82,7 +82,7 @@ body {
   color: var(--color-accent-ink);
 }
 
-/* Headings — display family */
+/* Headings: display family */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: var(--weight-semibold);
@@ -104,7 +104,7 @@ p {
   text-wrap: pretty;
 }
 
-/* Links — inline body links pick up accent + underline */
+/* Links: inline body links pick up accent + underline */
 a:where(:not([class])) {
   color: var(--color-accent);
   text-decoration: underline;
@@ -128,7 +128,7 @@ code:not(pre code) {
   border: 1px solid var(--color-line);
 }
 
-/* Lists — keep default flow, tighten spacing */
+/* Lists: keep default flow, tighten spacing */
 ul, ol { padding-left: 1.25em; }
 li + li { margin-top: var(--space-2); }
 
@@ -173,13 +173,13 @@ hr {
 .section--dark :where(h1,h2,h3,h4,h5,h6) { color: var(--color-dark-text); }
 .section--dark :where(.muted, .eyebrow) { color: var(--color-dark-muted); }
 
-/* Stack — vertical rhythm helper */
+/* Stack: vertical rhythm helper */
 .stack > * + * { margin-top: var(--stack-gap, var(--space-4)); }
 .stack-sm { --stack-gap: var(--space-3); }
 .stack-md { --stack-gap: var(--space-5); }
 .stack-lg { --stack-gap: var(--space-7); }
 
-/* Cluster — horizontal wrap with gap */
+/* Cluster: horizontal wrap with gap */
 .cluster {
   display: flex;
   flex-wrap: wrap;
@@ -193,10 +193,10 @@ hr {
 .grid-3 { grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); }
 
 /* ============================================================
-   4. UTILITIES — small, named, non-overlapping
+   4. UTILITIES: small, named, non-overlapping
    ============================================================ */
 
-/* Eyebrow / kicker — mono label above headings */
+/* Eyebrow / kicker: mono label above headings */
 .eyebrow {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
@@ -248,7 +248,7 @@ hr {
 .skip-link:focus { transform: translateY(0); }
 
 /* ============================================================
-   5. BUTTONS — primary, secondary, ghost
+   5. BUTTONS: primary, secondary, ghost
    ============================================================ */
 
 .btn {

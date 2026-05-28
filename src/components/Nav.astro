@@ -1,6 +1,6 @@
 ---
 /**
- * Nav.astro — primary site navigation.
+ * Nav.astro: primary site navigation.
  *
  * Layout: wordmark left, links centre, primary CTA right.
  * Mobile: links collapse into a <details>-driven panel (zero JS path).
@@ -18,7 +18,7 @@ const isCurrent = (href: string) =>
 <header class="nav" role="banner">
   <div class="container nav__inner">
 
-    <a href="/" class="nav__brand" aria-label={`${SITE.name} — home`}>
+    <a href="/" class="nav__brand" aria-label={`${SITE.name}, home`}>
       <span class="nav__mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="7" />
@@ -255,13 +255,13 @@ const isCurrent = (href: string) =>
 
     const close = () => { menu.open = false; document.body.style.overflow = ''; };
 
-    // Body scroll lock — only while open on mobile.
+    // Body scroll lock: only while open on mobile.
     menu.addEventListener('toggle', () => {
       if (menu.open && isMobile()) document.body.style.overflow = 'hidden';
       else document.body.style.overflow = '';
     });
 
-    // Outside click — only meaningful on mobile.
+    // Outside click: only meaningful on mobile.
     document.addEventListener('click', (e) => {
       if (!isMobile() || !menu.open) return;
       if (!menu.contains(e.target as Node)) close();

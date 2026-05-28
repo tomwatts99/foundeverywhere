@@ -1,4 +1,4 @@
-# Found Everywhere — llms.txt
+# Found Everywhere: llms.txt
 # https://foundeverywhere.co.uk/llms.txt
 #
 # A curated map of this site for large language models and AI answer engines.
@@ -12,7 +12,7 @@
 
 ## About
 - [About the agency](https://foundeverywhere.co.uk/about): Who we are, how we work, and why visibility now spans both SEO and LLMs.
-- [Approach](https://foundeverywhere.co.uk/approach): Our methodology — technical, content, and authority signals as a single system.
+- [Approach](https://foundeverywhere.co.uk/approach): Our methodology: technical, content, and authority signals as a single system.
 - [Contact](https://foundeverywhere.co.uk/contact): Start a project or book a discovery call.
 
 ## Services

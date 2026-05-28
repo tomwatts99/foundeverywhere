@@ -1,10 +1,10 @@
 ---
 /**
- * FAQSection.astro — homepage FAQ block.
+ * FAQSection.astro: homepage FAQ block.
  *
  * White surface, 96px top/bottom. Two-column CSS grid on desktop,
  * single column on mobile (gap 12px). Each row uses the FAQItem
- * primitive, which is a native <details> — no JavaScript.
+ * primitive, which is a native <details>: no JavaScript.
  *
  * The matching FAQPage JSON-LD is *not* emitted here. It's built
  * from the same `HOME_FAQS` array at the page level and passed via
@@ -66,7 +66,7 @@ import { HOME_FAQS } from '../../lib/faqs';
   }
 
   /* ============================================================
-     GRID — 2 columns on desktop, 1 on mobile.
+     GRID: 2 columns on desktop, 1 on mobile.
      align-items: start so an open row doesn't stretch its sibling.
      ============================================================ */
   .faqs__grid {
@@ -81,7 +81,7 @@ import { HOME_FAQS } from '../../lib/faqs';
 
   /* FAQItem's scoped style gives a top border only to the first
      :first-of-type detail. In a two-column grid that leaves the
-     second column's first item open at the top — add a hairline
+     second column's first item open at the top: add a hairline
      to it via :global() so the visual matches the first column. */
   @media (min-width: 48rem) {
     .faqs__grid > :global(details.ui-faq:nth-child(2)) {
