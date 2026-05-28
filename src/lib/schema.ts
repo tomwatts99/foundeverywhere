@@ -90,6 +90,27 @@ export function graph(...things: Thing[]): Thing {
 }
 
 /**
+ * BreadcrumbList entity. Pass an ordered list of { name, item } pairs;
+ * `item` should be an absolute URL.
+ */
+export function breadcrumbSchema(
+  crumbs: ReadonlyArray<{ name: string; item: string }>,
+  pageUrl?: string,
+): Thing {
+  const id = pageUrl ? `${pageUrl}#breadcrumbs` : `${SITE.url}/#breadcrumbs`;
+  return {
+    '@type': 'BreadcrumbList',
+    '@id': id,
+    itemListElement: crumbs.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: c.item,
+    })),
+  };
+}
+
+/**
  * FAQPage entity. Pass an array of { question, answer } pairs;
  * returns a Thing that can be added to a page's schemaExtras and
  * will be folded into the single JSON-LD graph emitted from Base.

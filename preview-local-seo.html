@@ -3,14 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>SEO and LLM Visibility Services | Found Everywhere</title>
-  <meta name="description" content="Technical SEO audits, LLM visibility optimisation, schema markup, and ongoing visibility management for UK businesses. Built to be found by Google and AI search." />
+  <title>Local SEO and Google Business Profile Optimisation UK | Found Everywhere</title>
+  <meta name="description" content="We optimise your Google Business Profile, build local citations, and implement location schema so your business shows up when nearby customers are searching." />
   <meta name="theme-color" content="#0C7B82" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet" href="src/styles/global.css" />
+
+  <!-- FAQPage + BreadcrumbList JSON-LD: preview only. Astro emits these via
+       schemaExtras inside Base.astro's single @graph. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "FAQPage",
+        "@id": "https://foundeverywhere.co.uk/services/local-seo/#faq",
+        "mainEntity": [
+          { "@type": "Question", "name": "How long does local SEO take to show results?", "acceptedAnswer": { "@type": "Answer", "text": "Google Business Profile improvements can show within a few weeks. Organic local rankings typically improve over two to three months as citations are built and schema is indexed." } },
+          { "@type": "Question", "name": "Do I need a website to do local SEO?", "acceptedAnswer": { "@type": "Answer", "text": "A website helps significantly but we can work with GBP alone as a starting point. A well optimised GBP with strong citations can drive meaningful local visibility even before a full site is in place." } },
+          { "@type": "Question", "name": "Can you manage our Google Business Profile on an ongoing basis?", "acceptedAnswer": { "@type": "Answer", "text": "Yes: GBP management is included in our retainer service. Regular posts, review responses, photo updates, and performance monitoring." } },
+          { "@type": "Question", "name": "Does local SEO help with AI search?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. AI tools like ChatGPT and Perplexity increasingly reference local businesses when answering location-based queries. LocalBusiness schema and a well optimised GBP are the signals that make that happen." } }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://foundeverywhere.co.uk/services/local-seo/#breadcrumbs",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home",     "item": "https://foundeverywhere.co.uk/" },
+          { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://foundeverywhere.co.uk/services/" },
+          { "@type": "ListItem", "position": 3, "name": "Local SEO and Google Business Profile", "item": "https://foundeverywhere.co.uk/services/local-seo/" }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -49,103 +78,96 @@
   <main id="main">
 
     <!-- ============ 1. HERO ============ -->
-    <section class="services-hero" aria-labelledby="services-hero-title">
+    <section class="lseo-hero" aria-labelledby="lseo-hero-title">
       <div class="container">
-        <p class="services-hero__eyebrow">What we do</p>
-        <h1 id="services-hero-title" class="services-hero__title">Services built for the way search works now</h1>
-        <p class="services-hero__lead">Not just Google. ChatGPT, Perplexity, Gemini, and Copilot too. We cover every place your customers are searching.</p>
+        <p class="lseo-hero__eyebrow">Local SEO</p>
+        <h1 id="lseo-hero-title" class="lseo-hero__title">Show up when it matters most</h1>
+        <p class="lseo-hero__lead">When someone nearby searches for what you do, you need to be there. We make sure you are: in Google search, Google Maps, and AI tools that reference local businesses.</p>
       </div>
     </section>
 
-    <!-- ============ 2. SERVICE BLOCKS ============ -->
-    <section class="services-detail" aria-label="Services in detail">
+    <!-- ============ 2. TWO-COLUMN BODY ============ -->
+    <section class="lseo-body">
       <div class="container">
-        <div class="services-detail__list">
+        <div class="lseo-body__grid">
 
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">01</p>
-              <h2 class="svc__name">SEO audit</h2>
-              <p class="svc__desc">A complete technical review of your site. We crawl it the way Google does, score every element, and give you a prioritised fix list in plain English. You will know exactly what is holding you back and what to do about it.</p>
-              <a href="/services/seo-audit/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
-            </div>
-            <ul class="svc__features" role="list">
-              <li>40+ point technical review</li>
-              <li>PageSpeed and Core Web Vitals analysis</li>
-              <li>Prioritised fix list by impact</li>
-              <li>Before and after scoring</li>
-            </ul>
-          </article>
+          <!-- LEFT: content -->
+          <div class="lseo-content">
+            <h2 class="lseo-h2">What is included</h2>
 
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">02</p>
-              <h2 class="svc__name">LLM visibility</h2>
-              <p class="svc__desc">Most sites are invisible to ChatGPT, Perplexity, and Gemini. We change that. Schema markup, entity signals, llms.txt, and content structured so AI systems cite you rather than your competitors.</p>
-              <a href="/services/llm-visibility/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
-            </div>
-            <ul class="svc__features" role="list">
-              <li>Schema markup implementation</li>
-              <li>llms.txt setup and optimisation</li>
-              <li>Entity and brand signal audit</li>
-              <li>AI citation monitoring</li>
+            <ul class="lseo-features" role="list">
+              <li class="lseo-feature">
+                <span class="lseo-feature__dot" aria-hidden="true"></span>
+                <div>
+                  <h3 class="lseo-feature__title">Google Business Profile optimisation</h3>
+                  <p class="lseo-feature__body">Your GBP is often the first thing a local customer sees. We make sure it is complete, accurate, and optimised: categories, services, photos, posts, and Q and A all working together.</p>
+                </div>
+              </li>
+              <li class="lseo-feature">
+                <span class="lseo-feature__dot" aria-hidden="true"></span>
+                <div>
+                  <h3 class="lseo-feature__title">Local citation building</h3>
+                  <p class="lseo-feature__body">Consistent NAP data across directories, review platforms, and local listings. Citations are a core local ranking signal and most businesses have inconsistencies that quietly hurt their visibility.</p>
+                </div>
+              </li>
+              <li class="lseo-feature">
+                <span class="lseo-feature__dot" aria-hidden="true"></span>
+                <div>
+                  <h3 class="lseo-feature__title">Location and business schema</h3>
+                  <p class="lseo-feature__body">We implement LocalBusiness, PostalAddress, and GeoCoordinates schema so search engines and AI tools have structured data about exactly where you are and what you do.</p>
+                </div>
+              </li>
+              <li class="lseo-feature">
+                <span class="lseo-feature__dot" aria-hidden="true"></span>
+                <div>
+                  <h3 class="lseo-feature__title">Local keyword targeting</h3>
+                  <p class="lseo-feature__body">We identify the searches your local customers are actually making and make sure your site and GBP are optimised to appear for them.</p>
+                </div>
+              </li>
             </ul>
-          </article>
 
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">03</p>
-              <h2 class="svc__name">Technical SEO</h2>
-              <p class="svc__desc">The foundations that everything else sits on. Indexing, site structure, Core Web Vitals, internal linking, and the technical details that most agencies overlook or defer indefinitely.</p>
-              <a href="/services/technical-seo/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
-            </div>
-            <ul class="svc__features" role="list">
-              <li>Crawl and indexing audit</li>
-              <li>Core Web Vitals fixes</li>
-              <li>Site architecture review</li>
-              <li>Internal linking optimisation</li>
-            </ul>
-          </article>
+            <h2 class="lseo-h2 lseo-h2--gap">Who this is for</h2>
+            <p class="lseo-prose">Any business that serves customers in a specific area: service businesses, retailers, hospitality, healthcare, tradespeople, and professional services. If your customers are local, local SEO is not optional.</p>
 
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">04</p>
-              <h2 class="svc__name">Visibility that compounds</h2>
-              <p class="svc__desc">We keep working after the initial project is done. Monthly monitoring, content updates, AI search tracking, and regular reporting so your visibility grows over time rather than slipping back.</p>
-              <a href="/services/retainer/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
+            <h3 class="lseo-h3">Common questions</h3>
+            <div class="lseo-faqs">
+              <details class="ui-faq">
+                <summary class="ui-faq__summary"><span class="ui-faq__q">How long does local SEO take to show results?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+                <div class="ui-faq__answer"><p>Google Business Profile improvements can show within a few weeks. Organic local rankings typically improve over two to three months as citations are built and schema is indexed.</p></div>
+              </details>
+              <details class="ui-faq">
+                <summary class="ui-faq__summary"><span class="ui-faq__q">Do I need a website to do local SEO?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+                <div class="ui-faq__answer"><p>A website helps significantly but we can work with GBP alone as a starting point. A well optimised GBP with strong citations can drive meaningful local visibility even before a full site is in place.</p></div>
+              </details>
+              <details class="ui-faq">
+                <summary class="ui-faq__summary"><span class="ui-faq__q">Can you manage our Google Business Profile on an ongoing basis?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+                <div class="ui-faq__answer"><p>Yes: GBP management is included in our retainer service. Regular posts, review responses, photo updates, and performance monitoring.</p></div>
+              </details>
+              <details class="ui-faq">
+                <summary class="ui-faq__summary"><span class="ui-faq__q">Does local SEO help with AI search?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+                <div class="ui-faq__answer"><p>Yes. AI tools like ChatGPT and Perplexity increasingly reference local businesses when answering location-based queries. LocalBusiness schema and a well optimised GBP are the signals that make that happen.</p></div>
+              </details>
             </div>
-            <ul class="svc__features" role="list">
-              <li>Monthly performance monitoring</li>
-              <li>AI search visibility tracking</li>
-              <li>Content and schema updates</li>
-              <li>Clear monthly reporting</li>
-            </ul>
-          </article>
+          </div>
 
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">05</p>
-              <h2 class="svc__name">Local SEO and Google Business Profile</h2>
-              <p class="svc__desc">When someone nearby searches for what you do, you need to show up. We optimise your Google Business Profile, build local citations, implement location schema, and make sure your site signals the right things to Google for local search.</p>
-              <a href="/services/local-seo/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
-            </div>
-            <ul class="svc__features" role="list">
-              <li>Google Business Profile optimisation</li>
-              <li>Local citation building</li>
-              <li>Location and business schema</li>
-              <li>Local keyword targeting</li>
+          <!-- RIGHT: sticky card -->
+          <aside class="lseo-card" aria-label="Local SEO audit summary">
+            <h2 class="lseo-card__title">Local SEO audit</h2>
+            <p class="lseo-card__price">From £297</p>
+
+            <ul class="lseo-card__checks" role="list">
+              <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Covers GBP and on-site</span></li>
+              <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Plain English recommendations</span></li>
+              <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Delivered within 2 weeks</span></li>
             </ul>
-          </article>
+
+            <a href="/contact/" class="lseo-card__cta">
+              Book your audit
+              <span aria-hidden="true" class="lseo-card__cta-arrow">&#x2197;</span>
+            </a>
+
+            <p class="lseo-card__note">Not sure if this is right for you? Get in touch and we will tell you honestly.</p>
+          </aside>
 
         </div>
       </div>
@@ -184,7 +206,7 @@
             <li><a href="/services/seo-audit/"      class="footer__link">SEO audit</a></li>
             <li><a href="/services/llm-visibility/" class="footer__link">LLM visibility</a></li>
             <li><a href="/services/technical-seo/"  class="footer__link">Technical SEO</a></li>
-            <li><a href="/services/retainer/"       class="footer__link">Retainer</a></li>
+            <li><a href="/services/local-seo/"      class="footer__link">Local SEO</a></li>
           </ul>
         </div>
         <div class="footer__col">
@@ -217,7 +239,7 @@
   </footer>
 
   <style>
-    /* ---------- NAV (chrome) ---------- */
+    /* ---------- NAV chrome (shared) ---------- */
     .nav { position: sticky; top: 0; z-index: var(--z-nav);
       background: color-mix(in oklab, var(--color-bg) 88%, transparent);
       backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px);
@@ -250,93 +272,165 @@
       .nav__cta .btn { width: 100%; }
     }
 
+    /* ---------- FAQItem (mirrors src/components/ui/FAQItem.astro) ---------- */
+    .ui-faq { border-bottom: 1px solid #E4E8EF; }
+    .ui-faq:first-of-type { border-top: 1px solid #E4E8EF; }
+    .ui-faq > summary { list-style: none; cursor: pointer; }
+    .ui-faq > summary::-webkit-details-marker { display: none; }
+    .ui-faq > summary::marker { content: ''; }
+    .ui-faq__summary {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 20px 0;
+      font-family: var(--font-display); font-weight: 500;
+      font-size: 15px; line-height: 1.4; color: #0D1321;
+    }
+    .ui-faq__summary:hover { color: #0C7B82; }
+    .ui-faq__q { flex: 1; text-wrap: balance; }
+    .ui-faq__chevron {
+      flex-shrink: 0; width: 9px; height: 9px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: translateY(-2px) rotate(45deg);
+      transform-origin: center;
+      transition: transform var(--duration-base) var(--ease-out);
+      color: #64748B;
+    }
+    .ui-faq[open] .ui-faq__chevron {
+      transform: translateY(2px) rotate(225deg); color: #0C7B82;
+    }
+    .ui-faq__answer { padding: 0 0 24px; max-width: 60ch; }
+    .ui-faq__answer p {
+      margin: 0;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 14px; line-height: 1.65; color: #64748B;
+    }
+
     /* ---------- HERO ---------- */
-    .services-hero { background: #0D1826; color: #FFFFFF; text-align: center; padding-block: 96px; }
-    .services-hero__eyebrow {
+    .lseo-hero { background: #0D1826; color: #FFFFFF; text-align: center; padding-block: 96px; }
+    .lseo-hero__eyebrow {
       margin: 0 0 20px;
       font-family: var(--font-mono); font-size: 11px; line-height: 1;
       color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em;
     }
-    .services-hero__title {
+    .lseo-hero__title {
       margin: 0;
       font-family: var(--font-display); font-weight: 700;
       font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
       line-height: 1.05; letter-spacing: -0.02em; color: #FFFFFF;
       text-wrap: balance;
     }
-    .services-hero__lead {
+    .lseo-hero__lead {
       margin: 20px auto 0; max-width: 560px;
       font-family: var(--font-body); font-weight: 400;
       font-size: 17px; line-height: 1.65; color: #94A3B8;
       text-wrap: pretty;
     }
 
-    /* ---------- SERVICE BLOCKS ---------- */
-    .services-detail { background: #FFFFFF; padding-block: 96px; }
-    .services-detail__list { max-width: 960px; margin: 0 auto; }
-
-    .svc {
+    /* ---------- TWO-COLUMN BODY ---------- */
+    .lseo-body { background: #FFFFFF; padding-block: 96px; }
+    .lseo-body__grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-      gap: 64px;
-      padding-block: 56px;
-      border-top: 1px solid #E4E8EF;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 64px; max-width: 960px; margin: 0 auto;
+      align-items: start;
     }
-    .svc:first-child { border-top: 0; padding-top: 0; }
-    .svc:last-child  { padding-bottom: 0; }
 
-    .svc__num {
-      margin: 0 0 16px;
-      font-family: var(--font-mono); font-weight: 500;
-      font-size: 11px; line-height: 1;
-      color: #0C7B82; letter-spacing: 0.08em;
-    }
-    .svc__name {
+    .lseo-h2 {
       margin: 0;
       font-family: var(--font-display); font-weight: 700;
       font-size: clamp(22px, 1.2rem + 1.4vw, 28px);
       line-height: 1.15; letter-spacing: -0.02em; color: #0D1321;
-      text-wrap: balance;
     }
-    .svc__desc {
+    .lseo-h2--gap { margin-top: 48px; }
+    .lseo-h3 {
+      margin: 48px 0 0;
+      font-family: var(--font-display); font-weight: 600;
+      font-size: 22px; line-height: 1.2; letter-spacing: -0.01em; color: #0D1321;
+    }
+    .lseo-prose {
       margin: 16px 0 0;
       font-family: var(--font-body); font-weight: 400;
-      font-size: 17px; line-height: 1.75; color: #64748B;
-      text-wrap: pretty;
+      font-size: 17px; line-height: 1.75; color: #64748B; text-wrap: pretty;
     }
-    .svc__link {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      margin-top: 20px;
-      font-family: var(--font-display); font-weight: 500; font-size: 15px;
-      color: #0C7B82; text-decoration: none;
-      transition: color var(--duration-fast) var(--ease-out);
-    }
-    .svc__link:hover { color: #0A6970; }
-    .svc__arrow { transition: transform var(--duration-base) var(--ease-out); }
-    .svc__link:hover .svc__arrow { transform: translateX(3px); }
 
-    .svc__features {
-      list-style: none; padding: 0; margin: 0;
-      display: flex; flex-direction: column; gap: 12px;
-      align-self: start;
+    .lseo-features {
+      list-style: none; padding: 0; margin: 24px 0 0;
+      display: flex; flex-direction: column; gap: 24px;
     }
-    .svc__features li {
-      position: relative; padding-left: 20px;
+    .lseo-feature {
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 14px; align-items: start;
+    }
+    .lseo-feature + .lseo-feature { margin-top: 0; }
+    .lseo-feature__dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: #0C7B82; margin-top: 0.5em;
+    }
+    .lseo-feature__title {
+      margin: 0;
+      font-family: var(--font-display); font-weight: 600;
+      font-size: 16px; line-height: 1.3; letter-spacing: -0.01em; color: #0D1321;
+    }
+    .lseo-feature__body {
+      margin: 6px 0 0;
       font-family: var(--font-body); font-weight: 400;
-      font-size: 15px; line-height: 1.5; color: #64748B;
+      font-size: 15px; line-height: 1.65; color: #64748B; text-wrap: pretty;
     }
-    .svc__features li + li { margin-top: 0; }
-    .svc__features li::before {
-      content: ""; position: absolute; left: 0; top: 0.55em;
-      width: 7px; height: 7px; border-radius: 50%; background: #0C7B82;
+    .lseo-faqs { margin-top: 16px; }
+
+    /* ---------- Sticky card ---------- */
+    .lseo-card {
+      position: sticky; top: calc(4.5rem + 24px);
+      background: #FFFFFF; border: 0.5px solid #E4E8EF;
+      border-radius: 16px; padding: 32px; align-self: start;
+    }
+    .lseo-card__title {
+      margin: 0;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 20px; line-height: 1.2; letter-spacing: -0.01em; color: #0D1321;
+    }
+    .lseo-card__price {
+      margin: 8px 0 0;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 32px; line-height: 1; letter-spacing: -0.02em; color: #0C7B82;
+    }
+    .lseo-card__checks {
+      list-style: none; margin: 24px 0 0; padding: 0;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .lseo-card__checks li {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 14px; line-height: 1.4; color: #64748B;
+    }
+    .lseo-card__checks li + li { margin-top: 0; }
+    .lseo-card__checks svg { color: #0C7B82; flex-shrink: 0; }
+    .lseo-card__cta {
+      display: inline-flex; width: 100%;
+      align-items: center; justify-content: center; gap: 0.45rem;
+      margin-top: 24px; padding: 12px 16px;
+      font-family: var(--font-display); font-weight: 600; font-size: 14px; line-height: 1;
+      color: #FFFFFF; background: #0C7B82; border: 1px solid #0C7B82;
+      border-radius: 8px; text-decoration: none;
+      transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+    }
+    .lseo-card__cta:hover { background: #0A6970; border-color: #0A6970; }
+    .lseo-card__cta-arrow { display: inline-block; transition: transform var(--duration-base) var(--ease-out); }
+    .lseo-card__cta:hover .lseo-card__cta-arrow { transform: translate(2px, -2px); }
+    .lseo-card__note {
+      margin: 16px 0 0;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 12px; line-height: 1.55; color: #64748B; text-wrap: pretty;
     }
 
     @media (max-width: 56rem) {
-      .svc { grid-template-columns: 1fr; gap: 28px; padding-block: 48px; }
+      .lseo-body__grid { grid-template-columns: 1fr; gap: 48px; }
+      .lseo-card { position: static; order: -1; }
     }
     @media (max-width: 48rem) {
-      .services-hero { padding-block: 72px; }
-      .services-detail { padding-block: 72px; }
+      .lseo-hero { padding-block: 72px; }
+      .lseo-body { padding-block: 72px; }
+      .lseo-card { padding: 24px; }
     }
 
     /* ---------- CTA (mirrors src/components/sections/CTABlock.astro) ---------- */
@@ -345,8 +439,7 @@
       margin: 0;
       font-family: var(--font-display); font-weight: 700;
       font-size: clamp(28px, 1.6rem + 1.6vw, 36px);
-      line-height: 1.15; letter-spacing: -0.02em; color: #FFFFFF;
-      text-wrap: balance;
+      line-height: 1.15; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance;
     }
     .cta__lead {
       margin: 12px auto 0; max-width: 36rem;
@@ -368,7 +461,7 @@
     .cta__btn:hover .cta__btn-arrow { transform: translate(2px, -2px); }
     @media (max-width: 48rem) { .cta { padding-block: 64px; } }
 
-    /* ---------- FOOTER (chrome) ---------- */
+    /* ---------- FOOTER chrome (shared) ---------- */
     .footer { background: var(--color-dark); color: var(--color-dark-text); padding-block: var(--space-10) var(--space-6); border-top: 1px solid var(--color-dark-line); }
     .footer__inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr); gap: var(--space-9); align-items: start; padding-bottom: var(--space-9); border-bottom: 1px solid var(--color-dark-line); }
     .footer__brand-link { display: inline-flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: var(--weight-semibold); font-size: var(--text-md); color: var(--color-dark-text); letter-spacing: var(--tracking-tight); }

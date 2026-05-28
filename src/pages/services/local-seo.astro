@@ -1,0 +1,406 @@
+---
+/**
+ * services/local-seo.astro: detail page for local SEO + GBP service.
+ *
+ * Schema flow: FAQPage built from the same LOCAL_FAQS source rendered
+ * on-page, plus a BreadcrumbList (Home > Services > this page). Both
+ * flow through schemaExtras into the single <head> @graph.
+ */
+import Page from '../../layouts/Page.astro';
+import FAQItem from '../../components/ui/FAQItem.astro';
+import CTABlock from '../../components/sections/CTABlock.astro';
+import { faqPageSchema, breadcrumbSchema } from '../../lib/schema';
+import { SITE } from '../../lib/site';
+
+const FEATURES = [
+  {
+    title: 'Google Business Profile optimisation',
+    body: 'Your GBP is often the first thing a local customer sees. We make sure it is complete, accurate, and optimised: categories, services, photos, posts, and Q and A all working together.',
+  },
+  {
+    title: 'Local citation building',
+    body: 'Consistent NAP data across directories, review platforms, and local listings. Citations are a core local ranking signal and most businesses have inconsistencies that quietly hurt their visibility.',
+  },
+  {
+    title: 'Location and business schema',
+    body: 'We implement LocalBusiness, PostalAddress, and GeoCoordinates schema so search engines and AI tools have structured data about exactly where you are and what you do.',
+  },
+  {
+    title: 'Local keyword targeting',
+    body: 'We identify the searches your local customers are actually making and make sure your site and GBP are optimised to appear for them.',
+  },
+] as const;
+
+const LOCAL_FAQS = [
+  {
+    question: 'How long does local SEO take to show results?',
+    answer:
+      'Google Business Profile improvements can show within a few weeks. Organic local rankings typically improve over two to three months as citations are built and schema is indexed.',
+  },
+  {
+    question: 'Do I need a website to do local SEO?',
+    answer:
+      'A website helps significantly but we can work with GBP alone as a starting point. A well optimised GBP with strong citations can drive meaningful local visibility even before a full site is in place.',
+  },
+  {
+    question: 'Can you manage our Google Business Profile on an ongoing basis?',
+    answer:
+      'Yes: GBP management is included in our retainer service. Regular posts, review responses, photo updates, and performance monitoring.',
+  },
+  {
+    question: 'Does local SEO help with AI search?',
+    answer:
+      'Yes. AI tools like ChatGPT and Perplexity increasingly reference local businesses when answering location-based queries. LocalBusiness schema and a well optimised GBP are the signals that make that happen.',
+  },
+];
+
+const pageUrl = `${SITE.url}/services/local-seo/`;
+const schemaExtras = [
+  faqPageSchema(LOCAL_FAQS, pageUrl),
+  breadcrumbSchema(
+    [
+      { name: 'Home',     item: `${SITE.url}/` },
+      { name: 'Services', item: `${SITE.url}/services/` },
+      { name: 'Local SEO and Google Business Profile', item: pageUrl },
+    ],
+    pageUrl,
+  ),
+];
+---
+
+<Page
+  title="Local SEO and Google Business Profile Optimisation UK | Found Everywhere"
+  description="We optimise your Google Business Profile, build local citations, and implement location schema so your business shows up when nearby customers are searching."
+  path="/services/local-seo/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="lseo-hero" aria-labelledby="lseo-hero-title">
+    <div class="container">
+      <p class="lseo-hero__eyebrow">Local SEO</p>
+      <h1 id="lseo-hero-title" class="lseo-hero__title">Show up when it matters most</h1>
+      <p class="lseo-hero__lead">
+        When someone nearby searches for what you do, you need to be there.
+        We make sure you are: in Google search, Google Maps, and AI tools
+        that reference local businesses.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 2. TWO COLUMN ============ -->
+  <section class="lseo-body">
+    <div class="container">
+      <div class="lseo-body__grid">
+
+        <!-- LEFT COLUMN -->
+        <div class="lseo-content">
+
+          <h2 class="lseo-h2">What is included</h2>
+
+          <ul class="lseo-features" role="list">
+            {FEATURES.map((f) => (
+              <li class="lseo-feature">
+                <span class="lseo-feature__dot" aria-hidden="true"></span>
+                <div>
+                  <h3 class="lseo-feature__title">{f.title}</h3>
+                  <p class="lseo-feature__body">{f.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <h2 class="lseo-h2 lseo-h2--gap">Who this is for</h2>
+          <p class="lseo-prose">
+            Any business that serves customers in a specific area:
+            service businesses, retailers, hospitality, healthcare,
+            tradespeople, and professional services. If your customers
+            are local, local SEO is not optional.
+          </p>
+
+          <h3 class="lseo-h3">Common questions</h3>
+          <div class="lseo-faqs">
+            {LOCAL_FAQS.map((faq) => (
+              <FAQItem question={faq.question} answer={faq.answer} />
+            ))}
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <aside class="lseo-card" aria-label="Local SEO audit summary">
+          <h2 class="lseo-card__title">Local SEO audit</h2>
+          <p class="lseo-card__price">From £297</p>
+
+          <ul class="lseo-card__checks" role="list">
+            <li>
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
+              <span>Covers GBP and on-site</span>
+            </li>
+            <li>
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
+              <span>Plain English recommendations</span>
+            </li>
+            <li>
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
+              <span>Delivered within 2 weeks</span>
+            </li>
+          </ul>
+
+          <a href="/contact/" class="lseo-card__cta">
+            Book your audit
+            <span aria-hidden="true" class="lseo-card__cta-arrow">&#x2197;</span>
+          </a>
+
+          <p class="lseo-card__note">
+            Not sure if this is right for you? Get in touch and we will tell
+            you honestly.
+          </p>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. CTA ============ -->
+  <CTABlock />
+
+</Page>
+
+<style>
+  /* ============================================================
+     1. HERO
+     ============================================================ */
+  .lseo-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .lseo-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .lseo-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .lseo-hero__lead {
+    margin: 20px auto 0;
+    max-width: 560px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     2. TWO-COLUMN BODY
+     ============================================================ */
+  .lseo-body { background: #FFFFFF; padding-block: 96px; }
+
+  .lseo-body__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 64px;
+    max-width: 960px;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  /* ---------- Left: content ---------- */
+  .lseo-h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(22px, 1.2rem + 1.4vw, 28px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .lseo-h2--gap { margin-top: 48px; }
+  .lseo-h3 {
+    margin: 48px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .lseo-prose {
+    margin: 16px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* Features list */
+  .lseo-features {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .lseo-feature {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .lseo-feature + .lseo-feature { margin-top: 0; }
+  .lseo-feature__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #0C7B82;
+    margin-top: 0.5em;
+  }
+  .lseo-feature__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .lseo-feature__body {
+    margin: 6px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* FAQ wrapper */
+  .lseo-faqs { margin-top: 16px; }
+
+  /* ---------- Right: sticky card ---------- */
+  .lseo-card {
+    position: sticky;
+    top: calc(4.5rem + 24px);
+    background: #FFFFFF;
+    border: 0.5px solid #E4E8EF;
+    border-radius: 16px;
+    padding: 32px;
+    align-self: start;
+  }
+  .lseo-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .lseo-card__price {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .lseo-card__checks {
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .lseo-card__checks li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #64748B;
+  }
+  .lseo-card__checks li + li { margin-top: 0; }
+  .lseo-card__checks svg { color: #0C7B82; flex-shrink: 0; }
+
+  .lseo-card__cta {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 24px;
+    padding: 12px 16px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    color: #FFFFFF;
+    background: #0C7B82;
+    border: 1px solid #0C7B82;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+  .lseo-card__cta:hover { background: #0A6970; border-color: #0A6970; }
+  .lseo-card__cta-arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .lseo-card__cta:hover .lseo-card__cta-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  .lseo-card__note {
+    margin: 16px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 56rem) {
+    .lseo-body__grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .lseo-card {
+      position: static;
+      order: -1;
+    }
+  }
+  @media (max-width: 48rem) {
+    .lseo-hero { padding-block: 72px; }
+    .lseo-body { padding-block: 72px; }
+    .lseo-card { padding: 24px; }
+  }
+</style>
