@@ -1,0 +1,138 @@
+---
+/**
+ * Base.astro — the document shell.
+ *
+ * Owns: <html>, <head>, meta, OpenGraph, Twitter, canonical, hreflang,
+ * fonts, theme-color, favicons, JSON-LD graph, skip link, and the
+ * single global stylesheet import.
+ *
+ * Body content goes through {slot}. Higher-level layouts (Page.astro)
+ * compose Base and inject Nav/Footer.
+ */
+import '../styles/global.css';
+import { SITE } from '../lib/site';
+import { orgSchema, websiteSchema, webPageSchema, graph } from '../lib/schema';
+
+export interface Props {
+  title: string;
+  description?: string;
+  /** Absolute or root-relative URL of this page. Used for canonical + JSON-LD. */
+  path?: string;
+  /** Path to an OG image under /public. Defaults to SITE.ogImage. */
+  image?: string;
+  /** ISO date for content publication (optional). */
+  datePublished?: string;
+  /** ISO date for content modification (optional). */
+  dateModified?: string;
+  /** Set to true on pages that should NOT be indexed. */
+  noindex?: boolean;
+  /** Optional extra JSON-LD entities to add to the graph (Article, Service, FAQPage, etc.). */
+  schemaExtras?: Array<Record<string, unknown>>;
+  /** Optional breadcrumb trail. */
+  breadcrumb?: ReadonlyArray<{ name: string; item: string }>;
+}
+
+const {
+  title,
+  description = SITE.description,
+  path = Astro.url.pathname,
+  image = SITE.ogImage,
+  datePublished,
+  dateModified,
+  noindex = false,
+  schemaExtras = [],
+  breadcrumb,
+} = Astro.props;
+
+const canonical = new URL(path, SITE.url).toString();
+const ogImageUrl = new URL(image, SITE.url).toString();
+const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
+
+const ld = graph(
+  orgSchema(),
+  websiteSchema(),
+  webPageSchema({
+    url: canonical,
+    title,
+    description,
+    datePublished,
+    dateModified,
+    breadcrumb,
+  }),
+  ...schemaExtras,
+);
+---
+<!doctype html>
+<html lang={SITE.language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    {/* Resource hints */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    {/* Fonts — Outfit (display), Inter (body), JetBrains Mono (label).
+        display=swap to avoid CLS; weights kept minimal for performance. */}
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    {/* Primary meta */}
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0C7B82" />
+    <meta name="color-scheme" content="light" />
+
+    {/* Robots */}
+    {noindex
+      ? <meta name="robots" content="noindex, nofollow" />
+      : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    }
+
+    {/* Open Graph */}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${SITE.name} — ${SITE.tagline}`} />
+
+    {/* Twitter / X */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={SITE.twitter} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {/* Favicons */}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    {/* Feeds + sitemap discovery */}
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Insights`} href="/rss.xml" />
+
+    {/* JSON-LD graph — one connected entity model per page */}
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </head>
+
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,91 @@
+---
+/**
+ * CTABlock.astro — final teal call-to-action band.
+ *
+ * Full-width, teal #0C7B82, 96px top/bottom. Centred headline + lead
+ * + a single inverted button (white bg, teal text) that hovers toward
+ * the soft-teal tint used by the .ui-btn--ghost component.
+ */
+---
+
+<section class="cta" aria-labelledby="cta-title">
+  <div class="container">
+    <h2 id="cta-title" class="cta__title">Ready to be found everywhere?</h2>
+    <p class="cta__lead">Free audit. No commitment. Just clarity on where you stand.</p>
+
+    <a href="/contact/" class="cta__btn">
+      Get your free audit
+      <span aria-hidden="true" class="cta__btn-arrow">&#x2197;</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .cta {
+    background: #0C7B82;
+    padding-block: 96px;
+    text-align: center;
+    color: #FFFFFF;
+  }
+
+  .cta__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.6rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+
+  .cta__lead {
+    margin: 12px auto 0;
+    max-width: 36rem;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    text-wrap: pretty;
+  }
+
+  .cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 32px;
+    padding: 11px 24px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    color: #0C7B82;
+    background: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color    var(--duration-fast) var(--ease-out),
+      transform       var(--duration-fast) var(--ease-out);
+  }
+  .cta__btn:hover {
+    background: #E0F4F5;
+    border-color: #E0F4F5;
+  }
+  .cta__btn:active { transform: translateY(1px); }
+
+  .cta__btn-arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .cta__btn:hover .cta__btn-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  @media (max-width: 48rem) {
+    .cta { padding-block: 64px; }
+    .cta__btn { padding-block: 14px; }
+  }
+</style>

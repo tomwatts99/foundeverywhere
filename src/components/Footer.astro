@@ -1,0 +1,182 @@
+---
+/**
+ * Footer.astro — colophon + nav columns + legal row.
+ *
+ * Sits on dark surface (#0D1826) to bookend the page and signal the
+ * end of content. Includes site map columns, contact, and the legal /
+ * meta row (©, llms.txt link, RSS, sitemap).
+ */
+import { SITE, FOOTER_NAV } from '../lib/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="footer" role="contentinfo">
+  <div class="container footer__inner">
+
+    <div class="footer__brand">
+      <a href="/" class="footer__brand-link" aria-label={`${SITE.name} — home`}>
+        <span class="footer__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+        </span>
+        <span class="footer__wordmark">Found Everywhere</span>
+      </a>
+      <p class="footer__tagline">{SITE.tagline}</p>
+      <p class="footer__contact">
+        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+      </p>
+    </div>
+
+    <nav class="footer__nav" aria-label="Footer">
+      {FOOTER_NAV.map((col) => (
+        <div class="footer__col">
+          <h2 class="footer__col-title">{col.title}</h2>
+          <ul class="footer__col-list" role="list">
+            {col.items.map((item) => (
+              <li><a href={item.href} class="footer__link">{item.label}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  </div>
+
+  <div class="container footer__legal">
+    <p class="footer__copy">
+      © {year} {SITE.legalName}. Registered in England &amp; Wales.
+    </p>
+    <ul class="footer__meta" role="list">
+      <li><a href="/privacy" class="footer__link">Privacy</a></li>
+      <li><a href="/terms"   class="footer__link">Terms</a></li>
+      <li><a href="/llms.txt" class="footer__link mono">llms.txt</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-dark);
+    color: var(--color-dark-text);
+    padding-block: var(--space-10) var(--space-6);
+    border-top: 1px solid var(--color-dark-line);
+  }
+
+  .footer__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr);
+    gap: var(--space-9);
+    align-items: start;
+    padding-bottom: var(--space-9);
+    border-bottom: 1px solid var(--color-dark-line);
+  }
+
+  /* ---------- Brand block ---------- */
+  .footer__brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-display);
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-md);
+    color: var(--color-dark-text);
+    letter-spacing: var(--tracking-tight);
+  }
+  .footer__mark {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-md);
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+  .footer__tagline {
+    margin-top: var(--space-4);
+    max-width: 28ch;
+    color: var(--color-dark-muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+  }
+  .footer__contact {
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .footer__contact a {
+    color: var(--color-dark-text);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-underline-offset: 0.25em;
+  }
+
+  /* ---------- Nav columns ---------- */
+  .footer__nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-7);
+  }
+  .footer__col-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-dark-muted);
+    font-weight: var(--weight-medium);
+    margin-bottom: var(--space-4);
+  }
+  .footer__col-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .footer__col-list li + li { margin-top: 0; }
+
+  .footer__link {
+    color: var(--color-dark-text);
+    font-size: var(--text-sm);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .footer__link:hover { color: var(--color-accent); }
+  .footer__link.mono { font-family: var(--font-mono); }
+
+  /* ---------- Legal row ---------- */
+  .footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-top: var(--space-5);
+    font-size: var(--text-xs);
+    color: var(--color-dark-muted);
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-mono);
+  }
+  .footer__copy { margin: 0; }
+  .footer__meta {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: var(--space-5);
+  }
+  .footer__meta li + li { margin-top: 0; }
+
+  @media (max-width: 56rem) {
+    .footer__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+  }
+  @media (max-width: 36rem) {
+    .footer__nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-6);
+    }
+  }
+</style>

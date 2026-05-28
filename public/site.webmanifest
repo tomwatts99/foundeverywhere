@@ -1,0 +1,13 @@
+{
+  "name": "Found Everywhere",
+  "short_name": "Found Everywhere",
+  "description": "SEO and LLM visibility, built for the search era after search.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0C7B82",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180" }
+  ]
+}

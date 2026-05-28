@@ -1,0 +1,87 @@
+---
+/**
+ * FAQItem.astro — native <details>/<summary> accordion.
+ *
+ * Zero JavaScript. The chevron is a CSS pseudo-element drawn with two
+ * borders on a rotated square; it sits at 45° collapsed and rotates a
+ * further 180° (to 225°) when [open].
+ */
+export interface Props {
+  question: string;
+  answer: string;
+}
+
+const { question, answer } = Astro.props;
+---
+
+<details class="ui-faq">
+  <summary class="ui-faq__summary">
+    <span class="ui-faq__q">{question}</span>
+    <span class="ui-faq__chevron" aria-hidden="true"></span>
+  </summary>
+  <div class="ui-faq__answer">
+    <p>{answer}</p>
+  </div>
+</details>
+
+<style>
+  .ui-faq {
+    border-bottom: 1px solid #E4E8EF;
+  }
+  .ui-faq:first-of-type { border-top: 1px solid #E4E8EF; }
+
+  /* Strip the native triangle */
+  .ui-faq > summary { list-style: none; cursor: pointer; }
+  .ui-faq > summary::-webkit-details-marker { display: none; }
+  .ui-faq > summary::marker { content: ''; }
+
+  .ui-faq__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #0D1321;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .ui-faq__summary:hover { color: #0C7B82; }
+
+  .ui-faq__q { flex: 1; text-wrap: balance; }
+
+  /* ---------- Chevron — pure CSS ---------- */
+  .ui-faq__chevron {
+    flex-shrink: 0;
+    width: 9px;
+    height: 9px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    transform-origin: center;
+    transition: transform var(--duration-base) var(--ease-out);
+    color: #64748B;
+  }
+  .ui-faq__summary:hover .ui-faq__chevron { color: #0C7B82; }
+  .ui-faq[open] .ui-faq__chevron {
+    /* Brief: rotate 180° on open. 45 + 180 = 225. */
+    transform: translateY(2px) rotate(225deg);
+    color: #0C7B82;
+  }
+
+  /* ---------- Answer ---------- */
+  .ui-faq__answer {
+    padding: 0 0 24px;
+    max-width: 60ch;
+  }
+  .ui-faq__answer p {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #64748B;
+  }
+</style>

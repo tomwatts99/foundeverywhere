@@ -1,0 +1,41 @@
+---
+/**
+ * Badge.astro — small label pill. Teal or neutral.
+ *
+ * Brief: JetBrains Mono 11px, 3px 10px padding, 20px radius.
+ */
+export interface Props {
+  text: string;
+  variant?: 'teal' | 'neutral';
+}
+
+const { text, variant = 'teal' } = Astro.props;
+---
+
+<span class={`ui-badge ui-badge--${variant}`}>{text}</span>
+
+<style>
+  .ui-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  .ui-badge--teal {
+    background: #E0F4F5;
+    color: #085D63;
+    border-color: transparent;
+  }
+  .ui-badge--neutral {
+    background: #F7F9FC;
+    color: #64748B;
+    border-color: #E4E8EF;
+  }
+</style>

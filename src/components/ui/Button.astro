@@ -1,0 +1,73 @@
+---
+/**
+ * Button.astro — primary and ghost variants.
+ *
+ * Renders an anchor; if you ever need a real <button>, swap the tag.
+ * Brief sizing: Outfit 500 14px, 10px 22px padding, radius 10px.
+ */
+export interface Props {
+  href: string;
+  text: string;
+  variant?: 'primary' | 'ghost';
+  /** Hint to open in new tab. */
+  external?: boolean;
+}
+
+const { href, text, variant = 'primary', external = false } = Astro.props;
+
+const target = external ? '_blank' : undefined;
+const rel    = external ? 'noopener noreferrer' : undefined;
+---
+
+<a
+  href={href}
+  class={`ui-btn ui-btn--${variant}`}
+  target={target}
+  rel={rel}
+>{text}</a>
+
+<style>
+  .ui-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 10px 22px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color    var(--duration-fast) var(--ease-out),
+      color           var(--duration-fast) var(--ease-out),
+      transform       var(--duration-fast) var(--ease-out);
+    white-space: nowrap;
+  }
+  .ui-btn:active { transform: translateY(1px); }
+
+  /* ---------- Primary ---------- */
+  .ui-btn--primary {
+    background: #0C7B82;
+    color: #FFFFFF;
+    border-color: #0C7B82;
+  }
+  .ui-btn--primary:hover {
+    background: #0A6970;
+    border-color: #0A6970;
+  }
+
+  /* ---------- Ghost ---------- */
+  .ui-btn--ghost {
+    background: transparent;
+    color: #0C7B82;
+    border-color: #0C7B82;
+  }
+  .ui-btn--ghost:hover {
+    background: #E0F4F5;
+  }
+</style>

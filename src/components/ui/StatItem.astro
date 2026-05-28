@@ -1,0 +1,50 @@
+---
+/**
+ * StatItem.astro — big-number stat with caption.
+ *
+ * Brief:
+ *   value  Outfit 700 28px
+ *   label  Inter  400 12px
+ *   light=true → value white, label #64748B (for dark surfaces)
+ */
+export interface Props {
+  value: string;
+  label: string;
+  light?: boolean;
+}
+
+const { value, label, light = false } = Astro.props;
+---
+
+<div class={`ui-stat${light ? ' ui-stat--light' : ''}`}>
+  <div class="ui-stat__value">{value}</div>
+  <div class="ui-stat__label">{label}</div>
+</div>
+
+<style>
+  .ui-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ui-stat__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .ui-stat__label {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #64748B;
+  }
+
+  /* On dark surfaces */
+  .ui-stat--light .ui-stat__value { color: #FFFFFF; }
+  .ui-stat--light .ui-stat__label { color: #64748B; }
+</style>

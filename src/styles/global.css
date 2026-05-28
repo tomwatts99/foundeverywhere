@@ -1,0 +1,309 @@
+/* ============================================================
+   Found Everywhere — Global CSS
+   Order: reset → base → typography → layout primitives → utilities
+   ============================================================ */
+
+@import './tokens.css';
+
+/* ============================================================
+   1. RESET — modern, minimal
+   ============================================================ */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+#root, #__next, main { isolation: isolate; }
+
+/* ============================================================
+   2. BASE — typographic foundation
+   ============================================================ */
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  font-weight: var(--weight-regular);
+  font-feature-settings: 'ss01', 'cv11';     /* Inter stylistic */
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+/* Headings — display family */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--text-fluid-3xl); font-weight: var(--weight-bold); }
+h2 { font-size: var(--text-fluid-2xl); }
+h3 { font-size: var(--text-fluid-xl); }
+h4 { font-size: var(--text-lg); }
+h5 { font-size: var(--text-md); }
+h6 { font-size: var(--text-base); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+
+p {
+  line-height: var(--leading-relaxed);
+  text-wrap: pretty;
+}
+
+/* Links — inline body links pick up accent + underline */
+a:where(:not([class])) {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+a:where(:not([class])):hover { color: var(--color-accent-hover); }
+
+/* Code / mono */
+code, kbd, samp, pre {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  letter-spacing: var(--tracking-mono);
+}
+
+code:not(pre code) {
+  background: var(--color-surface);
+  padding: 0.1em 0.4em;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-line);
+}
+
+/* Lists — keep default flow, tighten spacing */
+ul, ol { padding-left: 1.25em; }
+li + li { margin-top: var(--space-2); }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  margin-block: var(--space-7);
+}
+
+/* Forms */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+/* ============================================================
+   3. LAYOUT PRIMITIVES
+   ============================================================ */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.container--narrow { max-width: var(--container-narrow); }
+.container--wide   { max-width: var(--container-wide); }
+
+.section {
+  padding-block: var(--section-y);
+}
+.section--tight {
+  padding-block: clamp(2.5rem, 2rem + 2vw, 4rem);
+}
+
+.section--surface { background: var(--color-surface); }
+.section--dark {
+  background: var(--color-dark);
+  color: var(--color-dark-text);
+}
+.section--dark :where(h1,h2,h3,h4,h5,h6) { color: var(--color-dark-text); }
+.section--dark :where(.muted, .eyebrow) { color: var(--color-dark-muted); }
+
+/* Stack — vertical rhythm helper */
+.stack > * + * { margin-top: var(--stack-gap, var(--space-4)); }
+.stack-sm { --stack-gap: var(--space-3); }
+.stack-md { --stack-gap: var(--space-5); }
+.stack-lg { --stack-gap: var(--space-7); }
+
+/* Cluster — horizontal wrap with gap */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+/* Grid helpers */
+.grid { display: grid; gap: var(--space-5); }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); }
+
+/* ============================================================
+   4. UTILITIES — small, named, non-overlapping
+   ============================================================ */
+
+/* Eyebrow / kicker — mono label above headings */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 1.5rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.muted { color: var(--color-muted); }
+.lead  { font-size: var(--text-md); line-height: var(--leading-relaxed); color: var(--color-muted); }
+
+.mono { font-family: var(--font-mono); letter-spacing: var(--tracking-mono); }
+
+/* Visually hidden but accessible */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-radius: var(--radius-sm);
+  transform: translateY(-200%);
+  transition: transform var(--duration-base) var(--ease-out);
+  z-index: var(--z-toast);
+}
+.skip-link:focus { transform: translateY(0); }
+
+/* ============================================================
+   5. BUTTONS — primary, secondary, ghost
+   ============================================================ */
+
+.btn {
+  --btn-bg: var(--color-accent);
+  --btn-fg: var(--color-accent-ink);
+  --btn-border: var(--color-accent);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-body);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-base);
+  line-height: 1;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+  text-decoration: none;
+}
+.btn:hover {
+  --btn-bg: var(--color-accent-hover);
+  --btn-border: var(--color-accent-hover);
+}
+.btn:active { transform: translateY(1px); }
+
+.btn--secondary {
+  --btn-bg: transparent;
+  --btn-fg: var(--color-text);
+  --btn-border: var(--color-line);
+}
+.btn--secondary:hover {
+  --btn-bg: var(--color-surface);
+  --btn-border: var(--color-text);
+}
+
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--color-text);
+  --btn-border: transparent;
+}
+.btn--ghost:hover { --btn-bg: var(--color-surface); }
+
+/* On dark sections */
+.section--dark .btn--secondary {
+  --btn-fg: var(--color-dark-text);
+  --btn-border: var(--color-dark-line);
+}
+.section--dark .btn--secondary:hover {
+  --btn-bg: var(--color-dark-line);
+}

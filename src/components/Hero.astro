@@ -1,0 +1,283 @@
+---
+/**
+ * Hero.astro — kinetic-type hero on a dark surface.
+ *
+ * Centred, full-width, dark `#0D1826` background.
+ * Headline cycles a single word through six platform names; the
+ * visible word is absolutely positioned over an invisible "ghost"
+ * locked to the longest word so layout never reflows mid-swap.
+ *
+ * Animation is wrapped in `@media (prefers-reduced-motion: no-preference)`.
+ * Under reduced motion (or no JS) the word stays as the safe fallback
+ * "everywhere" and never moves.
+ */
+
+const CYCLE_WORDS = ['Google', 'ChatGPT', 'Perplexity', 'Gemini', 'Copilot', 'Claude'] as const;
+const STRIP_PLATFORMS = ['Google', 'Bing', 'ChatGPT', 'Perplexity', 'Gemini', 'Copilot', 'Claude'] as const;
+// Reserve layout space for the longest cycling word.
+const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero__inner">
+
+    <p class="hero__eyebrow">SEO + LLM visibility</p>
+
+    <h1 id="hero-title" class="hero__title">
+      <span class="hero__line">Be found on</span>
+      <span class="hero__line hero__cycle" id="hero-cycle">
+        {/* Ghost reserves max width; aria-hidden so SR users hear only the visible word. */}
+        <span class="hero__cycle-ghost" aria-hidden="true">{LONGEST}</span>
+        <span class="hero__cycle-visible" aria-live="polite">everywhere</span>
+      </span>
+    </h1>
+
+    <p class="hero__lead">
+      We audit and optimise your website so it ranks in Google and gets
+      cited by ChatGPT, Claude, Perplexity, and Gemini &mdash; wherever
+      your customers are searching.
+    </p>
+
+    <div class="hero__cta">
+      <a href="/contact" class="hero__btn hero__btn--primary">
+        Get your free audit <span aria-hidden="true" class="hero__btn-arrow">&#x2197;</span>
+      </a>
+      <a href="/approach" class="hero__btn hero__btn--ghost">How it works</a>
+    </div>
+
+    <ul class="hero__strip" aria-label="Platforms we optimise for">
+      {STRIP_PLATFORMS.map((p) => <li>{p}</li>)}
+    </ul>
+  </div>
+</section>
+
+<script is:inline define:vars={{ words: CYCLE_WORDS }}>
+  /**
+   * Word-cycle controller. setInterval per the brief — every 3000ms it
+   * toggles a CSS class that runs a single keyframe; text is swapped
+   * at the mid-point when the word is invisible.
+   *
+   * Bails out entirely under prefers-reduced-motion — the initial
+   * "everywhere" fallback stays put.
+   */
+  (function () {
+    var cycle = document.getElementById('hero-cycle');
+    if (!cycle) return;
+    var visible = cycle.querySelector('.hero__cycle-visible');
+    if (!visible) return;
+
+    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mq.matches) return;
+
+    var i = 0;
+    visible.textContent = words[0];
+
+    setInterval(function () {
+      cycle.classList.add('is-swapping');
+      // Swap text at mid-animation, when opacity is 0.
+      setTimeout(function () {
+        i = (i + 1) % words.length;
+        visible.textContent = words[i];
+      }, 200);
+      setTimeout(function () {
+        cycle.classList.remove('is-swapping');
+      }, 420);
+    }, 3000);
+  })();
+</script>
+
+<style>
+  /* ============================================================
+     SHELL
+     ============================================================ */
+  .hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    padding-block: clamp(5rem, 4rem + 6vw, 9rem);
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero__inner {
+    display: block;
+    text-align: center;
+  }
+
+  /* ============================================================
+     EYEBROW
+     ============================================================ */
+  .hero__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 var(--space-6);
+  }
+
+  /* ============================================================
+     TITLE — two stacked lines
+     ============================================================ */
+  .hero__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 52px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .hero__line {
+    display: block;
+  }
+
+  /* ---------- Cycling word ---------- */
+  .hero__cycle {
+    position: relative;
+    color: #0C7B82;
+  }
+  .hero__cycle-ghost {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .hero__cycle-visible {
+    position: absolute;
+    inset: 0;
+    display: block;
+    text-align: center;
+    /* Inherits font-size, weight, line-height from .hero__title so
+       baseline aligns with the ghost. */
+  }
+
+  /* ============================================================
+     BODY COPY
+     ============================================================ */
+  .hero__lead {
+    margin: var(--space-6) auto 0;
+    max-width: 520px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     CTAs
+     ============================================================ */
+  .hero__cta {
+    margin-top: var(--space-7);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+  }
+  .hero__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 11px 24px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition:
+      background var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+  }
+  .hero__btn:active { transform: translateY(1px); }
+
+  .hero__btn--primary {
+    background: #0C7B82;
+    color: #FFFFFF;
+    border-color: #0C7B82;
+  }
+  .hero__btn--primary:hover {
+    background: #0A6970;
+    border-color: #0A6970;
+  }
+  .hero__btn-arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .hero__btn--primary:hover .hero__btn-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  .hero__btn--ghost {
+    background: transparent;
+    color: #94A3B8;
+    border-color: #2D3748;
+  }
+  .hero__btn--ghost:hover {
+    color: #FFFFFF;
+    border-color: #94A3B8;
+  }
+
+  /* ============================================================
+     PLATFORM STRIP
+     ============================================================ */
+  .hero__strip {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;       /* dots and words share a baseline */
+    column-gap: 0.4em;
+    row-gap: 0.25em;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.6;
+    color: #64748B;
+    letter-spacing: 0.06em;
+  }
+  .hero__strip li + li::before {
+    content: "·";
+    margin-right: 0.4em;
+    color: #64748B;
+  }
+
+  /* ============================================================
+     ANIMATION — gated on motion preference
+     ============================================================ */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes hero-word-swap {
+      0%   { opacity: 1; transform: translateY(0); }
+      45%  { opacity: 0; transform: translateY(-14px); }
+      55%  { opacity: 0; transform: translateY(14px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .hero__cycle.is-swapping .hero__cycle-visible {
+      animation: hero-word-swap 0.4s var(--ease-in-out) both;
+    }
+  }
+
+  /* ============================================================
+     MOBILE
+     ============================================================ */
+  @media (max-width: 48rem) {
+    .hero { padding-block: clamp(4rem, 3rem + 6vw, 6rem); }
+    .hero__title { font-size: 36px; }
+    .hero__lead { font-size: 16px; padding-inline: var(--space-2); }
+    .hero__cta {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+      max-width: 22rem;
+      margin-inline: auto;
+      gap: var(--space-3);
+    }
+    .hero__btn { justify-content: center; padding-block: 14px; }
+    .hero__strip { gap: 0.2em 0; font-size: 9px; }
+  }
+</style>

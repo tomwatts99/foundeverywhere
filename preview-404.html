@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Page not found | Found Everywhere</title>
+  <meta name="description" content="The page you were looking for doesn't exist." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0C7B82" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="src/styles/global.css" />
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" role="banner">
+    <div class="container nav__inner">
+      <a href="/" class="nav__brand" aria-label="Found Everywhere — home">
+        <span class="nav__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+        </span>
+        <span class="nav__wordmark">Found Everywhere</span>
+      </a>
+
+      <details class="nav__menu" id="nav-menu" open>
+        <summary class="nav__toggle" aria-label="Toggle navigation">
+          <span class="nav__toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="sr-only">Menu</span>
+        </summary>
+        <nav class="nav__panel" aria-label="Primary">
+          <ul class="nav__links" role="list">
+            <li><a href="/services" class="nav__link">Services</a></li>
+            <li><a href="/approach" class="nav__link">Approach</a></li>
+            <li><a href="/work"     class="nav__link">Case studies</a></li>
+            <li><a href="/insights" class="nav__link">Insights</a></li>
+            <li><a href="/about"    class="nav__link">About</a></li>
+          </ul>
+          <div class="nav__cta"><a href="/contact" class="btn">Book an audit</a></div>
+        </nav>
+      </details>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ 404 SECTION ============ -->
+    <section class="notfound" aria-labelledby="notfound-title">
+      <div class="notfound__inner">
+        <p class="notfound__label">Error 404</p>
+        <h1 id="notfound-title" class="notfound__title">
+          Not found everywhere &mdash; yet.
+        </h1>
+        <p class="notfound__body">
+          This page does not exist. But your business probably has the same
+          problem in Google and ChatGPT. We can fix that.
+        </p>
+        <a href="/contact/" class="ui-btn ui-btn--primary">Get your free audit &#x2197;</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="/" class="footer__brand-link" aria-label="Found Everywhere — home">
+          <span class="footer__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+          </span>
+          <span class="footer__wordmark">Found Everywhere</span>
+        </a>
+        <p class="footer__tagline">SEO and LLM visibility, built for the search era after search.</p>
+        <p class="footer__contact"><a href="mailto:hello@foundeverywhere.co.uk">hello@foundeverywhere.co.uk</a></p>
+      </div>
+
+      <nav class="footer__nav" aria-label="Footer">
+        <div class="footer__col">
+          <h2 class="footer__col-title">Services</h2>
+          <ul class="footer__col-list" role="list">
+            <li><a href="/services/seo"     class="footer__link">Technical SEO</a></li>
+            <li><a href="/services/llm"     class="footer__link">LLM visibility</a></li>
+            <li><a href="/services/content" class="footer__link">Content &amp; E-E-A-T</a></li>
+            <li><a href="/services/audit"   class="footer__link">Audits</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h2 class="footer__col-title">Agency</h2>
+          <ul class="footer__col-list" role="list">
+            <li><a href="/about"    class="footer__link">About</a></li>
+            <li><a href="/work"     class="footer__link">Case studies</a></li>
+            <li><a href="/insights" class="footer__link">Insights</a></li>
+            <li><a href="/contact"  class="footer__link">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h2 class="footer__col-title">Resources</h2>
+          <ul class="footer__col-list" role="list">
+            <li><a href="/llms.txt"          class="footer__link mono">llms.txt</a></li>
+            <li><a href="/sitemap-index.xml" class="footer__link">Sitemap</a></li>
+            <li><a href="/rss.xml"           class="footer__link">RSS</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="container footer__legal">
+      <p class="footer__copy">© 2026 Found Everywhere Ltd. Registered in England &amp; Wales.</p>
+      <ul class="footer__meta" role="list">
+        <li><a href="/privacy"  class="footer__link">Privacy</a></li>
+        <li><a href="/terms"    class="footer__link">Terms</a></li>
+        <li><a href="/llms.txt" class="footer__link mono">llms.txt</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <style>
+    /* ============ NAV (mirrors src/components/Nav.astro) ============ */
+    .nav { position: sticky; top: 0; z-index: var(--z-nav);
+      background: color-mix(in oklab, var(--color-bg) 88%, transparent);
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+      border-bottom: 1px solid var(--color-line); }
+    .nav__inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-5); min-height: 4.5rem; }
+    .nav__brand { display: inline-flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: var(--weight-semibold); font-size: var(--text-md); letter-spacing: var(--tracking-tight); color: var(--color-text); flex-shrink: 0; white-space: nowrap; }
+    .nav__mark { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--radius-md); background: var(--color-accent); color: var(--color-accent-ink); }
+    .nav__menu { position: relative; }
+    .nav__menu > summary { list-style: none; }
+    .nav__menu > summary::-webkit-details-marker { display: none; }
+    .nav__menu > summary::marker { content: ''; }
+    .nav__toggle { display: none; width: 2.5rem; height: 2.5rem; border: 1px solid var(--color-line); border-radius: var(--radius-md); align-items: center; justify-content: center; cursor: pointer; background: var(--color-bg); }
+    .nav__toggle-bars { display: inline-flex; flex-direction: column; gap: 4px; }
+    .nav__toggle-bars span { display: block; width: 1rem; height: 1.5px; background: var(--color-text); border-radius: 2px; transition: transform var(--duration-base) var(--ease-out), opacity var(--duration-fast) var(--ease-out); }
+    .nav__menu[open] .nav__toggle-bars span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+    .nav__menu[open] .nav__toggle-bars span:nth-child(2) { opacity: 0; }
+    .nav__menu[open] .nav__toggle-bars span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+    .nav__panel { display: flex; align-items: center; gap: var(--space-7); }
+    .nav__links { display: flex; align-items: center; gap: var(--space-5); padding: 0; margin: 0; list-style: none; }
+    .nav__links li + li { margin-top: 0; }
+    .nav__link { position: relative; display: inline-block; padding: var(--space-2) 0; font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text); transition: color var(--duration-fast) var(--ease-out); }
+    .nav__link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1.5px; background: var(--color-accent); transform: scaleX(0); transform-origin: left; transition: transform var(--duration-base) var(--ease-out); }
+    .nav__link:hover::after { transform: scaleX(1); }
+
+    @media (max-width: 48rem) {
+      .nav__toggle { display: inline-flex; }
+      .nav__panel { position: absolute; top: calc(100% + 1px); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: var(--space-5); padding: var(--space-6) var(--gutter); background: var(--color-bg); border-bottom: 1px solid var(--color-line); box-shadow: var(--shadow-lg); transform: translateY(-8px); opacity: 0; pointer-events: none; transition: transform var(--duration-base) var(--ease-out), opacity var(--duration-base) var(--ease-out); }
+      .nav__menu[open] .nav__panel { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      .nav__links { flex-direction: column; align-items: stretch; gap: 0; border-top: 1px solid var(--color-line); }
+      .nav__links li { border-bottom: 1px solid var(--color-line); }
+      .nav__link { display: block; padding: var(--space-4) 0; font-size: var(--text-md); }
+      .nav__link::after { display: none; }
+      .nav__cta .btn { width: 100%; }
+    }
+
+    /* ============ Button (mirrors src/components/ui/Button.astro) ============ */
+    .ui-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 10px 22px;
+      font-family: var(--font-display); font-weight: 500; font-size: 14px; line-height: 1;
+      border: 1px solid transparent; border-radius: 10px;
+      text-decoration: none; cursor: pointer;
+      transition:
+        background-color var(--duration-fast) var(--ease-out),
+        border-color    var(--duration-fast) var(--ease-out),
+        color           var(--duration-fast) var(--ease-out),
+        transform       var(--duration-fast) var(--ease-out);
+      white-space: nowrap;
+    }
+    .ui-btn:active { transform: translateY(1px); }
+    .ui-btn--primary { background: #0C7B82; color: #FFFFFF; border-color: #0C7B82; }
+    .ui-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
+
+    /* ============ 404 (mirrors src/pages/404.astro) ============ */
+    .notfound {
+      background: #0D1826;
+      color: #FFFFFF;
+      min-height: calc(100dvh - 4.5rem);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-block: var(--space-9);
+      padding-inline: var(--gutter);
+      text-align: center;
+    }
+    .notfound__inner { max-width: 36rem; }
+    .notfound__label {
+      margin: 0 0 24px;
+      font-family: var(--font-mono); font-size: 11px; line-height: 1;
+      color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .notfound__title {
+      margin: 0;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(30px, 1.6rem + 2.2vw, 42px);
+      line-height: 1.1; letter-spacing: -0.02em; color: #FFFFFF;
+      text-wrap: balance;
+    }
+    .notfound__body {
+      margin: 16px auto 32px; max-width: 440px;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 16px; line-height: 1.6; color: #94A3B8;
+      text-wrap: pretty;
+    }
+
+    /* ============ Footer (mirrors src/components/Footer.astro) ============ */
+    .footer { background: var(--color-dark); color: var(--color-dark-text); padding-block: var(--space-10) var(--space-6); border-top: 1px solid var(--color-dark-line); }
+    .footer__inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr); gap: var(--space-9); align-items: start; padding-bottom: var(--space-9); border-bottom: 1px solid var(--color-dark-line); }
+    .footer__brand-link { display: inline-flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: var(--weight-semibold); font-size: var(--text-md); color: var(--color-dark-text); letter-spacing: var(--tracking-tight); }
+    .footer__mark { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--radius-md); background: var(--color-accent); color: var(--color-accent-ink); }
+    .footer__tagline { margin-top: var(--space-4); max-width: 28ch; color: var(--color-dark-muted); font-size: var(--text-sm); line-height: var(--leading-relaxed); }
+    .footer__contact { margin-top: var(--space-4); font-family: var(--font-mono); font-size: var(--text-sm); }
+    .footer__contact a { color: var(--color-dark-text); text-decoration: underline; text-decoration-color: var(--color-accent); text-underline-offset: 0.25em; }
+    .footer__nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-7); }
+    .footer__col-title { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--color-dark-muted); font-weight: var(--weight-medium); margin-bottom: var(--space-4); }
+    .footer__col-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+    .footer__col-list li + li { margin-top: 0; }
+    .footer__link { color: var(--color-dark-text); font-size: var(--text-sm); transition: color var(--duration-fast) var(--ease-out); }
+    .footer__link:hover { color: var(--color-accent); }
+    .footer__link.mono { font-family: var(--font-mono); }
+    .footer__legal { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); padding-top: var(--space-5); font-size: var(--text-xs); color: var(--color-dark-muted); font-family: var(--font-mono); letter-spacing: var(--tracking-mono); }
+    .footer__copy { margin: 0; }
+    .footer__meta { list-style: none; padding: 0; margin: 0; display: flex; gap: var(--space-5); }
+    .footer__meta li + li { margin-top: 0; }
+    @media (max-width: 56rem) { .footer__inner { grid-template-columns: 1fr; gap: var(--space-8); } }
+    @media (max-width: 36rem) { .footer__nav { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); } }
+  </style>
+
+  <script>
+    (function () {
+      var menu = document.getElementById('nav-menu');
+      if (!menu) return;
+      var mq = window.matchMedia('(max-width: 48rem)');
+      function isMobile() { return mq.matches; }
+      function sync() { menu.open = !isMobile(); document.body.style.overflow = ''; }
+      sync();
+      mq.addEventListener('change', sync);
+      function close() { menu.open = false; document.body.style.overflow = ''; }
+      menu.addEventListener('toggle', function () {
+        if (menu.open && isMobile()) document.body.style.overflow = 'hidden';
+        else document.body.style.overflow = '';
+      });
+      document.addEventListener('click', function (e) {
+        if (!isMobile() || !menu.open) return;
+        if (!menu.contains(e.target)) close();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isMobile() && menu.open) close();
+      });
+      menu.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { if (isMobile()) close(); });
+      });
+    })();
+  </script>
+</body>
+</html>

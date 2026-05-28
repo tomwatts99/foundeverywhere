@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UI kit — Found Everywhere</title>
+  <meta name="theme-color" content="#0C7B82" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="src/styles/global.css" />
+
+  <style>
+    /* ---------- Playground frame only — not part of any component. ---------- */
+    body { background: var(--color-surface); }
+
+    .kit { padding-block: var(--space-9); }
+
+    .kit__head {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding-inline: var(--gutter);
+      margin-bottom: var(--space-7);
+    }
+    .kit__head h1 { font-size: var(--text-2xl); }
+    .kit__head p  { color: var(--color-muted); margin-top: var(--space-3); font-size: var(--text-md); }
+
+    .kit__section {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: var(--space-6);
+      padding-inline: var(--gutter);
+    }
+    .kit__section + .kit__section { padding-top: 0; }
+
+    .kit__title {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--color-muted);
+      margin-bottom: var(--space-4);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .kit__title::before {
+      content: ""; display: inline-block; width: 1.5rem; height: 1px; background: currentColor; opacity: 0.5;
+    }
+
+    .kit__board {
+      background: #FFFFFF;
+      border: 1px solid var(--color-line);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+    }
+    .kit__board--dark {
+      background: #0D1826;
+      border-color: #1F2A3A;
+    }
+
+    .kit__row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .kit__row + .kit__row { margin-top: var(--space-5); padding-top: var(--space-5); border-top: 1px dashed var(--color-line); }
+    .kit__board--dark .kit__row + .kit__row { border-top-color: #1F2A3A; }
+
+    .kit__label {
+      width: 7rem;
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+    }
+    .kit__board--dark .kit__label { color: #94A3B8; }
+
+    .kit__grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+      gap: var(--space-5);
+    }
+    .kit__faq-wrap {
+      max-width: 44rem;
+    }
+
+    /* ============================================================
+       Component mirrors — exact copies of each .astro file's <style>.
+       ============================================================ */
+
+    /* ---------- Button ---------- */
+    .ui-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 10px 22px;
+      font-family: var(--font-display); font-weight: 500; font-size: 14px; line-height: 1;
+      border: 1px solid transparent; border-radius: 10px;
+      text-decoration: none; cursor: pointer;
+      transition:
+        background-color var(--duration-fast) var(--ease-out),
+        border-color    var(--duration-fast) var(--ease-out),
+        color           var(--duration-fast) var(--ease-out),
+        transform       var(--duration-fast) var(--ease-out);
+      white-space: nowrap;
+    }
+    .ui-btn:active { transform: translateY(1px); }
+    .ui-btn--primary { background: #0C7B82; color: #FFFFFF; border-color: #0C7B82; }
+    .ui-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
+    .ui-btn--ghost   { background: transparent; color: #0C7B82; border-color: #0C7B82; }
+    .ui-btn--ghost:hover { background: #E0F4F5; }
+
+    /* ---------- Badge ---------- */
+    .ui-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      font-family: var(--font-mono); font-weight: 500;
+      font-size: 11px; line-height: 1.4; letter-spacing: 0.02em;
+      border-radius: 20px; border: 1px solid transparent;
+      white-space: nowrap; vertical-align: middle;
+    }
+    .ui-badge--teal    { background: #E0F4F5; color: #085D63; }
+    .ui-badge--neutral { background: #F7F9FC; color: #64748B; border-color: #E4E8EF; }
+
+    /* ---------- ServiceCard ---------- */
+    .ui-card {
+      --card-border: #E4E8EF;
+      display: flex; flex-direction: column; gap: 8px;
+      padding: 24px;
+      background: #FFFFFF;
+      border: 0.5px solid var(--card-border);
+      border-radius: 16px;
+      color: inherit; text-decoration: none;
+      transition:
+        transform   var(--duration-base) var(--ease-out),
+        border-color var(--duration-base) var(--ease-out),
+        box-shadow  var(--duration-base) var(--ease-out);
+      isolation: isolate;
+    }
+    .ui-card:hover {
+      transform: translateY(-3px);
+      --card-border: #0C7B82;
+      box-shadow: 0 12px 24px rgba(12, 123, 130, 0.08);
+    }
+    .ui-card:focus-visible {
+      --card-border: #0C7B82;
+      outline: 2px solid #0C7B82; outline-offset: 4px;
+    }
+    .ui-card__num {
+      font-family: var(--font-mono); font-weight: 500;
+      font-size: 10px; line-height: 1; color: #0C7B82;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .ui-card__title {
+      margin: 0; font-family: var(--font-display); font-weight: 600;
+      font-size: 16px; line-height: 1.3; letter-spacing: -0.01em; color: #0D1321;
+    }
+    .ui-card__desc {
+      margin: 0; font-family: var(--font-body); font-weight: 400;
+      font-size: 13px; line-height: 1.55; color: #64748B;
+    }
+    .ui-card__cta {
+      margin-top: auto; padding-top: 16px;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-display); font-weight: 500; font-size: 13px; color: #0C7B82;
+    }
+    .ui-card__arrow { transition: transform var(--duration-base) var(--ease-out); }
+    .ui-card:hover .ui-card__arrow { transform: translateX(3px); }
+
+    /* ---------- FAQItem ---------- */
+    .ui-faq { border-bottom: 1px solid #E4E8EF; }
+    .ui-faq:first-of-type { border-top: 1px solid #E4E8EF; }
+    .ui-faq > summary { list-style: none; cursor: pointer; }
+    .ui-faq > summary::-webkit-details-marker { display: none; }
+    .ui-faq > summary::marker { content: ''; }
+    .ui-faq__summary {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 20px 0;
+      font-family: var(--font-display); font-weight: 500;
+      font-size: 15px; line-height: 1.4; color: #0D1321;
+      transition: color var(--duration-fast) var(--ease-out);
+    }
+    .ui-faq__summary:hover { color: #0C7B82; }
+    .ui-faq__q { flex: 1; text-wrap: balance; }
+    .ui-faq__chevron {
+      flex-shrink: 0;
+      width: 9px; height: 9px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: translateY(-2px) rotate(45deg);
+      transform-origin: center;
+      transition: transform var(--duration-base) var(--ease-out);
+      color: #64748B;
+    }
+    .ui-faq__summary:hover .ui-faq__chevron { color: #0C7B82; }
+    .ui-faq[open] .ui-faq__chevron {
+      transform: translateY(2px) rotate(225deg); color: #0C7B82;
+    }
+    .ui-faq__answer { padding: 0 0 24px; max-width: 60ch; }
+    .ui-faq__answer p {
+      margin: 0;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 14px; line-height: 1.65; color: #64748B;
+    }
+
+    /* ---------- StatItem ---------- */
+    .ui-stat { display: flex; flex-direction: column; gap: 4px; }
+    .ui-stat__value {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 28px; line-height: 1.05; letter-spacing: -0.02em; color: #0D1321;
+    }
+    .ui-stat__label {
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 12px; line-height: 1.45; color: #64748B;
+    }
+    .ui-stat--light .ui-stat__value { color: #FFFFFF; }
+    .ui-stat--light .ui-stat__label { color: #64748B; }
+  </style>
+</head>
+<body>
+
+  <div class="kit">
+
+    <header class="kit__head">
+      <h1>UI kit</h1>
+      <p>The five reusable primitives — exact mirrors of <code>src/components/ui/*.astro</code>. Hover, focus, and click them to verify states.</p>
+    </header>
+
+    <!-- ============ Button ============ -->
+    <section class="kit__section">
+      <p class="kit__title">Button</p>
+      <div class="kit__board">
+        <div class="kit__row">
+          <span class="kit__label">primary</span>
+          <a href="#" class="ui-btn ui-btn--primary">Book an audit</a>
+          <a href="#" class="ui-btn ui-btn--primary">Get started</a>
+        </div>
+        <div class="kit__row">
+          <span class="kit__label">ghost</span>
+          <a href="#" class="ui-btn ui-btn--ghost">How it works</a>
+          <a href="#" class="ui-btn ui-btn--ghost">Read more</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Badge ============ -->
+    <section class="kit__section">
+      <p class="kit__title">Badge</p>
+      <div class="kit__board">
+        <div class="kit__row">
+          <span class="kit__label">teal</span>
+          <span class="ui-badge ui-badge--teal">NEW</span>
+          <span class="ui-badge ui-badge--teal">CASE STUDY</span>
+          <span class="ui-badge ui-badge--teal">SHIPPED</span>
+        </div>
+        <div class="kit__row">
+          <span class="kit__label">neutral</span>
+          <span class="ui-badge ui-badge--neutral">DRAFT</span>
+          <span class="ui-badge ui-badge--neutral">3 MIN READ</span>
+          <span class="ui-badge ui-badge--neutral">Q2 2026</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ServiceCard ============ -->
+    <section class="kit__section">
+      <p class="kit__title">ServiceCard</p>
+      <div class="kit__grid-3">
+        <a href="#" class="ui-card" aria-label="Technical SEO">
+          <span class="ui-card__num">01</span>
+          <h3 class="ui-card__title">Technical SEO</h3>
+          <p class="ui-card__desc">Site architecture, Core Web Vitals, indexation, schema, internal linking — the engineering layer Google still rewards.</p>
+          <span class="ui-card__cta" aria-hidden="true">
+            <span>Learn more</span>
+            <svg class="ui-card__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
+          </span>
+        </a>
+        <a href="#" class="ui-card" aria-label="LLM visibility">
+          <span class="ui-card__num">02</span>
+          <h3 class="ui-card__title">LLM visibility</h3>
+          <p class="ui-card__desc">Being cited and recommended inside ChatGPT, Claude, Perplexity, and the rest of the new answer surface.</p>
+          <span class="ui-card__cta" aria-hidden="true">
+            <span>Learn more</span>
+            <svg class="ui-card__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
+          </span>
+        </a>
+        <a href="#" class="ui-card" aria-label="Content and E-E-A-T">
+          <span class="ui-card__num">03</span>
+          <h3 class="ui-card__title">Content &amp; E-E-A-T</h3>
+          <p class="ui-card__desc">Editorial strategy that satisfies both human readers and the machine evaluators behind every modern ranking signal.</p>
+          <span class="ui-card__cta" aria-hidden="true">
+            <span>Learn more</span>
+            <svg class="ui-card__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ FAQItem ============ -->
+    <section class="kit__section">
+      <p class="kit__title">FAQItem</p>
+      <div class="kit__board">
+        <div class="kit__faq-wrap">
+          <details class="ui-faq">
+            <summary class="ui-faq__summary">
+              <span class="ui-faq__q">What is LLM visibility, exactly?</span>
+              <span class="ui-faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="ui-faq__answer">
+              <p>It's the practice of making sure your brand, product, and expertise are surfaced inside AI answer engines — ChatGPT, Claude, Perplexity, Gemini, Copilot. The work overlaps with SEO but isn't the same: citations, entity clarity, and factual coverage matter as much as keywords.</p>
+            </div>
+          </details>
+          <details class="ui-faq" open>
+            <summary class="ui-faq__summary">
+              <span class="ui-faq__q">Is this in addition to SEO or instead of it?</span>
+              <span class="ui-faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="ui-faq__answer">
+              <p>In addition. Classic search isn't going anywhere — but the new answer engines are taking a growing share of high-intent queries. We treat both as one system.</p>
+            </div>
+          </details>
+          <details class="ui-faq">
+            <summary class="ui-faq__summary">
+              <span class="ui-faq__q">How long does it take to see results?</span>
+              <span class="ui-faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="ui-faq__answer">
+              <p>Technical fixes show in Google within 2–6 weeks. LLM citations move faster on some indexes and slower on others — usually a 4–12 week horizon for clear lift.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ StatItem ============ -->
+    <section class="kit__section">
+      <p class="kit__title">StatItem</p>
+
+      <div class="kit__board">
+        <div class="kit__row">
+          <span class="kit__label">default</span>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-7);flex:1">
+            <div class="ui-stat"><div class="ui-stat__value">6</div><div class="ui-stat__label">Answer engines optimised for</div></div>
+            <div class="ui-stat"><div class="ui-stat__value">100</div><div class="ui-stat__label">Lighthouse target, every page</div></div>
+            <div class="ui-stat"><div class="ui-stat__value">0</div><div class="ui-stat__label">JS frameworks shipped to users</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kit__board kit__board--dark" style="margin-top:var(--space-5)">
+        <div class="kit__row">
+          <span class="kit__label">light</span>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-7);flex:1">
+            <div class="ui-stat ui-stat--light"><div class="ui-stat__value">6</div><div class="ui-stat__label">Answer engines optimised for</div></div>
+            <div class="ui-stat ui-stat--light"><div class="ui-stat__value">100</div><div class="ui-stat__label">Lighthouse target, every page</div></div>
+            <div class="ui-stat ui-stat--light"><div class="ui-stat__value">0</div><div class="ui-stat__label">JS frameworks shipped to users</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

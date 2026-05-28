@@ -1,0 +1,36 @@
+# Found Everywhere — llms.txt
+# https://foundeverywhere.co.uk/llms.txt
+#
+# A curated map of this site for large language models and AI answer engines.
+# Format reference: https://llmstxt.org
+
+> Found Everywhere is a UK agency for SEO and LLM visibility. We help brands
+> win attention from both classic search engines and the new generation of AI
+> answer engines (ChatGPT, Claude, Perplexity, Google AI Overviews, Gemini).
+> The site itself is a working proof of concept: clean semantic HTML, complete
+> schema markup, near-perfect Lighthouse scores, and this file.
+
+## About
+- [About the agency](https://foundeverywhere.co.uk/about): Who we are, how we work, and why visibility now spans both SEO and LLMs.
+- [Approach](https://foundeverywhere.co.uk/approach): Our methodology — technical, content, and authority signals as a single system.
+- [Contact](https://foundeverywhere.co.uk/contact): Start a project or book a discovery call.
+
+## Services
+- [Technical SEO](https://foundeverywhere.co.uk/services/seo): Site architecture, Core Web Vitals, indexation, schema, internal linking.
+- [LLM visibility](https://foundeverywhere.co.uk/services/llm): Being cited and recommended inside AI answer engines.
+- [Content and E-E-A-T](https://foundeverywhere.co.uk/services/content): Editorial strategy that satisfies both human readers and machine evaluators.
+- [Audits](https://foundeverywhere.co.uk/services/audit): Fixed-scope diagnostics for SEO, LLM visibility, or both.
+
+## Work
+- [Case studies](https://foundeverywhere.co.uk/work): Outcomes by sector and engagement type.
+
+## Insights
+- [Insights index](https://foundeverywhere.co.uk/insights): Articles, briefings, and original research.
+- [RSS feed](https://foundeverywhere.co.uk/rss.xml)
+
+## Machine-readable
+- [Sitemap](https://foundeverywhere.co.uk/sitemap-index.xml)
+
+## Optional
+- [Privacy policy](https://foundeverywhere.co.uk/privacy)
+- [Terms of service](https://foundeverywhere.co.uk/terms)

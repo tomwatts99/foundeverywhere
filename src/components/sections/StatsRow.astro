@@ -1,0 +1,136 @@
+---
+/**
+ * StatsRow.astro — three-up animated stats band.
+ *
+ * Surface #F7F9FC, 48px top/bottom. Numbers count up from 0 to their
+ * target the first time the section enters the viewport, using an
+ * ease-out cubic over 1200ms. The "2 weeks" stat counts only the
+ * digit and the " weeks" suffix is appended once the count completes.
+ *
+ * Reduced motion: no animation; the final values render immediately.
+ */
+const STATS = [
+  { value: 98, suffix: '',        label: 'Our own PageSpeed score' },
+  { value: 2,  suffix: ' weeks',  label: 'Average audit turnaround' },
+  { value: 5,  suffix: '',        label: 'AI systems we optimise for' },
+] as const;
+---
+
+<section class="stats" aria-label="By the numbers">
+  <div class="container">
+    <div class="stats__row" id="stats-row">
+      {STATS.map((stat) => (
+        <div class="stat">
+          <div
+            class="stat__value"
+            data-target={stat.value}
+            data-suffix={stat.suffix}
+          >0</div>
+          <div class="stat__label">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  /**
+   * Count-up controller. Plays once when the row first intersects the
+   * viewport. Each cell carries `data-target` (final integer) and
+   * optionally `data-suffix` (appended after the count finishes).
+   */
+  (function () {
+    var row = document.getElementById('stats-row');
+    if (!row) return;
+    var cells = row.querySelectorAll('.stat__value');
+    if (!cells.length) return;
+
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Reduced motion: write final values now and bail.
+    if (reduced) {
+      cells.forEach(function (cell) {
+        var target = parseInt(cell.getAttribute('data-target') || '0', 10);
+        var suffix = cell.getAttribute('data-suffix') || '';
+        cell.textContent = target + suffix;
+      });
+      return;
+    }
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function countUp(cell) {
+      var target = parseInt(cell.getAttribute('data-target') || '0', 10);
+      var suffix = cell.getAttribute('data-suffix') || '';
+      var duration = 1200;
+      var start = null;
+
+      function frame(now) {
+        if (start === null) start = now;
+        var elapsed = now - start;
+        var t = Math.min(1, elapsed / duration);
+        var value = Math.round(target * easeOutCubic(t));
+        // During the animation, show only the integer; append the suffix
+        // once we hit the final value.
+        cell.textContent = (t < 1) ? String(value) : (target + suffix);
+        if (t < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    // Fallback for very old browsers — run immediately.
+    if (typeof IntersectionObserver === 'undefined') {
+      cells.forEach(countUp);
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          cells.forEach(countUp);
+          io.disconnect();
+        }
+      });
+    }, { threshold: 0.25 });
+    io.observe(row);
+  })();
+</script>
+
+<style>
+  .stats {
+    background: #F7F9FC;
+    padding-block: 48px;
+  }
+  .stats__row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+    text-align: center;
+    align-items: start;
+  }
+
+  .stat__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    /* Reserve digit-width slot so the count doesn't reflow neighbours. */
+    font-variant-numeric: tabular-nums;
+  }
+  .stat__label {
+    margin-top: 6px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #64748B;
+  }
+
+  @media (max-width: 48rem) {
+    .stats { padding-block: 40px; }
+    .stats__row { grid-template-columns: 1fr; gap: 24px; }
+    .stat__value { font-size: 36px; }
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+/**
+ * FAQSection.astro — homepage FAQ block.
+ *
+ * White surface, 96px top/bottom. Two-column CSS grid on desktop,
+ * single column on mobile (gap 12px). Each row uses the FAQItem
+ * primitive, which is a native <details> — no JavaScript.
+ *
+ * The matching FAQPage JSON-LD is *not* emitted here. It's built
+ * from the same `HOME_FAQS` array at the page level and passed via
+ * the `schemaExtras` prop on Page.astro, so it ends up inside the
+ * single @graph in <head> rather than as a duplicate script tag.
+ */
+import FAQItem from '../ui/FAQItem.astro';
+import { HOME_FAQS } from '../../lib/faqs';
+---
+
+<section class="faqs" aria-labelledby="faqs-title">
+  <div class="container">
+
+    <header class="faqs__head">
+      <p class="faqs__eyebrow">Common questions</p>
+      <h2 id="faqs-title" class="faqs__title">
+        What people ask before they get in touch
+      </h2>
+    </header>
+
+    <div class="faqs__grid">
+      {HOME_FAQS.map((faq) => (
+        <FAQItem question={faq.question} answer={faq.answer} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faqs {
+    background: #FFFFFF;
+    padding-block: 96px;
+  }
+
+  /* ---------- Header ---------- */
+  .faqs__head {
+    text-align: center;
+    max-width: 36rem;
+    margin: 0 auto 56px;
+  }
+  .faqs__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 16px;
+  }
+  .faqs__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 40px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  /* ============================================================
+     GRID — 2 columns on desktop, 1 on mobile.
+     align-items: start so an open row doesn't stretch its sibling.
+     ============================================================ */
+  .faqs__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    column-gap: 40px;
+    row-gap: 12px;
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+
+  /* FAQItem's scoped style gives a top border only to the first
+     :first-of-type detail. In a two-column grid that leaves the
+     second column's first item open at the top — add a hairline
+     to it via :global() so the visual matches the first column. */
+  @media (min-width: 48rem) {
+    .faqs__grid > :global(details.ui-faq:nth-child(2)) {
+      border-top: 1px solid #E4E8EF;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .faqs { padding-block: 64px; }
+    .faqs__head { margin-bottom: 40px; }
+    .faqs__grid {
+      grid-template-columns: 1fr;
+      row-gap: 0;
+    }
+  }
+</style>

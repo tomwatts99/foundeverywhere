@@ -1,0 +1,152 @@
+---
+/**
+ * HowItWorks.astro — four-step process row.
+ *
+ * Surface #F7F9FC, 96px top/bottom. On desktop: 4-column grid with
+ * thin connector lines bridging the gaps, aligned with the step
+ * number. On mobile: single column, connectors removed.
+ */
+const STEPS = [
+  { num: '01', title: 'Audit',    desc: 'We crawl your site and score every element against 40+ criteria.' },
+  { num: '02', title: 'Fix',      desc: 'We resolve every issue with a prioritised action plan.' },
+  { num: '03', title: 'Optimise', desc: 'We implement LLM signals, schema, and content for AI visibility.' },
+  { num: '04', title: 'Monitor',  desc: 'Monthly checks and reporting so gains compound over time.' },
+] as const;
+---
+
+<section class="how" aria-labelledby="how-title">
+  <div class="container">
+
+    <header class="how__head">
+      <p class="how__eyebrow">The process</p>
+      <h2 id="how-title" class="how__title">From invisible to everywhere</h2>
+    </header>
+
+    <ol class="how__steps" role="list">
+      {STEPS.map((step) => (
+        <li class="how__step">
+          <span class="how__num">{step.num}</span>
+          <h3 class="how__step-title">{step.title}</h3>
+          <p class="how__step-desc">{step.desc}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* ============================================================
+     SHELL
+     ============================================================ */
+  .how {
+    background: #F7F9FC;
+    padding-block: 96px;
+  }
+
+  /* ---------- Header ---------- */
+  .how__head {
+    text-align: center;
+    max-width: 36rem;
+    margin: 0 auto 64px;
+  }
+  .how__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 16px;
+  }
+  .how__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 40px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  /* ============================================================
+     STEP ROW
+     The connector lives as a pseudo-element on every step except
+     the last; its width matches the grid gap so it exactly bridges
+     two columns at the height of the number.
+     ============================================================ */
+  .how__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+  .how__step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .how__step + .how__step::before { content: none; }
+  .how__step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 5px;                  /* aligns with vertical midpoint of the 11px number */
+    left: calc(100% + 4px);    /* sits inside the 40px column gap */
+    width: 32px;
+    height: 1px;
+    background: #E4E8EF;
+  }
+
+  /* ---------- Step contents ---------- */
+  .how__num {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    letter-spacing: 0.08em;
+  }
+  .how__step-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .how__step-desc {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 64rem) {
+    /* 2 × 2 on tablets — connector only between columns 1↔2 and 3↔4 */
+    .how__steps {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+    .how__step:nth-child(2n)::after { display: none; }
+  }
+
+  @media (max-width: 48rem) {
+    .how { padding-block: 64px; }
+    .how__head { margin-bottom: 40px; }
+    .how__steps {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .how__step:not(:last-child)::after { display: none; }
+  }
+</style>

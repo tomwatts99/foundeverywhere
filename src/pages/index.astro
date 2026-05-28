@@ -1,0 +1,36 @@
+---
+/**
+ * Home page — composes the full section stack inside Page.
+ *
+ * Schema flow: the FAQPage entity is built from the same HOME_FAQS
+ * source the section renders, then handed to Page → Base via
+ * `schemaExtras` so it lands in the single <head> @graph alongside
+ * Organization, WebSite, and WebPage.
+ */
+import Page from '../layouts/Page.astro';
+import Hero from '../components/Hero.astro';
+import StatsRow from '../components/sections/StatsRow.astro';
+import ServicesGrid from '../components/sections/ServicesGrid.astro';
+import HowItWorks from '../components/sections/HowItWorks.astro';
+import FAQSection from '../components/sections/FAQSection.astro';
+import CTABlock from '../components/sections/CTABlock.astro';
+import { HOME_FAQS } from '../lib/faqs';
+import { faqPageSchema } from '../lib/schema';
+
+const schemaExtras = [faqPageSchema(HOME_FAQS)];
+---
+
+<Page
+  title="Found Everywhere | SEO & LLM Visibility Agency UK"
+  description="We audit and optimise websites to rank in Google and get cited by ChatGPT, Perplexity, and Gemini. Technical SEO and AI search visibility for UK businesses."
+  path="/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+  <Hero />
+  <StatsRow />
+  <ServicesGrid />
+  <HowItWorks />
+  <FAQSection />
+  <CTABlock />
+</Page>

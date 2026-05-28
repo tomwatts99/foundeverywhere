@@ -1,0 +1,131 @@
+---
+/**
+ * ServiceCard.astro — clickable card for service tiles.
+ *
+ * Whole card is the link (no nested interactives). Lifts on hover and
+ * the border tints teal — pure CSS transition.
+ *
+ * Brief sizing:
+ *   number    JetBrains Mono 10px #0C7B82 uppercase
+ *   title     Outfit 600 16px #0D1321
+ *   desc      Inter   13px #64748B
+ *   card      bg #fff, 0.5px border #E4E8EF, radius 16px, padding 24px
+ */
+export interface Props {
+  number: string;       // e.g. "01"
+  title: string;
+  description: string;
+  href: string;
+}
+
+const { number, title, description, href } = Astro.props;
+---
+
+<a href={href} class="ui-card" aria-label={title}>
+  {Astro.slots.has('icon') && (
+    <span class="ui-card__icon" aria-hidden="true"><slot name="icon" /></span>
+  )}
+  <span class="ui-card__num">{number}</span>
+  <h3 class="ui-card__title">{title}</h3>
+  <p class="ui-card__desc">{description}</p>
+
+  <span class="ui-card__cta" aria-hidden="true">
+    <span>Learn more</span>
+    <svg class="ui-card__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 8h10" />
+      <path d="m9 4 4 4-4 4" />
+    </svg>
+  </span>
+</a>
+
+<style>
+  .ui-card {
+    --card-border: #E4E8EF;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px;
+    background: #FFFFFF;
+    border: 0.5px solid var(--card-border);
+    border-radius: 16px;
+    color: inherit;
+    text-decoration: none;
+    transition:
+      transform   var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out),
+      box-shadow  var(--duration-base) var(--ease-out);
+    isolation: isolate;
+  }
+  .ui-card:hover {
+    transform: translateY(-3px);
+    --card-border: #0C7B82;
+    box-shadow: 0 12px 24px rgba(12, 123, 130, 0.08);
+  }
+  .ui-card:focus-visible {
+    --card-border: #0C7B82;
+    outline: 2px solid #0C7B82;
+    outline-offset: 4px;
+  }
+
+  .ui-card__num {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* Optional 40×40 teal-tinted icon square, sits above the number. */
+  .ui-card__icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 8px;
+    background: #E0F4F5;
+    border-radius: 10px;
+    color: #0C7B82;
+  }
+  .ui-card__icon :global(svg) {
+    width: 22px;
+    height: 22px;
+    display: block;
+  }
+  .ui-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .ui-card__desc {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #64748B;
+  }
+
+  .ui-card__cta {
+    margin-top: auto;
+    padding-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 13px;
+    color: #0C7B82;
+  }
+  .ui-card__arrow {
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .ui-card:hover .ui-card__arrow {
+    transform: translateX(3px);
+  }
+</style>

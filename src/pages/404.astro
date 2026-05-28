@@ -1,0 +1,83 @@
+---
+/**
+ * 404.astro — not-found page.
+ *
+ * Full dark section (#0D1826), centred copy, single CTA back to the
+ * audit funnel. Renders through the standard Page layout so users
+ * still get the nav and footer, but the page itself is marked
+ * `noindex` and uses `bleed` so the section owns its top padding.
+ */
+import Page from '../layouts/Page.astro';
+import Button from '../components/ui/Button.astro';
+---
+
+<Page
+  title="Page not found | Found Everywhere"
+  description="The page you were looking for doesn't exist."
+  noindex
+  bleed
+>
+  <section class="notfound" aria-labelledby="notfound-title">
+    <div class="notfound__inner">
+      <p class="notfound__label">Error 404</p>
+      <h1 id="notfound-title" class="notfound__title">
+        Not found everywhere &mdash; yet.
+      </h1>
+      <p class="notfound__body">
+        This page does not exist. But your business probably has the same
+        problem in Google and ChatGPT. We can fix that.
+      </p>
+      <Button href="/contact/" text="Get your free audit ↗" variant="primary" />
+    </div>
+  </section>
+</Page>
+
+<style>
+  /* Fill the viewport below the sticky nav (4.5rem). The footer
+     follows naturally and is reachable by scroll. */
+  .notfound {
+    background: #0D1826;
+    color: #FFFFFF;
+    min-height: calc(100dvh - 4.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: var(--space-9);
+    padding-inline: var(--gutter);
+    text-align: center;
+  }
+
+  .notfound__inner { max-width: 36rem; }
+
+  .notfound__label {
+    margin: 0 0 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .notfound__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(30px, 1.6rem + 2.2vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+
+  .notfound__body {
+    margin: 16px auto 32px;
+    max-width: 440px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+</style>

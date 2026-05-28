@@ -1,0 +1,22 @@
+# https://foundeverywhere.co.uk/robots.txt
+
+User-agent: *
+Allow: /
+
+# AI crawlers — explicit allow. The site is meant to be read and cited.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://foundeverywhere.co.uk/sitemap-index.xml
