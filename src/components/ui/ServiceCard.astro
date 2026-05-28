@@ -128,4 +128,13 @@ const { number, title, description, href } = Astro.props;
   .ui-card:hover .ui-card__arrow {
     transform: translateX(3px);
   }
+
+  /* Mobile: lift cards off the background with a firmer border and a
+     very subtle shadow. Desktop styling is unchanged. */
+  @media (max-width: 768px) {
+    .ui-card {
+      border: 1px solid #D4DCE8;
+      box-shadow: 0 2px 8px rgba(13, 19, 33, 0.06);
+    }
+  }
 </style>

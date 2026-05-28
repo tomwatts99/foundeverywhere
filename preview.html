@@ -59,7 +59,7 @@
               <li><a href="/services/seo-audit/"      class="nav__dropdown-link">SEO audit</a></li>
               <li><a href="/services/llm-visibility/" class="nav__dropdown-link">LLM visibility</a></li>
               <li><a href="/services/technical-seo/"  class="nav__dropdown-link">Technical SEO</a></li>
-              <li><a href="/services/retainer/"       class="nav__dropdown-link">Visibility that compounds</a></li>
+              <li><a href="/services/visibility-that-compounds/"       class="nav__dropdown-link">Visibility that compounds</a></li>
               <li><a href="/services/local-seo/"      class="nav__dropdown-link">Local SEO and Google Business Profile</a></li>
             </ul>
             </li>
@@ -82,13 +82,24 @@
 
         <p class="hero__eyebrow">SEO + LLM visibility</p>
 
-        <h1 id="hero-title" class="hero__title">
-          <span class="hero__line">Be found on</span>
-          <span class="hero__line hero__cycle" id="hero-cycle">
-            <span class="hero__cycle-ghost" aria-hidden="true">Perplexity</span>
-            <span class="hero__cycle-visible" aria-live="polite">everywhere</span>
-          </span>
-        </h1>
+        <h1 id="hero-title" class="hero__title">Be found on</h1>
+
+        <!-- Rotating platform logo, directly under the headline. -->
+        <div class="hero__platforms">
+          <div class="hero__platforms-cycle" id="hero-platforms-cycle">
+            <img class="hero__platforms-logo" src="public/images/brands/chatgpt.svg" alt="ChatGPT" width="160" height="40" />
+          </div>
+
+          <!-- Reduced-motion fallback: static row of all six logos. -->
+          <ul class="hero__platforms-static" role="list" aria-label="Platforms we optimise for">
+            <li><img src="public/images/brands/chatgpt.svg"    alt="ChatGPT"    height="40" /></li>
+            <li><img src="public/images/brands/google.svg"     alt="Google"     height="40" /></li>
+            <li><img src="public/images/brands/copilot.svg"    alt="Copilot"    height="40" /></li>
+            <li><img src="public/images/brands/perplexity.svg" alt="Perplexity" height="40" /></li>
+            <li><img src="public/images/brands/claude.svg"     alt="Claude"     height="40" /></li>
+            <li><img src="public/images/brands/gemini.svg"     alt="Gemini"     height="40" /></li>
+          </ul>
+        </div>
 
         <p class="hero__lead">
           We audit and optimise your website so it ranks in Google and gets
@@ -103,15 +114,9 @@
           <a href="/approach" class="hero__btn hero__btn--ghost">How it works</a>
         </div>
 
-        <ul class="hero__strip" aria-label="Platforms we optimise for">
-          <li>Google</li>
-          <li>Bing</li>
-          <li>ChatGPT</li>
-          <li>Perplexity</li>
-          <li>Gemini</li>
-          <li>Copilot</li>
-          <li>Claude</li>
-        </ul>
+        <p class="hero__platforms-strip" aria-label="Platforms we optimise for">
+          ChatGPT · Google · Copilot · Perplexity · Claude · Gemini
+        </p>
       </div>
     </section>
 
@@ -121,15 +126,15 @@
         <div class="stats__row" id="stats-row">
           <div class="stat">
             <div class="stat__value" data-target="98" data-suffix="">0</div>
-            <div class="stat__label">Our own PageSpeed score</div>
+            <div class="stat__label">Our PageSpeed score</div>
           </div>
           <div class="stat">
-            <div class="stat__value" data-target="2" data-suffix=" weeks">0</div>
-            <div class="stat__label">Average audit turnaround</div>
+            <div class="stat__value" data-target="100" data-suffix="">0</div>
+            <div class="stat__label">Our SEO score</div>
           </div>
           <div class="stat">
-            <div class="stat__value" data-target="5" data-suffix="">0</div>
-            <div class="stat__label">AI systems we optimise for</div>
+            <div class="stat__value" data-target="100" data-suffix="">0</div>
+            <div class="stat__label">Our best practices score</div>
           </div>
         </div>
       </div>
@@ -185,16 +190,49 @@
             </span>
           </a>
 
-          <a href="/services/retainer/" class="ui-card" aria-label="Visibility that compounds">
+          <a href="/services/technical-seo/" class="ui-card" aria-label="Technical SEO">
+            <span class="ui-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3 21 8 12 13 3 8 12 3Z" />
+                <polyline points="3,12 12,17 21,12" />
+                <polyline points="3,16 12,21 21,16" />
+              </svg>
+            </span>
+            <span class="ui-card__num">03</span>
+            <h3 class="ui-card__title">Technical SEO</h3>
+            <p class="ui-card__desc">Indexing, site structure, Core Web Vitals, and internal linking — the engineering foundations everything else sits on.</p>
+            <span class="ui-card__cta" aria-hidden="true">
+              <span>Learn more</span>
+              <svg class="ui-card__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
+            </span>
+          </a>
+
+          <a href="/services/visibility-that-compounds/" class="ui-card" aria-label="Visibility that compounds">
             <span class="ui-card__icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="3,19 9,14 14,11 20,5" />
                 <circle cx="20" cy="5" r="1.5" />
               </svg>
             </span>
-            <span class="ui-card__num">03</span>
+            <span class="ui-card__num">04</span>
             <h3 class="ui-card__title">Visibility that compounds</h3>
             <p class="ui-card__desc">Monthly monitoring, content updates, and AI search tracking so your visibility compounds over time.</p>
+            <span class="ui-card__cta" aria-hidden="true">
+              <span>Learn more</span>
+              <svg class="ui-card__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
+            </span>
+          </a>
+
+          <a href="/services/local-seo/" class="ui-card" aria-label="Local SEO and Google Business Profile">
+            <span class="ui-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21s-6-5.3-6-10a6 6 0 0 1 12 0c0 4.7-6 10-6 10Z" />
+                <circle cx="12" cy="11" r="2.5" />
+              </svg>
+            </span>
+            <span class="ui-card__num">05</span>
+            <h3 class="ui-card__title">Local SEO and Google Business Profile</h3>
+            <p class="ui-card__desc">Google Business Profile, local citations, and location schema so you show up when nearby customers are searching.</p>
             <span class="ui-card__cta" aria-hidden="true">
               <span>Learn more</span>
               <svg class="ui-card__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
@@ -373,13 +411,7 @@
     <div class="container footer__inner">
       <div class="footer__brand">
         <a href="/" class="footer__brand-link" aria-label="Found Everywhere, home">
-          <span class="footer__mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-3.5-3.5" />
-            </svg>
-          </span>
-          <span class="footer__wordmark">Found Everywhere</span>
+          <img class="footer__logo" src="public/images/logo-white.svg" alt="Found Everywhere" height="48" />
         </a>
         <p class="footer__tagline">SEO and LLM visibility, built for the search era after search.</p>
         <p class="footer__contact"><a href="mailto:hello@foundeverywhere.co.uk">hello@foundeverywhere.co.uk</a></p>
@@ -550,8 +582,8 @@
     /* ---------- FOOTER (mirrors Footer.astro <style>) ---------- */
     .footer { background: var(--color-dark); color: var(--color-dark-text); padding-block: var(--space-10) var(--space-6); border-top: 1px solid var(--color-dark-line); }
     .footer__inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr); gap: var(--space-9); align-items: start; padding-bottom: var(--space-9); border-bottom: 1px solid var(--color-dark-line); }
-    .footer__brand-link { display: inline-flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: var(--weight-semibold); font-size: var(--text-md); color: var(--color-dark-text); letter-spacing: var(--tracking-tight); }
-    .footer__mark { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--radius-md); background: var(--color-accent); color: var(--color-accent-ink); }
+    .footer__brand-link { display: inline-flex; align-items: center; line-height: 0; }
+    .footer__logo { display: block; height: 48px; width: auto; }
     .footer__tagline { margin-top: var(--space-4); max-width: 28ch; color: var(--color-dark-muted); font-size: var(--text-sm); line-height: var(--leading-relaxed); }
     .footer__contact { margin-top: var(--space-4); font-family: var(--font-mono); font-size: var(--text-sm); }
     .footer__contact a { color: var(--color-dark-text); text-decoration: underline; text-decoration-color: var(--color-accent); text-underline-offset: 0.25em; }
@@ -593,14 +625,9 @@
       letter-spacing: -0.02em; color: #FFFFFF; margin: 0;
       text-wrap: balance;
     }
-    .hero__line { display: block; }
-
-    .hero__cycle { position: relative; color: #0C7B82; }
-    .hero__cycle-ghost { visibility: hidden; pointer-events: none; }
-    .hero__cycle-visible { position: absolute; inset: 0; display: block; text-align: center; }
 
     .hero__lead {
-      margin: var(--space-6) auto 0; max-width: 520px;
+      margin: 0 auto; max-width: 520px;
       font-family: var(--font-body); font-weight: 400;
       font-size: 17px; line-height: 1.65; color: #94A3B8;
       text-wrap: pretty;
@@ -630,27 +657,44 @@
     .hero__btn--ghost { background: transparent; color: #94A3B8; border-color: #2D3748; }
     .hero__btn--ghost:hover { color: #FFFFFF; border-color: #94A3B8; }
 
-    .hero__strip {
-      list-style: none; margin: 32px 0 0; padding: 0;
-      display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline;
-      column-gap: 0.4em; row-gap: 0.25em;
-      font-family: var(--font-mono); font-size: 10px; line-height: 1.6;
-      color: #64748B; letter-spacing: 0.06em;
+    .hero__platforms {
+      /* 16px below the headline, 32px above the lead. */
+      margin: 16px auto 32px;
+      display: flex; flex-direction: column; align-items: center;
     }
-    .hero__strip li + li::before {
-      content: "·"; margin-right: 0.4em; color: #64748B;
+    .hero__platforms-cycle {
+      display: flex; justify-content: center; align-items: center;
+      /* Reserve room so swaps never reflow the layout. */
+      min-height: 40px;
     }
-
-    @media (prefers-reduced-motion: no-preference) {
-      @keyframes hero-word-swap {
-        0%   { opacity: 1; transform: translateY(0); }
-        45%  { opacity: 0; transform: translateY(-14px); }
-        55%  { opacity: 0; transform: translateY(14px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-      .hero__cycle.is-swapping .hero__cycle-visible {
-        animation: hero-word-swap 0.4s var(--ease-in-out) both;
-      }
+    .hero__platforms-logo {
+      display: block;
+      height: 40px; width: auto;
+      opacity: 0.9;
+      transition: opacity 300ms ease;
+    }
+    .hero__platforms-logo.is-fading { opacity: 0; }
+    .hero__platforms-static {
+      display: none;
+      list-style: none; margin: 0; padding: 0;
+      flex-wrap: wrap; justify-content: center; align-items: center; gap: 32px;
+    }
+    .hero__platforms-static img {
+      display: block; height: 40px; width: auto;
+      opacity: 0.9;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero__platforms-cycle  { display: none; }
+      .hero__platforms-static { display: flex; }
+    }
+    .hero__platforms-strip {
+      margin: 48px 0 0;
+      font-family: var(--font-mono);
+      font-size: 10px; line-height: 1.6;
+      color: #64748B;
+      letter-spacing: 0.06em;
+      text-align: center;
+      text-wrap: balance;
     }
 
     @media (max-width: 48rem) {
@@ -662,7 +706,11 @@
         width: 100%; max-width: 22rem; margin-inline: auto; gap: var(--space-3);
       }
       .hero__btn { justify-content: center; padding-block: 14px; }
-      .hero__strip { gap: 0.2em 0; font-size: 9px; }
+      .hero__platforms        { margin: 12px auto 24px; }
+      .hero__platforms-logo,
+      .hero__platforms-static img { height: 32px; }
+      .hero__platforms-static { gap: 20px; }
+      .hero__platforms-strip { margin-top: 32px; font-size: 9px; }
     }
 
     /* ---------- ServiceCard (mirrors src/components/ui/ServiceCard.astro) ---------- */
@@ -718,6 +766,12 @@
     }
     .ui-card__arrow { transition: transform var(--duration-base) var(--ease-out); }
     .ui-card:hover .ui-card__arrow { transform: translateX(3px); }
+    @media (max-width: 768px) {
+      .ui-card {
+        border: 1px solid #D4DCE8;
+        box-shadow: 0 2px 8px rgba(13, 19, 33, 0.06);
+      }
+    }
 
     /* ---------- ServicesGrid section (mirrors src/components/sections/ServicesGrid.astro) ---------- */
     .services { background: #FFFFFF; padding-block: 96px; }
@@ -735,8 +789,17 @@
     }
     .services__grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: 1fr;
       gap: 20px;
+    }
+    @media (min-width: 40rem) {
+      .services__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 64rem) {
+      .services__grid { grid-template-columns: repeat(6, 1fr); }
+      .services__grid > * { grid-column: span 2; }
+      .services__grid > :nth-child(4) { grid-column: 2 / span 2; }
+      .services__grid > :nth-child(5) { grid-column: 4 / span 2; }
     }
     .services__all { margin: 48px 0 0; text-align: center; }
     .services__all-link {
@@ -798,8 +861,19 @@
     @media (max-width: 48rem) {
       .how { padding-block: 64px; }
       .how__head { margin-bottom: 40px; }
-      .how__steps { grid-template-columns: 1fr; gap: 32px; }
+      .how__steps { grid-template-columns: 1fr; gap: 12px; }
       .how__step:not(:last-child)::after { display: none; }
+      .how__step {
+        background: #FFFFFF;
+        border: 1px solid #D4DCE8;
+        border-left: 3px solid #0C7B82;
+        border-radius: 10px;
+        padding: 20px 20px 20px 24px;
+        box-shadow: 0 2px 8px rgba(13, 19, 33, 0.06);
+        gap: 8px;
+      }
+      .how__step-title { font-size: 18px; }
+      .how__step-desc  { font-size: 15px; }
     }
 
     /* ---------- FAQItem (mirrors src/components/ui/FAQItem.astro) ---------- */
@@ -1068,30 +1142,6 @@
       });
     })();
 
-    // Mirrors the deferred script in src/components/Hero.astro.
-    (function () {
-      var cycle = document.getElementById('hero-cycle');
-      if (!cycle) return;
-      var visible = cycle.querySelector('.hero__cycle-visible');
-      if (!visible) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      var words = ['Google', 'ChatGPT', 'Perplexity', 'Gemini', 'Copilot', 'Claude'];
-      var i = 0;
-      visible.textContent = words[0];
-
-      setInterval(function () {
-        cycle.classList.add('is-swapping');
-        setTimeout(function () {
-          i = (i + 1) % words.length;
-          visible.textContent = words[i];
-        }, 200);
-        setTimeout(function () {
-          cycle.classList.remove('is-swapping');
-        }, 420);
-      }, 3000);
-    })();
-
     // Mirrors the inline script in src/components/sections/StatsRow.astro.
     (function () {
       var row = document.getElementById('stats-row');
@@ -1162,6 +1212,37 @@
       }
       window.addEventListener('scroll', onScroll, { passive: true });
       update();
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var cycleEl = document.getElementById('hero-platforms-cycle');
+      if (!cycleEl) return;
+      var img = cycleEl.querySelector('.hero__platforms-logo');
+      if (!img) return;
+      var motionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (motionMq.matches) return;
+      var platforms = [
+        { src: 'public/images/brands/chatgpt.svg',    name: 'ChatGPT' },
+        { src: 'public/images/brands/google.svg',     name: 'Google' },
+        { src: 'public/images/brands/copilot.svg',    name: 'Copilot' },
+        { src: 'public/images/brands/perplexity.svg', name: 'Perplexity' },
+        { src: 'public/images/brands/claude.svg',     name: 'Claude' },
+        { src: 'public/images/brands/gemini.svg',     name: 'Gemini' },
+      ];
+      var i = 0;
+      function step() {
+        img.classList.add('is-fading');
+        setTimeout(function () {
+          i = (i + 1) % platforms.length;
+          img.setAttribute('src', platforms[i].src);
+          img.setAttribute('alt', platforms[i].name);
+          img.classList.remove('is-fading');
+          setTimeout(step, 300 + 2500);
+        }, 300);
+      }
+      setTimeout(step, 2500);
     })();
   </script>
 </body>

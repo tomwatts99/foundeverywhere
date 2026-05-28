@@ -37,7 +37,7 @@
               <li><a href="/services/seo-audit/"      class="nav__dropdown-link">SEO audit</a></li>
               <li><a href="/services/llm-visibility/" class="nav__dropdown-link">LLM visibility</a></li>
               <li><a href="/services/technical-seo/"  class="nav__dropdown-link">Technical SEO</a></li>
-              <li><a href="/services/retainer/"       class="nav__dropdown-link">Visibility that compounds</a></li>
+              <li><a href="/services/visibility-that-compounds/"       class="nav__dropdown-link">Visibility that compounds</a></li>
               <li><a href="/services/local-seo/"      class="nav__dropdown-link">Local SEO and Google Business Profile</a></li>
             </ul>
             </li>
@@ -104,13 +104,7 @@
     <div class="container footer__inner">
       <div class="footer__brand">
         <a href="/" class="footer__brand-link" aria-label="Found Everywhere, home">
-          <span class="footer__mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-3.5-3.5" />
-            </svg>
-          </span>
-          <span class="footer__wordmark">Found Everywhere</span>
+          <img class="footer__logo" src="public/images/logo-white.svg" alt="Found Everywhere" height="48" />
         </a>
         <p class="footer__tagline">SEO and LLM visibility, built for the search era after search.</p>
         <p class="footer__contact"><a href="mailto:hello@foundeverywhere.co.uk">hello@foundeverywhere.co.uk</a></p>
@@ -275,8 +269,8 @@
     /* ---------- FOOTER ---------- */
     .footer { background: var(--color-dark); color: var(--color-dark-text); padding-block: var(--space-10) var(--space-6); border-top: 1px solid var(--color-dark-line); }
     .footer__inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr); gap: var(--space-9); align-items: start; padding-bottom: var(--space-9); border-bottom: 1px solid var(--color-dark-line); }
-    .footer__brand-link { display: inline-flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: var(--weight-semibold); font-size: var(--text-md); color: var(--color-dark-text); letter-spacing: var(--tracking-tight); }
-    .footer__mark { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--radius-md); background: var(--color-accent); color: var(--color-accent-ink); }
+    .footer__brand-link { display: inline-flex; align-items: center; line-height: 0; }
+    .footer__logo { display: block; height: 48px; width: auto; }
     .footer__tagline { margin-top: var(--space-4); max-width: 28ch; color: var(--color-dark-muted); font-size: var(--text-sm); line-height: var(--leading-relaxed); }
     .footer__contact { margin-top: var(--space-4); font-family: var(--font-mono); font-size: var(--text-sm); }
     .footer__contact a { color: var(--color-dark-text); text-decoration: underline; text-decoration-color: var(--color-accent); text-underline-offset: 0.25em; }

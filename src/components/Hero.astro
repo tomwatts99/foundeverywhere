@@ -1,21 +1,29 @@
 ---
 /**
- * Hero.astro: kinetic-type hero on a dark surface.
+ * Hero.astro: kinetic hero on a dark surface.
  *
- * Centred, full-width, dark `#0D1826` background.
- * Headline cycles a single word through six platform names; the
- * visible word is absolutely positioned over an invisible "ghost"
- * locked to the longest word so layout never reflows mid-swap.
+ * Centred, full-width, dark `#0D1826` background. The headline is a
+ * single line; directly beneath it a rotating platform logo cycles
+ * through six brands on its own 2500ms timer with 300ms fade.
  *
- * Animation is wrapped in `@media (prefers-reduced-motion: no-preference)`.
- * Under reduced motion (or no JS) the word stays as the safe fallback
- * "everywhere" and never moves.
+ * The cycler is wrapped in `@media (prefers-reduced-motion: no-preference)`.
+ * Under reduced motion (or no JS) the static fallback row of all six
+ * logos is shown instead.
  */
 
-const CYCLE_WORDS = ['Google', 'ChatGPT', 'Perplexity', 'Gemini', 'Copilot', 'Claude'] as const;
-const STRIP_PLATFORMS = ['Google', 'Bing', 'ChatGPT', 'Perplexity', 'Gemini', 'Copilot', 'Claude'] as const;
-// Reserve layout space for the longest cycling word.
-const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
+/**
+ * Platforms shown in the rotating logo strip below the headline.
+ * `src` is loaded from /images/brands/; `name` is the alt text used
+ * on the static fallback (no on-screen name in the rotator).
+ */
+const PLATFORMS = [
+  { src: '/images/brands/chatgpt.svg',    name: 'ChatGPT' },
+  { src: '/images/brands/google.svg',     name: 'Google' },
+  { src: '/images/brands/copilot.svg',    name: 'Copilot' },
+  { src: '/images/brands/perplexity.svg', name: 'Perplexity' },
+  { src: '/images/brands/claude.svg',     name: 'Claude' },
+  { src: '/images/brands/gemini.svg',     name: 'Gemini' },
+] as const;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -23,14 +31,29 @@ const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
 
     <p class="hero__eyebrow">SEO + LLM visibility</p>
 
-    <h1 id="hero-title" class="hero__title">
-      <span class="hero__line">Be found on</span>
-      <span class="hero__line hero__cycle" id="hero-cycle">
-        {/* Ghost reserves max width; aria-hidden so SR users hear only the visible word. */}
-        <span class="hero__cycle-ghost" aria-hidden="true">{LONGEST}</span>
-        <span class="hero__cycle-visible" aria-live="polite">everywhere</span>
-      </span>
-    </h1>
+    <h1 id="hero-title" class="hero__title">Be found on</h1>
+
+    {/* Rotating platform logo, directly under the headline. */}
+    <div class="hero__platforms">
+      <div class="hero__platforms-cycle" id="hero-platforms-cycle">
+        <img
+          class="hero__platforms-logo"
+          src={PLATFORMS[0].src}
+          alt={PLATFORMS[0].name}
+          width="160"
+          height="40"
+        />
+      </div>
+
+      {/* Reduced-motion fallback: static row of all six logos. */}
+      <ul class="hero__platforms-static" role="list" aria-label="Platforms we optimise for">
+        {PLATFORMS.map((p) => (
+          <li>
+            <img src={p.src} alt={p.name} height="40" />
+          </li>
+        ))}
+      </ul>
+    </div>
 
     <p class="hero__lead">
       We audit and optimise your website so it ranks in Google and gets
@@ -45,44 +68,42 @@ const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
       <a href="/approach" class="hero__btn hero__btn--ghost">How it works</a>
     </div>
 
-    <ul class="hero__strip" aria-label="Platforms we optimise for">
-      {STRIP_PLATFORMS.map((p) => <li>{p}</li>)}
-    </ul>
+    <p class="hero__platforms-strip" aria-label="Platforms we optimise for">
+      ChatGPT · Google · Copilot · Perplexity · Claude · Gemini
+    </p>
   </div>
 </section>
 
-<script is:inline define:vars={{ words: CYCLE_WORDS }}>
+<script is:inline define:vars={{ platforms: PLATFORMS }}>
   /**
-   * Word-cycle controller. setInterval per the brief: every 3000ms it
-   * toggles a CSS class that runs a single keyframe; text is swapped
-   * at the mid-point when the word is invisible.
-   *
-   * Bails out entirely under prefers-reduced-motion: the initial
-   * "everywhere" fallback stays put.
+   * Platform-logo cycler. Single <img> swap.
+   * Cadence: 2500ms display → 300ms fade out → swap src → 300ms fade in.
+   * Bails under prefers-reduced-motion (CSS then shows the static row).
    */
   (function () {
-    var cycle = document.getElementById('hero-cycle');
-    if (!cycle) return;
-    var visible = cycle.querySelector('.hero__cycle-visible');
-    if (!visible) return;
+    var cycleEl = document.getElementById('hero-platforms-cycle');
+    if (!cycleEl) return;
+    var img = cycleEl.querySelector('.hero__platforms-logo');
+    if (!img) return;
 
-    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mq.matches) return;
+    var motionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (motionMq.matches) return;
 
     var i = 0;
-    visible.textContent = words[0];
-
-    setInterval(function () {
-      cycle.classList.add('is-swapping');
-      // Swap text at mid-animation, when opacity is 0.
+    function step() {
+      img.classList.add('is-fading');
+      // After fade-out, swap src and fade in.
       setTimeout(function () {
-        i = (i + 1) % words.length;
-        visible.textContent = words[i];
-      }, 200);
-      setTimeout(function () {
-        cycle.classList.remove('is-swapping');
-      }, 420);
-    }, 3000);
+        i = (i + 1) % platforms.length;
+        img.setAttribute('src', platforms[i].src);
+        img.setAttribute('alt', platforms[i].name);
+        img.classList.remove('is-fading');
+        // 300ms fade-in + 2500ms hold, then step again.
+        setTimeout(step, 300 + 2500);
+      }, 300);
+    }
+    // Initial 2500ms hold before the first transition.
+    setTimeout(step, 2500);
   })();
 </script>
 
@@ -117,7 +138,7 @@ const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
   }
 
   /* ============================================================
-     TITLE: two stacked lines
+     TITLE: single line
      ============================================================ */
   .hero__title {
     font-family: var(--font-display);
@@ -129,33 +150,12 @@ const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
     margin: 0;
     text-wrap: balance;
   }
-  .hero__line {
-    display: block;
-  }
-
-  /* ---------- Cycling word ---------- */
-  .hero__cycle {
-    position: relative;
-    color: #0C7B82;
-  }
-  .hero__cycle-ghost {
-    visibility: hidden;
-    pointer-events: none;
-  }
-  .hero__cycle-visible {
-    position: absolute;
-    inset: 0;
-    display: block;
-    text-align: center;
-    /* Inherits font-size, weight, line-height from .hero__title so
-       baseline aligns with the ghost. */
-  }
 
   /* ============================================================
      BODY COPY
      ============================================================ */
   .hero__lead {
-    margin: var(--space-6) auto 0;
+    margin: 0 auto;
     max-width: 520px;
     font-family: var(--font-body);
     font-weight: 400;
@@ -223,43 +223,73 @@ const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
   }
 
   /* ============================================================
-     PLATFORM STRIP
+     PLATFORM ROTATOR
+     A single rotating logo sits between the headline and the body
+     copy. Reduced-motion users see a static row of all six.
      ============================================================ */
-  .hero__strip {
-    list-style: none;
-    margin: 32px 0 0;
-    padding: 0;
+  .hero__platforms {
+    /* 16px below the headline, 32px above the lead. */
+    margin: 16px auto 32px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero__platforms-cycle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Reserve room so swapping logos never reflows the layout. */
+    min-height: 40px;
+  }
+
+  .hero__platforms-logo {
+    display: block;
+    height: 40px;
+    width: auto;
+    opacity: 0.9;
+    transition: opacity 300ms ease;
+  }
+  .hero__platforms-logo.is-fading { opacity: 0; }
+
+  /* Static fallback row: all six logos in a single line. */
+  .hero__platforms-static {
+    display: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: baseline;       /* dots and words share a baseline */
-    column-gap: 0.4em;
-    row-gap: 0.25em;
+    align-items: center;
+    gap: 32px;
+  }
+  .hero__platforms-static img {
+    display: block;
+    height: 40px;
+    width: auto;
+    opacity: 0.9;
+  }
+
+  /* If the user prefers reduced motion, swap the rotator for the
+     static row. The JS controller also bails under this query. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__platforms-cycle  { display: none; }
+    .hero__platforms-static { display: flex; }
+  }
+
+  /* ============================================================
+     PLATFORM REFERENCE STRIP
+     Static dot-separated names at the very bottom of the hero.
+     ============================================================ */
+  .hero__platforms-strip {
+    margin: 48px 0 0;
     font-family: var(--font-mono);
     font-size: 10px;
     line-height: 1.6;
     color: #64748B;
     letter-spacing: 0.06em;
-  }
-  .hero__strip li + li::before {
-    content: "·";
-    margin-right: 0.4em;
-    color: #64748B;
-  }
-
-  /* ============================================================
-     ANIMATION: gated on motion preference
-     ============================================================ */
-  @media (prefers-reduced-motion: no-preference) {
-    @keyframes hero-word-swap {
-      0%   { opacity: 1; transform: translateY(0); }
-      45%  { opacity: 0; transform: translateY(-14px); }
-      55%  { opacity: 0; transform: translateY(14px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    .hero__cycle.is-swapping .hero__cycle-visible {
-      animation: hero-word-swap 0.4s var(--ease-in-out) both;
-    }
+    text-align: center;
+    text-wrap: balance;
   }
 
   /* ============================================================
@@ -278,6 +308,10 @@ const LONGEST = CYCLE_WORDS.reduce((a, b) => (b.length > a.length ? b : a));
       gap: var(--space-3);
     }
     .hero__btn { justify-content: center; padding-block: 14px; }
-    .hero__strip { gap: 0.2em 0; font-size: 9px; }
+    .hero__platforms        { margin: 12px auto 24px; }
+    .hero__platforms-logo,
+    .hero__platforms-static img { height: 32px; }
+    .hero__platforms-static { gap: 20px; }
+    .hero__platforms-strip { margin-top: 32px; font-size: 9px; }
   }
 </style>

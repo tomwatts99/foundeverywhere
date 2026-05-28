@@ -3,14 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>SEO and LLM Visibility Services | Found Everywhere</title>
-  <meta name="description" content="Technical SEO audits, LLM visibility optimisation, schema markup, and ongoing visibility management for UK businesses. Built to be found by Google and AI search." />
+  <title>How Found Everywhere Works | SEO and LLM Visibility Process</title>
+  <meta name="description" content="From audit to ongoing visibility management. Here is exactly how we work, what you can expect, and what happens at each stage." />
   <meta name="theme-color" content="#0C7B82" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet" href="src/styles/global.css" />
+
+  <!-- FAQPage + BreadcrumbList JSON-LD: preview only. Astro emits these via
+       schemaExtras inside Base.astro's single @graph. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://foundeverywhere.co.uk/how-it-works/#breadcrumbs",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home",         "item": "https://foundeverywhere.co.uk/" },
+          { "@type": "ListItem", "position": 2, "name": "How It Works", "item": "https://foundeverywhere.co.uk/how-it-works/" }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -29,7 +47,7 @@
         <nav class="nav__panel" aria-label="Primary">
           <ul class="nav__links" role="list">
             <li class="nav__item nav__item--has-dropdown">
-              <a href="/services/" class="nav__link" aria-current="page">Services</a>
+              <a href="/services/" class="nav__link">Services</a>
             <button type="button" class="nav__chevron-btn" aria-expanded="false" aria-controls="submenu-services" aria-label="Toggle Services submenu">
               <svg class="nav__chevron" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>
             </button>
@@ -41,7 +59,7 @@
               <li><a href="/services/local-seo/"      class="nav__dropdown-link">Local SEO and Google Business Profile</a></li>
             </ul>
             </li>
-            <li class="nav__item"><a href="/how-it-works/" class="nav__link">How it works</a></li>
+            <li class="nav__item"><a href="/how-it-works/" class="nav__link" aria-current="page">How it works</a></li>
             <li class="nav__item"><a href="/insights/"     class="nav__link">Insights</a></li>
             <li class="nav__item"><a href="/results/"      class="nav__link">Results</a></li>
             <li class="nav__item"><a href="/about/"        class="nav__link">About</a></li>
@@ -55,109 +73,129 @@
   <main id="main">
 
     <!-- ============ 1. HERO ============ -->
-    <section class="services-hero" aria-labelledby="services-hero-title">
+    <section class="hiw-hero" aria-labelledby="hiw-hero-title">
       <div class="container">
-        <p class="services-hero__eyebrow">What we do</p>
-        <h1 id="services-hero-title" class="services-hero__title">Services built for the way search works now</h1>
-        <p class="services-hero__lead">Not just Google. ChatGPT, Perplexity, Gemini, and Copilot too. We cover every place your customers are searching.</p>
+        <p class="hiw-hero__eyebrow">The process</p>
+        <h1 id="hiw-hero-title" class="hiw-hero__title">Simple, transparent, no surprises</h1>
+        <p class="hiw-hero__lead">We do not believe in mystery. Here is exactly how we work, what happens at each stage, and what you can expect from us.</p>
       </div>
     </section>
 
-    <!-- ============ 2. SERVICE BLOCKS ============ -->
-    <section class="services-detail" aria-label="Services in detail">
+    <!-- ============ 2. THE FOUR STAGES ============ -->
+    <section class="hiw-stages" aria-label="Our process, stage by stage">
       <div class="container">
-        <div class="services-detail__list">
-
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">01</p>
-              <h2 class="svc__name">SEO audit</h2>
-              <p class="svc__desc">A complete technical review of your site. We crawl it the way Google does, score every element, and give you a prioritised fix list in plain English. You will know exactly what is holding you back and what to do about it.</p>
-              <a href="/services/seo-audit/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
+        <ol class="hiw-stages__list" role="list">
+          <li class="hiw-stage">
+            <span class="hiw-stage__num" aria-hidden="true">01</span>
+            <div class="hiw-stage__content">
+              <p class="hiw-stage__when">Week 1</p>
+              <h2 class="hiw-stage__title">Discovery and audit</h2>
+              <p class="hiw-stage__body">We start with a conversation. You tell us about your business, your customers, and what you are trying to achieve. Then we get to work. We crawl your site, test it across every major AI system, score your PageSpeed and Core Web Vitals, and document every issue we find.</p>
+              <ul class="hiw-stage__points" role="list">
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Full technical crawl and audit</span></li>
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>AI visibility test across 8 platforms</span></li>
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>PageSpeed and Core Web Vitals baseline</span></li>
+              </ul>
             </div>
-            <ul class="svc__features" role="list">
-              <li>40+ point technical review</li>
-              <li>PageSpeed and Core Web Vitals analysis</li>
-              <li>Prioritised fix list by impact</li>
-              <li>Before and after scoring</li>
-            </ul>
-          </article>
-
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">02</p>
-              <h2 class="svc__name">LLM visibility</h2>
-              <p class="svc__desc">Most sites are invisible to ChatGPT, Perplexity, and Gemini. We change that. Schema markup, entity signals, llms.txt, and content structured so AI systems cite you rather than your competitors.</p>
-              <a href="/services/llm-visibility/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
+          </li>
+          <li class="hiw-stage">
+            <span class="hiw-stage__num" aria-hidden="true">02</span>
+            <div class="hiw-stage__content">
+              <p class="hiw-stage__when">Week 2</p>
+              <h2 class="hiw-stage__title">Report and walkthrough</h2>
+              <p class="hiw-stage__body">You get a full audit report — every issue documented, scored by impact, and explained in plain English. Then we walk you through it on a 30 minute call. No jargon. No upselling. Just a clear explanation of what we found, what it means, and what we recommend.</p>
+              <ul class="hiw-stage__points" role="list">
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Prioritised fix list by impact</span></li>
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Plain English throughout</span></li>
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>30 minute walkthrough call</span></li>
+              </ul>
             </div>
-            <ul class="svc__features" role="list">
-              <li>Schema markup implementation</li>
-              <li>llms.txt setup and optimisation</li>
-              <li>Entity and brand signal audit</li>
-              <li>AI citation monitoring</li>
-            </ul>
-          </article>
-
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">03</p>
-              <h2 class="svc__name">Technical SEO</h2>
-              <p class="svc__desc">The foundations that everything else sits on. Indexing, site structure, Core Web Vitals, internal linking, and the technical details that most agencies overlook or defer indefinitely.</p>
-              <a href="/services/technical-seo/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
+          </li>
+          <li class="hiw-stage">
+            <span class="hiw-stage__num" aria-hidden="true">03</span>
+            <div class="hiw-stage__content">
+              <p class="hiw-stage__when">Weeks 3 and 4</p>
+              <h2 class="hiw-stage__title">Implementation</h2>
+              <p class="hiw-stage__body">We get to work on the fixes. Technical issues resolved, schema implemented, llms.txt written, content restructured for AI visibility. We work directly on your site or alongside your developer — whatever suits you. You see the changes as they go in and we verify every fix.</p>
+              <ul class="hiw-stage__points" role="list">
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Hands-on implementation</span></li>
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Changes verified before sign-off</span></li>
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Before and after scores provided</span></li>
+              </ul>
             </div>
-            <ul class="svc__features" role="list">
-              <li>Crawl and indexing audit</li>
-              <li>Core Web Vitals fixes</li>
-              <li>Site architecture review</li>
-              <li>Internal linking optimisation</li>
-            </ul>
-          </article>
-
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">04</p>
-              <h2 class="svc__name">Visibility that compounds</h2>
-              <p class="svc__desc">We keep working after the initial project is done. Monthly monitoring, content updates, AI search tracking, and regular reporting so your visibility grows over time rather than slipping back.</p>
-              <a href="/services/visibility-that-compounds/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
+          </li>
+          <li class="hiw-stage">
+            <span class="hiw-stage__num" aria-hidden="true">04</span>
+            <div class="hiw-stage__content">
+              <p class="hiw-stage__when">Ongoing</p>
+              <h2 class="hiw-stage__title">Monitor and compound</h2>
+              <p class="hiw-stage__body">For clients on a retainer we keep working after the initial project is done. Monthly monitoring, AI visibility tracking, content improvements, and clear reporting. Search changes constantly. We stay on top of it so you do not have to.</p>
+              <ul class="hiw-stage__points" role="list">
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Monthly visibility monitoring</span></li>
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>AI citation tracking across 8 platforms</span></li>
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Clear monthly reporting</span></li>
+              </ul>
             </div>
-            <ul class="svc__features" role="list">
-              <li>Monthly performance monitoring</li>
-              <li>AI search visibility tracking</li>
-              <li>Content and schema updates</li>
-              <li>Clear monthly reporting</li>
-            </ul>
-          </article>
+          </li>
+        </ol>
+      </div>
+    </section>
 
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">05</p>
-              <h2 class="svc__name">Local SEO and Google Business Profile</h2>
-              <p class="svc__desc">When someone nearby searches for what you do, you need to show up. We optimise your Google Business Profile, build local citations, implement location schema, and make sure your site signals the right things to Google for local search.</p>
-              <a href="/services/local-seo/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
-            </div>
-            <ul class="svc__features" role="list">
-              <li>Google Business Profile optimisation</li>
-              <li>Local citation building</li>
-              <li>Location and business schema</li>
-              <li>Local keyword targeting</li>
-            </ul>
+    <!-- ============ 3. WHAT MAKES US DIFFERENT ============ -->
+    <section class="hiw-diff" aria-labelledby="hiw-diff-title">
+      <div class="container">
+        <header class="hiw-diff__head">
+          <p class="hiw-diff__eyebrow">Our approach</p>
+          <h2 id="hiw-diff-title" class="hiw-diff__title">A few things we do differently</h2>
+        </header>
+        <div class="hiw-diff__grid">
+          <article class="hiw-diff-card">
+            <h3 class="hiw-diff-card__title">We fix, not just report</h3>
+            <p class="hiw-diff-card__body">Most audits are documents. Ours come with implementation. You get the report and the fixed site.</p>
           </article>
-
+          <article class="hiw-diff-card">
+            <h3 class="hiw-diff-card__title">We test on the AI systems</h3>
+            <p class="hiw-diff-card__body">Every engagement includes a real test of your visibility across ChatGPT, Perplexity, Gemini, Copilot, Claude, Bing, Grok, and Google. Not an estimate. An actual test.</p>
+          </article>
+          <article class="hiw-diff-card">
+            <h3 class="hiw-diff-card__title">We tell you the truth</h3>
+            <p class="hiw-diff-card__body">If your site does not need a retainer yet, we will tell you. If a free tool would solve your problem, we will point you to it. We would rather give you the right answer than the expensive one.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- ============ 3. CTA ============ -->
+    <!-- ============ 4. FAQ ============ -->
+    <section class="hiw-faq" aria-labelledby="hiw-faq-title">
+      <div class="container">
+        <p class="hiw-faq__eyebrow">Common questions</p>
+        <h2 id="hiw-faq-title" class="hiw-faq__title">What people ask about working with us</h2>
+        <div class="hiw-faq__list">
+          <details class="ui-faq">
+            <summary class="ui-faq__summary"><span class="ui-faq__q">How do I get started?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+            <div class="ui-faq__answer"><p>Get in touch via the contact page. Tell us your website URL and a bit about your business. We will come back to you within one working day.</p></div>
+          </details>
+          <details class="ui-faq">
+            <summary class="ui-faq__summary"><span class="ui-faq__q">Do I need to sign a contract?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+            <div class="ui-faq__answer"><p>For one-off projects like the audit and fix there is no long term contract — just a simple statement of work. For retainers we ask for an initial three month commitment, then it runs month to month.</p></div>
+          </details>
+          <details class="ui-faq">
+            <summary class="ui-faq__summary"><span class="ui-faq__q">How do you access my site to make changes?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+            <div class="ui-faq__answer"><p>We ask for the access we need — usually WordPress admin, FTP, or Google Search Console access depending on the work. We document everything we do and return access at the end of the project if requested.</p></div>
+          </details>
+          <details class="ui-faq">
+            <summary class="ui-faq__summary"><span class="ui-faq__q">Do you work with businesses outside the UK?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+            <div class="ui-faq__answer"><p>Our focus is UK businesses but we work with clients internationally. Get in touch and we will let you know if we are a good fit.</p></div>
+          </details>
+          <details class="ui-faq">
+            <summary class="ui-faq__summary"><span class="ui-faq__q">How quickly will I see results?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+            <div class="ui-faq__answer"><p>Technical fixes and schema changes can show in Search Console within days. Ranking improvements typically follow over four to eight weeks. AI visibility improvements can show within weeks as systems re-crawl and update.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5. CTA ============ -->
     <section class="cta" aria-labelledby="cta-title">
       <div class="container">
         <h2 id="cta-title" class="cta__title">Ready to be found everywhere?</h2>
@@ -184,7 +222,7 @@
             <li><a href="/services/seo-audit/"      class="footer__link">SEO audit</a></li>
             <li><a href="/services/llm-visibility/" class="footer__link">LLM visibility</a></li>
             <li><a href="/services/technical-seo/"  class="footer__link">Technical SEO</a></li>
-            <li><a href="/services/visibility-that-compounds/"       class="footer__link">Retainer</a></li>
+            <li><a href="/services/local-seo/"      class="footer__link">Local SEO</a></li>
           </ul>
         </div>
         <div class="footer__col">
@@ -217,7 +255,7 @@
   </footer>
 
   <style>
-    /* ---------- NAV (chrome) ---------- */
+    /* ---------- NAV chrome (shared) ---------- */
     .nav {
       position: sticky; top: 0; z-index: var(--z-nav);
       background: #FFFFFF;
@@ -326,93 +364,86 @@
       .nav__cta .btn { width: 100%; }
     }
 
-    /* ---------- HERO ---------- */
-    .services-hero { background: #0D1826; color: #FFFFFF; text-align: center; padding-block: 96px; }
-    .services-hero__eyebrow {
-      margin: 0 0 20px;
-      font-family: var(--font-mono); font-size: 11px; line-height: 1;
-      color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em;
+    /* ---------- FAQItem (mirrors src/components/ui/FAQItem.astro) ---------- */
+    .ui-faq { border-bottom: 1px solid #E4E8EF; }
+    .ui-faq:first-of-type { border-top: 1px solid #E4E8EF; }
+    .ui-faq > summary { list-style: none; cursor: pointer; }
+    .ui-faq > summary::-webkit-details-marker { display: none; }
+    .ui-faq > summary::marker { content: ''; }
+    .ui-faq__summary {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 20px 0;
+      font-family: var(--font-display); font-weight: 500;
+      font-size: 15px; line-height: 1.4; color: #0D1321;
     }
-    .services-hero__title {
+    .ui-faq__summary:hover { color: #0C7B82; }
+    .ui-faq__q { flex: 1; text-wrap: balance; }
+    .ui-faq__chevron {
+      flex-shrink: 0; width: 9px; height: 9px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: translateY(-2px) rotate(45deg);
+      transform-origin: center;
+      transition: transform var(--duration-base) var(--ease-out);
+      color: #64748B;
+    }
+    .ui-faq[open] .ui-faq__chevron {
+      transform: translateY(2px) rotate(225deg); color: #0C7B82;
+    }
+    .ui-faq__answer { padding: 0 0 24px; max-width: 60ch; }
+    .ui-faq__answer p {
       margin: 0;
-      font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
-      line-height: 1.05; letter-spacing: -0.02em; color: #FFFFFF;
-      text-wrap: balance;
-    }
-    .services-hero__lead {
-      margin: 20px auto 0; max-width: 560px;
       font-family: var(--font-body); font-weight: 400;
-      font-size: 17px; line-height: 1.65; color: #94A3B8;
-      text-wrap: pretty;
+      font-size: 14px; line-height: 1.65; color: #64748B;
     }
 
-    /* ---------- SERVICE BLOCKS ---------- */
-    .services-detail { background: #FFFFFF; padding-block: 96px; }
-    .services-detail__list { max-width: 960px; margin: 0 auto; }
+    /* ---------- 1. HERO ---------- */
+    .hiw-hero { background: #0D1826; color: #FFFFFF; text-align: center; padding-block: 96px; }
+    .hiw-hero__eyebrow { margin: 0 0 20px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .hiw-hero__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(34px, 1.6rem + 3.6vw, 52px); line-height: 1.1; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance; }
+    .hiw-hero__lead { margin: 20px auto 0; max-width: 560px; font-family: var(--font-body); font-weight: 400; font-size: 17px; line-height: 1.65; color: #94A3B8; text-wrap: pretty; }
 
-    .svc {
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-      gap: 64px;
-      padding-block: 56px;
-      border-top: 1px solid #E4E8EF;
-    }
-    .svc:first-child { border-top: 0; padding-top: 0; }
-    .svc:last-child  { padding-bottom: 0; }
+    /* ---------- 2. STAGES ---------- */
+    .hiw-stages { background: #FFFFFF; padding-block: 96px; }
+    .hiw-stages .container { max-width: 860px; }
+    .hiw-stages__list { list-style: none; margin: 0; padding: 0; }
+    .hiw-stage { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: start; }
+    .hiw-stage + .hiw-stage { margin-top: 80px; padding-top: 80px; border-top: 1px solid #E4E8EF; }
+    .hiw-stage__num { font-family: var(--font-display); font-weight: 700; font-size: 80px; line-height: 1; letter-spacing: -0.03em; color: #E0F4F5; }
+    .hiw-stage__when { margin: 0 0 12px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .hiw-stage__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(24px, 1.3rem + 1.4vw, 32px); line-height: 1.15; letter-spacing: -0.02em; color: #0D1321; }
+    .hiw-stage__body { margin: 16px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 17px; line-height: 1.75; color: #64748B; text-wrap: pretty; }
+    .hiw-stage__points { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .hiw-point { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; font-family: var(--font-body); font-weight: 400; font-size: 15px; line-height: 1.5; color: #64748B; }
+    .hiw-point__dot { width: 7px; height: 7px; border-radius: 50%; background: #0C7B82; margin-top: 0.5em; }
 
-    .svc__num {
-      margin: 0 0 16px;
-      font-family: var(--font-mono); font-weight: 500;
-      font-size: 11px; line-height: 1;
-      color: #0C7B82; letter-spacing: 0.08em;
-    }
-    .svc__name {
-      margin: 0;
-      font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(22px, 1.2rem + 1.4vw, 28px);
-      line-height: 1.15; letter-spacing: -0.02em; color: #0D1321;
-      text-wrap: balance;
-    }
-    .svc__desc {
-      margin: 16px 0 0;
-      font-family: var(--font-body); font-weight: 400;
-      font-size: 17px; line-height: 1.75; color: #64748B;
-      text-wrap: pretty;
-    }
-    .svc__link {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      margin-top: 20px;
-      font-family: var(--font-display); font-weight: 500; font-size: 15px;
-      color: #0C7B82; text-decoration: none;
-      transition: color var(--duration-fast) var(--ease-out);
-    }
-    .svc__link:hover { color: #0A6970; }
-    .svc__arrow { transition: transform var(--duration-base) var(--ease-out); }
-    .svc__link:hover .svc__arrow { transform: translateX(3px); }
+    /* ---------- 3. DIFFERENTIATORS ---------- */
+    .hiw-diff { background: #F7F9FC; padding-block: 96px; }
+    .hiw-diff .container { max-width: 960px; }
+    .hiw-diff__head { text-align: center; max-width: 36rem; margin: 0 auto 48px; }
+    .hiw-diff__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .hiw-diff__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 1.5rem + 1.6vw, 36px); line-height: 1.15; letter-spacing: -0.02em; color: #0D1321; text-wrap: balance; }
+    .hiw-diff__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .hiw-diff-card { background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 16px; padding: 32px; }
+    .hiw-diff-card__title { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.3; letter-spacing: -0.01em; color: #0D1321; }
+    .hiw-diff-card__body { margin: 10px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 15px; line-height: 1.65; color: #64748B; text-wrap: pretty; }
 
-    .svc__features {
-      list-style: none; padding: 0; margin: 0;
-      display: flex; flex-direction: column; gap: 12px;
-      align-self: start;
-    }
-    .svc__features li {
-      position: relative; padding-left: 20px;
-      font-family: var(--font-body); font-weight: 400;
-      font-size: 15px; line-height: 1.5; color: #64748B;
-    }
-    .svc__features li + li { margin-top: 0; }
-    .svc__features li::before {
-      content: ""; position: absolute; left: 0; top: 0.55em;
-      width: 7px; height: 7px; border-radius: 50%; background: #0C7B82;
-    }
+    /* ---------- 4. FAQ ---------- */
+    .hiw-faq { background: #FFFFFF; padding-block: 96px; }
+    .hiw-faq .container { max-width: 800px; }
+    .hiw-faq__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .hiw-faq__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 1.5rem + 1.6vw, 36px); line-height: 1.15; letter-spacing: -0.02em; color: #0D1321; text-wrap: balance; }
+    .hiw-faq__list { margin-top: 48px; display: flex; flex-direction: column; gap: 8px; }
 
-    @media (max-width: 56rem) {
-      .svc { grid-template-columns: 1fr; gap: 28px; padding-block: 48px; }
-    }
     @media (max-width: 48rem) {
-      .services-hero { padding-block: 72px; }
-      .services-detail { padding-block: 72px; }
+      .hiw-hero { padding-block: 72px; }
+      .hiw-stages { padding-block: 72px; }
+      .hiw-diff { padding-block: 72px; }
+      .hiw-faq { padding-block: 72px; }
+      .hiw-stage { grid-template-columns: 1fr; gap: 8px; }
+      .hiw-stage__num { font-size: 64px; }
+      .hiw-stage + .hiw-stage { margin-top: 56px; padding-top: 56px; }
+      .hiw-diff__grid { grid-template-columns: 1fr; }
     }
 
     /* ---------- CTA (mirrors src/components/sections/CTABlock.astro) ---------- */
@@ -421,8 +452,7 @@
       margin: 0;
       font-family: var(--font-display); font-weight: 700;
       font-size: clamp(28px, 1.6rem + 1.6vw, 36px);
-      line-height: 1.15; letter-spacing: -0.02em; color: #FFFFFF;
-      text-wrap: balance;
+      line-height: 1.15; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance;
     }
     .cta__lead {
       margin: 12px auto 0; max-width: 36rem;
@@ -444,7 +474,7 @@
     .cta__btn:hover .cta__btn-arrow { transform: translate(2px, -2px); }
     @media (max-width: 48rem) { .cta { padding-block: 64px; } }
 
-    /* ---------- FOOTER (chrome) ---------- */
+    /* ---------- FOOTER chrome (shared) ---------- */
     .footer { background: var(--color-dark); color: var(--color-dark-text); padding-block: var(--space-10) var(--space-6); border-top: 1px solid var(--color-dark-line); }
     .footer__inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr); gap: var(--space-9); align-items: start; padding-bottom: var(--space-9); border-bottom: 1px solid var(--color-dark-line); }
     .footer__brand-link { display: inline-flex; align-items: center; line-height: 0; }

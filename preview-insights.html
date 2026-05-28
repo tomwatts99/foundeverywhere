@@ -3,14 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>SEO and LLM Visibility Services | Found Everywhere</title>
-  <meta name="description" content="Technical SEO audits, LLM visibility optimisation, schema markup, and ongoing visibility management for UK businesses. Built to be found by Google and AI search." />
+  <title>Insights | SEO and LLM Visibility Resources | Found Everywhere</title>
+  <meta name="description" content="Guides, articles, and practical resources on SEO, LLM visibility, generative engine optimisation, and technical SEO for UK businesses." />
   <meta name="theme-color" content="#0C7B82" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet" href="src/styles/global.css" />
+
+  <!-- FAQPage + BreadcrumbList JSON-LD: preview only. Astro emits these via
+       schemaExtras inside Base.astro's single @graph. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://foundeverywhere.co.uk/insights/#breadcrumbs",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home",     "item": "https://foundeverywhere.co.uk/" },
+          { "@type": "ListItem", "position": 2, "name": "Insights", "item": "https://foundeverywhere.co.uk/insights/" }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -29,7 +47,7 @@
         <nav class="nav__panel" aria-label="Primary">
           <ul class="nav__links" role="list">
             <li class="nav__item nav__item--has-dropdown">
-              <a href="/services/" class="nav__link" aria-current="page">Services</a>
+              <a href="/services/" class="nav__link">Services</a>
             <button type="button" class="nav__chevron-btn" aria-expanded="false" aria-controls="submenu-services" aria-label="Toggle Services submenu">
               <svg class="nav__chevron" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>
             </button>
@@ -42,7 +60,7 @@
             </ul>
             </li>
             <li class="nav__item"><a href="/how-it-works/" class="nav__link">How it works</a></li>
-            <li class="nav__item"><a href="/insights/"     class="nav__link">Insights</a></li>
+            <li class="nav__item"><a href="/insights/"     class="nav__link" aria-current="page">Insights</a></li>
             <li class="nav__item"><a href="/results/"      class="nav__link">Results</a></li>
             <li class="nav__item"><a href="/about/"        class="nav__link">About</a></li>
           </ul>
@@ -55,114 +73,74 @@
   <main id="main">
 
     <!-- ============ 1. HERO ============ -->
-    <section class="services-hero" aria-labelledby="services-hero-title">
+    <section class="ins-hero" aria-labelledby="ins-hero-title">
       <div class="container">
-        <p class="services-hero__eyebrow">What we do</p>
-        <h1 id="services-hero-title" class="services-hero__title">Services built for the way search works now</h1>
-        <p class="services-hero__lead">Not just Google. ChatGPT, Perplexity, Gemini, and Copilot too. We cover every place your customers are searching.</p>
+        <p class="ins-hero__eyebrow">Insights</p>
+        <h1 id="ins-hero-title" class="ins-hero__title">Everything we know about being found</h1>
+        <p class="ins-hero__lead">Practical guides on SEO, LLM visibility, and generative engine optimisation. Written by people who do this work every day.</p>
       </div>
     </section>
 
-    <!-- ============ 2. SERVICE BLOCKS ============ -->
-    <section class="services-detail" aria-label="Services in detail">
+    <!-- ============ 2. FEATURED PILLARS ============ -->
+    <section class="ins-pillars" aria-labelledby="ins-pillars-title">
       <div class="container">
-        <div class="services-detail__list">
-
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">01</p>
-              <h2 class="svc__name">SEO audit</h2>
-              <p class="svc__desc">A complete technical review of your site. We crawl it the way Google does, score every element, and give you a prioritised fix list in plain English. You will know exactly what is holding you back and what to do about it.</p>
-              <a href="/services/seo-audit/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
+        <p class="ins-pillars__eyebrow">Start here</p>
+        <h2 id="ins-pillars-title" class="ins-pillars__title">The essential guides</h2>
+        <div class="ins-pillars__grid">
+          <a class="ins-pillar" href="/insights/generative-engine-optimisation/">
+            <div class="ins-pillar__top">
+              <span class="ins-pillar__eyebrow">GEO</span>
+              <h3 class="ins-pillar__title">What is generative engine optimisation and why does it matter?</h3>
             </div>
-            <ul class="svc__features" role="list">
-              <li>40+ point technical review</li>
-              <li>PageSpeed and Core Web Vitals analysis</li>
-              <li>Prioritised fix list by impact</li>
-              <li>Before and after scoring</li>
-            </ul>
-          </article>
-
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">02</p>
-              <h2 class="svc__name">LLM visibility</h2>
-              <p class="svc__desc">Most sites are invisible to ChatGPT, Perplexity, and Gemini. We change that. Schema markup, entity signals, llms.txt, and content structured so AI systems cite you rather than your competitors.</p>
-              <a href="/services/llm-visibility/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
+            <div class="ins-pillar__bottom">
+              <p class="ins-pillar__desc">GEO is the practice of optimising your website to appear in AI-generated answers. This guide covers what it is, how it works, and what you need to do about it.</p>
+              <span class="ins-pillar__link">Read the guide <span aria-hidden="true">&rarr;</span></span>
             </div>
-            <ul class="svc__features" role="list">
-              <li>Schema markup implementation</li>
-              <li>llms.txt setup and optimisation</li>
-              <li>Entity and brand signal audit</li>
-              <li>AI citation monitoring</li>
-            </ul>
-          </article>
-
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">03</p>
-              <h2 class="svc__name">Technical SEO</h2>
-              <p class="svc__desc">The foundations that everything else sits on. Indexing, site structure, Core Web Vitals, internal linking, and the technical details that most agencies overlook or defer indefinitely.</p>
-              <a href="/services/technical-seo/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
+          </a>
+          <a class="ins-pillar" href="/insights/how-to-get-found-by-ai/">
+            <div class="ins-pillar__top">
+              <span class="ins-pillar__eyebrow">LLM SEO</span>
+              <h3 class="ins-pillar__title">How to get your business cited by ChatGPT, Perplexity, and Gemini</h3>
             </div>
-            <ul class="svc__features" role="list">
-              <li>Crawl and indexing audit</li>
-              <li>Core Web Vitals fixes</li>
-              <li>Site architecture review</li>
-              <li>Internal linking optimisation</li>
-            </ul>
-          </article>
-
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">04</p>
-              <h2 class="svc__name">Visibility that compounds</h2>
-              <p class="svc__desc">We keep working after the initial project is done. Monthly monitoring, content updates, AI search tracking, and regular reporting so your visibility grows over time rather than slipping back.</p>
-              <a href="/services/visibility-that-compounds/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
+            <div class="ins-pillar__bottom">
+              <p class="ins-pillar__desc">Most websites are invisible to AI search. This guide explains exactly why and what signals you need to implement to change that.</p>
+              <span class="ins-pillar__link">Read the guide <span aria-hidden="true">&rarr;</span></span>
             </div>
-            <ul class="svc__features" role="list">
-              <li>Monthly performance monitoring</li>
-              <li>AI search visibility tracking</li>
-              <li>Content and schema updates</li>
-              <li>Clear monthly reporting</li>
-            </ul>
-          </article>
-
-          <article class="svc">
-            <div class="svc__copy">
-              <p class="svc__num">05</p>
-              <h2 class="svc__name">Local SEO and Google Business Profile</h2>
-              <p class="svc__desc">When someone nearby searches for what you do, you need to show up. We optimise your Google Business Profile, build local citations, implement location schema, and make sure your site signals the right things to Google for local search.</p>
-              <a href="/services/local-seo/" class="svc__link">Learn more
-                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
-              </a>
+          </a>
+          <a class="ins-pillar" href="/insights/technical-seo-guide/">
+            <div class="ins-pillar__top">
+              <span class="ins-pillar__eyebrow">Technical SEO</span>
+              <h3 class="ins-pillar__title">The technical SEO guide for UK businesses in 2025</h3>
             </div>
-            <ul class="svc__features" role="list">
-              <li>Google Business Profile optimisation</li>
-              <li>Local citation building</li>
-              <li>Location and business schema</li>
-              <li>Local keyword targeting</li>
-            </ul>
-          </article>
-
+            <div class="ins-pillar__bottom">
+              <p class="ins-pillar__desc">Core Web Vitals, crawlability, schema markup, and site structure. Everything you need to know about technical SEO without the jargon.</p>
+              <span class="ins-pillar__link">Read the guide <span aria-hidden="true">&rarr;</span></span>
+            </div>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- ============ 3. CTA ============ -->
-    <section class="cta" aria-labelledby="cta-title">
+    <!-- ============ 3. ARTICLE GRID ============ -->
+    <section class="ins-grid-sec" aria-labelledby="ins-grid-title">
       <div class="container">
-        <h2 id="cta-title" class="cta__title">Ready to be found everywhere?</h2>
-        <p class="cta__lead">Free audit. No commitment. Just clarity on where you stand.</p>
-        <a href="/contact/" class="cta__btn">Get your free audit <span aria-hidden="true" class="cta__btn-arrow">&#x2197;</span></a>
+        <p class="ins-grid__eyebrow">Latest</p>
+        <h2 id="ins-grid-title" class="ins-grid__title">All articles</h2>
+        <p class="ins-empty">Articles coming soon. In the meantime get in touch if you have a specific question.</p>
+      </div>
+    </section>
+
+    <!-- ============ 4. NEWSLETTER ============ -->
+    <section class="ins-news" aria-labelledby="ins-news-title">
+      <div class="container">
+        <h2 id="ins-news-title" class="ins-news__title">Get new guides in your inbox</h2>
+        <p class="ins-news__body">No fluff, no sales emails. Just practical insights on SEO and AI visibility when we publish them.</p>
+        <form class="ins-news__form" action="/#" method="post">
+          <label class="sr-only" for="ins-email">Email address</label>
+          <input class="ins-news__input" id="ins-email" type="email" name="email" placeholder="your@email.com" autocomplete="email" required />
+          <button type="submit" class="ins-news__btn">Subscribe <span aria-hidden="true">&#x2197;</span></button>
+        </form>
+        <p class="ins-news__note">No spam. Unsubscribe any time.</p>
       </div>
     </section>
   </main>
@@ -184,7 +162,7 @@
             <li><a href="/services/seo-audit/"      class="footer__link">SEO audit</a></li>
             <li><a href="/services/llm-visibility/" class="footer__link">LLM visibility</a></li>
             <li><a href="/services/technical-seo/"  class="footer__link">Technical SEO</a></li>
-            <li><a href="/services/visibility-that-compounds/"       class="footer__link">Retainer</a></li>
+            <li><a href="/services/local-seo/"      class="footer__link">Local SEO</a></li>
           </ul>
         </div>
         <div class="footer__col">
@@ -217,7 +195,7 @@
   </footer>
 
   <style>
-    /* ---------- NAV (chrome) ---------- */
+    /* ---------- NAV chrome (shared) ---------- */
     .nav {
       position: sticky; top: 0; z-index: var(--z-nav);
       background: #FFFFFF;
@@ -326,93 +304,93 @@
       .nav__cta .btn { width: 100%; }
     }
 
-    /* ---------- HERO ---------- */
-    .services-hero { background: #0D1826; color: #FFFFFF; text-align: center; padding-block: 96px; }
-    .services-hero__eyebrow {
-      margin: 0 0 20px;
-      font-family: var(--font-mono); font-size: 11px; line-height: 1;
-      color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em;
+    /* ---------- FAQItem (mirrors src/components/ui/FAQItem.astro) ---------- */
+    .ui-faq { border-bottom: 1px solid #E4E8EF; }
+    .ui-faq:first-of-type { border-top: 1px solid #E4E8EF; }
+    .ui-faq > summary { list-style: none; cursor: pointer; }
+    .ui-faq > summary::-webkit-details-marker { display: none; }
+    .ui-faq > summary::marker { content: ''; }
+    .ui-faq__summary {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 20px 0;
+      font-family: var(--font-display); font-weight: 500;
+      font-size: 15px; line-height: 1.4; color: #0D1321;
     }
-    .services-hero__title {
+    .ui-faq__summary:hover { color: #0C7B82; }
+    .ui-faq__q { flex: 1; text-wrap: balance; }
+    .ui-faq__chevron {
+      flex-shrink: 0; width: 9px; height: 9px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: translateY(-2px) rotate(45deg);
+      transform-origin: center;
+      transition: transform var(--duration-base) var(--ease-out);
+      color: #64748B;
+    }
+    .ui-faq[open] .ui-faq__chevron {
+      transform: translateY(2px) rotate(225deg); color: #0C7B82;
+    }
+    .ui-faq__answer { padding: 0 0 24px; max-width: 60ch; }
+    .ui-faq__answer p {
       margin: 0;
-      font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
-      line-height: 1.05; letter-spacing: -0.02em; color: #FFFFFF;
-      text-wrap: balance;
-    }
-    .services-hero__lead {
-      margin: 20px auto 0; max-width: 560px;
       font-family: var(--font-body); font-weight: 400;
-      font-size: 17px; line-height: 1.65; color: #94A3B8;
-      text-wrap: pretty;
+      font-size: 14px; line-height: 1.65; color: #64748B;
     }
 
-    /* ---------- SERVICE BLOCKS ---------- */
-    .services-detail { background: #FFFFFF; padding-block: 96px; }
-    .services-detail__list { max-width: 960px; margin: 0 auto; }
+    /* ---------- 1. HERO ---------- */
+    .ins-hero { background: #0D1826; color: #FFFFFF; text-align: center; padding-block: 96px; }
+    .ins-hero__eyebrow { margin: 0 0 20px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .ins-hero__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(34px, 1.6rem + 3.6vw, 52px); line-height: 1.1; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance; }
+    .ins-hero__lead { margin: 20px auto 0; max-width: 520px; font-family: var(--font-body); font-weight: 400; font-size: 17px; line-height: 1.65; color: #94A3B8; text-wrap: pretty; }
 
-    .svc {
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-      gap: 64px;
-      padding-block: 56px;
-      border-top: 1px solid #E4E8EF;
-    }
-    .svc:first-child { border-top: 0; padding-top: 0; }
-    .svc:last-child  { padding-bottom: 0; }
+    .ins-pillars__eyebrow, .ins-grid__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .ins-pillars__title, .ins-grid__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 1.5rem + 1.6vw, 36px); line-height: 1.15; letter-spacing: -0.02em; color: #0D1321; text-wrap: balance; }
 
-    .svc__num {
-      margin: 0 0 16px;
-      font-family: var(--font-mono); font-weight: 500;
-      font-size: 11px; line-height: 1;
-      color: #0C7B82; letter-spacing: 0.08em;
-    }
-    .svc__name {
-      margin: 0;
-      font-family: var(--font-display); font-weight: 700;
-      font-size: clamp(22px, 1.2rem + 1.4vw, 28px);
-      line-height: 1.15; letter-spacing: -0.02em; color: #0D1321;
-      text-wrap: balance;
-    }
-    .svc__desc {
-      margin: 16px 0 0;
-      font-family: var(--font-body); font-weight: 400;
-      font-size: 17px; line-height: 1.75; color: #64748B;
-      text-wrap: pretty;
-    }
-    .svc__link {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      margin-top: 20px;
-      font-family: var(--font-display); font-weight: 500; font-size: 15px;
-      color: #0C7B82; text-decoration: none;
-      transition: color var(--duration-fast) var(--ease-out);
-    }
-    .svc__link:hover { color: #0A6970; }
-    .svc__arrow { transition: transform var(--duration-base) var(--ease-out); }
-    .svc__link:hover .svc__arrow { transform: translateX(3px); }
+    /* ---------- 2. FEATURED PILLARS ---------- */
+    .ins-pillars { background: #FFFFFF; padding-block: 96px; }
+    .ins-pillars .container { max-width: 960px; }
+    .ins-pillars__grid { margin-top: 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .ins-pillar { display: flex; flex-direction: column; background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 16px; overflow: hidden; text-decoration: none; color: inherit; transition: transform var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out); }
+    .ins-pillar:hover { transform: translateY(-3px); border-color: #0C7B82; box-shadow: 0 12px 24px rgba(12,123,130,0.08); }
+    .ins-pillar__top { background: #0D1826; padding: 28px; }
+    .ins-pillar__eyebrow { display: block; margin-bottom: 12px; font-family: var(--font-mono); font-weight: 500; font-size: 10px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .ins-pillar__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.2; letter-spacing: -0.01em; color: #FFFFFF; text-wrap: balance; }
+    .ins-pillar__bottom { padding: 24px; display: flex; flex-direction: column; flex: 1; }
+    .ins-pillar__desc { margin: 0 0 16px; font-family: var(--font-body); font-weight: 400; font-size: 15px; line-height: 1.65; color: #64748B; text-wrap: pretty; }
+    .ins-pillar__link { margin-top: auto; font-family: var(--font-display); font-weight: 600; font-size: 14px; color: #0C7B82; }
+    .ins-pillar__link span { display: inline-block; transition: transform var(--duration-base) var(--ease-out); }
+    .ins-pillar:hover .ins-pillar__link span { transform: translateX(3px); }
 
-    .svc__features {
-      list-style: none; padding: 0; margin: 0;
-      display: flex; flex-direction: column; gap: 12px;
-      align-self: start;
-    }
-    .svc__features li {
-      position: relative; padding-left: 20px;
-      font-family: var(--font-body); font-weight: 400;
-      font-size: 15px; line-height: 1.5; color: #64748B;
-    }
-    .svc__features li + li { margin-top: 0; }
-    .svc__features li::before {
-      content: ""; position: absolute; left: 0; top: 0.55em;
-      width: 7px; height: 7px; border-radius: 50%; background: #0C7B82;
-    }
+    /* ---------- 3. ARTICLE GRID ---------- */
+    .ins-grid-sec { background: #F7F9FC; padding-block: 96px; }
+    .ins-grid-sec .container { max-width: 960px; }
+    .ins-grid { margin-top: 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .ins-card { display: block; background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 12px; padding: 24px; text-decoration: none; color: inherit; transition: transform var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out); }
+    .ins-card:hover { transform: translateY(-2px); border-color: #0C7B82; box-shadow: 0 12px 24px rgba(12,123,130,0.08); }
+    .ins-card__title { margin: 10px 0 0; font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.3; letter-spacing: -0.01em; color: #0D1321; }
+    .ins-card__desc { margin: 8px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 14px; line-height: 1.6; color: #64748B; text-wrap: pretty; }
+    .ins-card__date { margin: 16px 0 0; font-family: var(--font-mono); font-weight: 400; font-size: 10px; line-height: 1; color: #64748B; letter-spacing: 0.04em; }
+    .ins-empty { margin: 48px auto 0; max-width: 36rem; text-align: center; font-family: var(--font-body); font-weight: 400; font-size: 16px; line-height: 1.6; color: #64748B; text-wrap: pretty; }
 
-    @media (max-width: 56rem) {
-      .svc { grid-template-columns: 1fr; gap: 28px; padding-block: 48px; }
-    }
+    /* ---------- 4. NEWSLETTER ---------- */
+    .ins-news { background: #0D1826; padding-block: 64px; text-align: center; }
+    .ins-news .container { max-width: 600px; }
+    .ins-news__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1.2; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance; }
+    .ins-news__body { margin: 12px auto 0; max-width: 440px; font-family: var(--font-body); font-weight: 400; font-size: 15px; line-height: 1.6; color: #94A3B8; text-wrap: pretty; }
+    .ins-news__form { margin: 28px auto 0; display: flex; gap: 12px; max-width: 440px; }
+    .ins-news__input { flex: 1; min-width: 0; border: 1px solid #1E3A4A; background: #0A1520; color: #FFFFFF; border-radius: 8px; padding: 11px 16px; font-family: var(--font-body); font-size: 15px; line-height: 1.4; transition: border-color var(--duration-fast) var(--ease-out); }
+    .ins-news__input::placeholder { color: #64748B; }
+    .ins-news__input:focus { outline: none; border-color: #0C7B82; }
+    .ins-news__btn { flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.4rem; background: #0C7B82; color: #FFFFFF; border: 1px solid #0C7B82; border-radius: 8px; padding: 11px 24px; font-family: var(--font-display); font-weight: 600; font-size: 14px; line-height: 1.4; cursor: pointer; transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out); }
+    .ins-news__btn:hover { background: #0A6970; border-color: #0A6970; }
+    .ins-news__note { margin: 12px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 12px; line-height: 1.5; color: #64748B; }
+
     @media (max-width: 48rem) {
-      .services-hero { padding-block: 72px; }
-      .services-detail { padding-block: 72px; }
+      .ins-hero { padding-block: 72px; }
+      .ins-pillars { padding-block: 72px; }
+      .ins-grid-sec { padding-block: 72px; }
+      .ins-news__form { flex-direction: column; }
+      .ins-news__btn { justify-content: center; }
     }
 
     /* ---------- CTA (mirrors src/components/sections/CTABlock.astro) ---------- */
@@ -421,8 +399,7 @@
       margin: 0;
       font-family: var(--font-display); font-weight: 700;
       font-size: clamp(28px, 1.6rem + 1.6vw, 36px);
-      line-height: 1.15; letter-spacing: -0.02em; color: #FFFFFF;
-      text-wrap: balance;
+      line-height: 1.15; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance;
     }
     .cta__lead {
       margin: 12px auto 0; max-width: 36rem;
@@ -444,7 +421,7 @@
     .cta__btn:hover .cta__btn-arrow { transform: translate(2px, -2px); }
     @media (max-width: 48rem) { .cta { padding-block: 64px; } }
 
-    /* ---------- FOOTER (chrome) ---------- */
+    /* ---------- FOOTER chrome (shared) ---------- */
     .footer { background: var(--color-dark); color: var(--color-dark-text); padding-block: var(--space-10) var(--space-6); border-top: 1px solid var(--color-dark-line); }
     .footer__inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr); gap: var(--space-9); align-items: start; padding-bottom: var(--space-9); border-bottom: 1px solid var(--color-dark-line); }
     .footer__brand-link { display: inline-flex; align-items: center; line-height: 0; }

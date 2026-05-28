@@ -43,7 +43,7 @@ export const NAV: ReadonlyArray<NavItem> = [
       { href: '/services/seo-audit/',      label: 'SEO audit' },
       { href: '/services/llm-visibility/', label: 'LLM visibility' },
       { href: '/services/technical-seo/',  label: 'Technical SEO' },
-      { href: '/services/retainer/',       label: 'Visibility that compounds' },
+      { href: '/services/visibility-that-compounds/',       label: 'Visibility that compounds' },
       { href: '/services/local-seo/',      label: 'Local SEO and Google Business Profile' },
     ],
   },

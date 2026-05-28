@@ -1,0 +1,631 @@
+---
+/**
+ * services/technical-seo.astro: detail page for the technical SEO service.
+ *
+ * Schema flow: FAQPage built from the same TECH_FAQS source rendered
+ * on-page, plus a BreadcrumbList (Home > Services > this page). Both
+ * flow through schemaExtras into the single <head> @graph.
+ */
+import Page from '../../layouts/Page.astro';
+import FAQItem from '../../components/ui/FAQItem.astro';
+import CTABlock from '../../components/sections/CTABlock.astro';
+import { faqPageSchema, breadcrumbSchema } from '../../lib/schema';
+import { SITE } from '../../lib/site';
+
+const FEATURES = [
+  {
+    num: '01',
+    title: 'Crawl and indexing',
+    body: 'We make sure search engines can find, crawl, and index your site correctly. Blocked pages, noindex tags, redirect chains, and crawl budget issues — all identified and resolved.',
+  },
+  {
+    num: '02',
+    title: 'Core Web Vitals',
+    body: 'Google uses Core Web Vitals as a ranking signal. We test your LCP, CLS, and INP scores, identify exactly what is causing them to fail, and fix the underlying issues rather than just treating the symptoms.',
+  },
+  {
+    num: '03',
+    title: 'Site architecture',
+    body: 'A logical, flat site structure helps search engines understand your content and distribute authority effectively. We review your URL structure, category hierarchy, and navigation and fix what is not working.',
+  },
+  {
+    num: '04',
+    title: 'Internal linking',
+    body: 'Internal links tell search engines which pages matter. Most sites have orphaned pages, broken links, and missed opportunities to pass authority to their most important content. We fix all of it.',
+  },
+  {
+    num: '05',
+    title: 'Page speed',
+    body: 'Beyond Core Web Vitals, raw page speed affects both rankings and conversions. We optimise images, eliminate render-blocking resources, implement caching, and strip out anything slowing your site down.',
+  },
+  {
+    num: '06',
+    title: 'Schema and structured data',
+    body: 'Structured data helps search engines and AI systems understand your content. We implement the right schema types for your business and make sure they validate correctly.',
+  },
+] as const;
+
+const DELIVERABLES = [
+  {
+    title: 'Full technical audit',
+    body: 'Every issue documented, scored by impact, explained in plain English.',
+  },
+  {
+    title: 'Hands-on fixes',
+    body: 'We do not just tell you what is wrong. We fix it. Every issue resolved and verified.',
+  },
+  {
+    title: 'Before and after scores',
+    body: 'PageSpeed, Core Web Vitals, and crawl stats before and after so you can see the improvement.',
+  },
+  {
+    title: '30 minute walkthrough',
+    body: 'We walk you through what we found and what we fixed so you understand what changed and why.',
+  },
+] as const;
+
+const TECH_FAQS = [
+  {
+    question: 'Do you fix the issues or just report them?',
+    answer:
+      'We fix them. Every technical SEO engagement includes hands-on implementation. You get a report of what we found and a fixed site, not a to-do list.',
+  },
+  {
+    question: 'What platforms do you work with?',
+    answer:
+      'Any platform — WordPress, Webflow, Squarespace, Shopify, Astro, custom builds. If it has a URL we can audit and fix it.',
+  },
+  {
+    question: 'How long does technical SEO take to show results?',
+    answer:
+      'Some improvements show within days — particularly crawl and indexing fixes. Core Web Vitals improvements typically show in Google Search Console within two to four weeks. Ranking improvements follow over the subsequent weeks as Google re-crawls and re-evaluates the site.',
+  },
+  {
+    question: 'My site already has an SEO plugin. Do I still need this?',
+    answer:
+      'Yes. SEO plugins handle on-page basics like title tags and meta descriptions. They do not fix Core Web Vitals, crawl errors, redirect chains, site architecture problems, or structured data implementation. Those require hands-on technical work.',
+  },
+  {
+    question: 'Will this affect my existing content or design?',
+    answer:
+      'No. Technical SEO work happens under the hood. Your content and design stay exactly as they are. We only touch the technical layer.',
+  },
+  {
+    question: 'How do I know if my site has technical SEO problems?',
+    answer:
+      'Almost every site does. Common signs include slow PageSpeed scores, pages not appearing in Google, rankings that have dropped without explanation, and Core Web Vitals failures in Search Console. Get in touch for a free audit and we will tell you exactly what your site needs.',
+  },
+];
+
+const pageUrl = `${SITE.url}/services/technical-seo/`;
+const schemaExtras = [
+  faqPageSchema(TECH_FAQS, pageUrl),
+  breadcrumbSchema(
+    [
+      { name: 'Home',          item: `${SITE.url}/` },
+      { name: 'Services',      item: `${SITE.url}/services/` },
+      { name: 'Technical SEO', item: pageUrl },
+    ],
+    pageUrl,
+  ),
+];
+---
+
+<Page
+  title="Technical SEO Service UK | Found Everywhere"
+  description="We fix the technical foundations that hold your site back. Core Web Vitals, crawlability, site structure, and internal linking done properly for UK businesses."
+  path="/services/technical-seo/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="ts-hero" aria-labelledby="ts-hero-title">
+    <div class="container">
+      <p class="ts-hero__eyebrow">Technical SEO</p>
+      <h1 id="ts-hero-title" class="ts-hero__title">The foundations everything else sits on</h1>
+      <p class="ts-hero__lead">
+        Most SEO problems are technical problems. Slow pages, crawl
+        errors, broken structure, missing schema. We find them, fix them,
+        and make sure they stay fixed.
+      </p>
+      <div class="ts-hero__cta">
+        <a href="/contact/" class="ts-btn ts-btn--primary">
+          Get your free audit <span aria-hidden="true" class="ts-btn__arrow">&#x2197;</span>
+        </a>
+        <a href="/services/" class="ts-btn ts-btn--ghost">See all services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. TWO COLUMN ============ -->
+  <section class="ts-body">
+    <div class="container">
+      <div class="ts-body__grid">
+
+        <!-- LEFT COLUMN -->
+        <div class="ts-content">
+
+          <h2 class="ts-h2">What we fix</h2>
+
+          <ul class="ts-features" role="list">
+            {FEATURES.map((f) => (
+              <li class="ts-feature">
+                <span class="ts-feature__num">{f.num}</span>
+                <div>
+                  <h3 class="ts-feature__title">{f.title}</h3>
+                  <p class="ts-feature__body">{f.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <h2 class="ts-h2 ts-h2--gap">What you get</h2>
+
+          <ul class="ts-deliverables" role="list">
+            {DELIVERABLES.map((d) => (
+              <li class="ts-deliverable">
+                <svg class="ts-deliverable__check" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
+                <div>
+                  <h3 class="ts-deliverable__title">{d.title}</h3>
+                  <p class="ts-deliverable__body">{d.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <aside class="ts-card" aria-label="Technical SEO summary">
+          <p class="ts-card__eyebrow">Investment</p>
+          <p class="ts-card__price">From £597</p>
+          <p class="ts-card__turnaround">Delivered within 2 weeks</p>
+
+          <hr class="ts-card__divider" />
+
+          <ul class="ts-card__checks" role="list">
+            <li>
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
+              <span>Fixes included, not just a report</span>
+            </li>
+            <li>
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
+              <span>Core Web Vitals guaranteed</span>
+            </li>
+            <li>
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
+              <span>Any platform, any stack</span>
+            </li>
+          </ul>
+
+          <a href="/contact/" class="ts-card__cta">
+            Get your free audit
+            <span aria-hidden="true" class="ts-card__cta-arrow">&#x2197;</span>
+          </a>
+
+          <p class="ts-card__note">
+            Not sure where to start? Get in touch and we will tell you
+            honestly what your site needs.
+          </p>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. WHY IT MATTERS ============ -->
+  <section class="ts-why" aria-labelledby="ts-why-title">
+    <div class="container">
+      <p class="ts-why__eyebrow">Why it matters</p>
+      <h2 id="ts-why-title" class="ts-why__title">You cannot build on broken foundations</h2>
+      <p class="ts-why__body">
+        Content, links, and strategy all matter. But none of them work
+        properly if your technical foundations are broken. A slow site
+        loses rankings before the content even gets a chance. A page Google
+        cannot crawl does not exist. Schema errors mean AI systems cannot
+        understand your business. Technical SEO is not the exciting part of
+        the job. It is the part that makes everything else work.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 4. FAQ ============ -->
+  <section class="ts-faq" aria-labelledby="ts-faq-title">
+    <div class="container">
+      <p class="ts-faq__eyebrow">Common questions</p>
+      <h2 id="ts-faq-title" class="ts-faq__title">What people ask about technical SEO</h2>
+      <div class="ts-faq__list">
+        {TECH_FAQS.map((faq) => (
+          <FAQItem question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. CTA ============ -->
+  <CTABlock />
+
+</Page>
+
+<style>
+  /* ============================================================
+     1. HERO
+     ============================================================ */
+  .ts-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .ts-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ts-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .ts-hero__lead {
+    margin: 20px auto 0;
+    max-width: 560px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .ts-hero__cta {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* Hero buttons */
+  .ts-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 13px 22px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+  .ts-btn--primary {
+    color: #FFFFFF;
+    background: #0C7B82;
+    border: 1px solid #0C7B82;
+  }
+  .ts-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
+  .ts-btn--ghost {
+    color: #FFFFFF;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .ts-btn--ghost:hover { border-color: rgba(255, 255, 255, 0.55); }
+  .ts-btn__arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .ts-btn--primary:hover .ts-btn__arrow { transform: translate(2px, -2px); }
+
+  /* ============================================================
+     2. TWO-COLUMN BODY
+     ============================================================ */
+  .ts-body { background: #FFFFFF; padding-block: 96px; }
+
+  .ts-body__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 64px;
+    max-width: 960px;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  /* ---------- Left: content ---------- */
+  .ts-h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 1.3rem + 1.4vw, 32px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .ts-h2--gap { margin-top: 64px; }
+
+  /* Features list */
+  .ts-features {
+    list-style: none;
+    padding: 0;
+    margin: 32px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .ts-feature {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  .ts-feature__num {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #0C7B82;
+    letter-spacing: 0.04em;
+  }
+  .ts-feature__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .ts-feature__body {
+    margin: 6px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* Deliverables list */
+  .ts-deliverables {
+    list-style: none;
+    padding: 0;
+    margin: 32px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .ts-deliverable {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .ts-deliverable__check {
+    color: #0C7B82;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .ts-deliverable__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .ts-deliverable__body {
+    margin: 5px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ---------- Right: sticky card ---------- */
+  .ts-card {
+    position: sticky;
+    top: calc(4.5rem + 24px);
+    background: #FFFFFF;
+    border: 0.5px solid #E4E8EF;
+    border-radius: 16px;
+    padding: 32px;
+    align-self: start;
+  }
+  .ts-card__eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ts-card__price {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .ts-card__turnaround {
+    margin: 6px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #64748B;
+  }
+  .ts-card__divider {
+    border: 0;
+    border-top: 1px solid #E4E8EF;
+    margin: 20px 0;
+  }
+  .ts-card__checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ts-card__checks li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #64748B;
+  }
+  .ts-card__checks svg { color: #0C7B82; flex-shrink: 0; }
+
+  .ts-card__cta {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 24px;
+    padding: 12px 16px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    color: #FFFFFF;
+    background: #0C7B82;
+    border: 1px solid #0C7B82;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+  .ts-card__cta:hover { background: #0A6970; border-color: #0A6970; }
+  .ts-card__cta-arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .ts-card__cta:hover .ts-card__cta-arrow { transform: translate(2px, -2px); }
+
+  .ts-card__note {
+    margin: 12px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     3. WHY IT MATTERS (dark)
+     ============================================================ */
+  .ts-why {
+    background: #0D1826;
+    padding-block: 96px;
+    text-align: center;
+  }
+  .ts-why .container { max-width: 800px; }
+  .ts-why__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ts-why__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 1.3rem + 1.4vw, 32px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .ts-why__body {
+    margin: 24px auto 0;
+    max-width: 640px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     4. FAQ
+     ============================================================ */
+  .ts-faq {
+    background: #FFFFFF;
+    padding-block: 96px;
+  }
+  .ts-faq .container { max-width: 800px; }
+  .ts-faq__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ts-faq__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .ts-faq__list {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 56rem) {
+    .ts-body__grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .ts-card {
+      position: static;
+      order: 1;
+    }
+  }
+  @media (max-width: 48rem) {
+    .ts-hero { padding-block: 72px; }
+    .ts-body { padding-block: 72px; }
+    .ts-why  { padding-block: 72px; }
+    .ts-faq  { padding-block: 72px; }
+    .ts-card { padding: 24px; }
+  }
+</style>

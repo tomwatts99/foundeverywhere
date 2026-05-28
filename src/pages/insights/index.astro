@@ -1,0 +1,467 @@
+---
+/**
+ * insights/index.astro: insights hub.
+ *
+ * Schema flow: a BreadcrumbList (Home > Insights) flows through
+ * schemaExtras into the single <head> @graph.
+ *
+ * The article grid is driven by the `insights` content collection
+ * (see src/content.config.ts). With no entries authored yet it shows a
+ * placeholder; as .md files land they appear newest-first.
+ */
+import { getCollection } from 'astro:content';
+import Page from '../../layouts/Page.astro';
+import Badge from '../../components/ui/Badge.astro';
+import { breadcrumbSchema } from '../../lib/schema';
+import { SITE } from '../../lib/site';
+
+const PILLARS = [
+  {
+    cluster: 'GEO',
+    title: 'What is generative engine optimisation and why does it matter?',
+    description: 'GEO is the practice of optimising your website to appear in AI-generated answers. This guide covers what it is, how it works, and what you need to do about it.',
+    href: '/insights/generative-engine-optimisation/',
+  },
+  {
+    cluster: 'LLM SEO',
+    title: 'How to get your business cited by ChatGPT, Perplexity, and Gemini',
+    description: 'Most websites are invisible to AI search. This guide explains exactly why and what signals you need to implement to change that.',
+    href: '/insights/how-to-get-found-by-ai/',
+  },
+  {
+    cluster: 'Technical SEO',
+    title: 'The technical SEO guide for UK businesses in 2025',
+    description: 'Core Web Vitals, crawlability, schema markup, and site structure. Everything you need to know about technical SEO without the jargon.',
+    href: '/insights/technical-seo-guide/',
+  },
+] as const;
+
+// Pull the collection, drop drafts, newest first.
+const articles = (await getCollection('insights'))
+  .filter((a) => !a.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+const pageUrl = `${SITE.url}/insights/`;
+const schemaExtras = [
+  breadcrumbSchema(
+    [
+      { name: 'Home',     item: `${SITE.url}/` },
+      { name: 'Insights', item: pageUrl },
+    ],
+    pageUrl,
+  ),
+];
+---
+
+<Page
+  title="Insights | SEO and LLM Visibility Resources | Found Everywhere"
+  description="Guides, articles, and practical resources on SEO, LLM visibility, generative engine optimisation, and technical SEO for UK businesses."
+  path="/insights/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="ins-hero" aria-labelledby="ins-hero-title">
+    <div class="container">
+      <p class="ins-hero__eyebrow">Insights</p>
+      <h1 id="ins-hero-title" class="ins-hero__title">Everything we know about being found</h1>
+      <p class="ins-hero__lead">
+        Practical guides on SEO, LLM visibility, and generative engine
+        optimisation. Written by people who do this work every day.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 2. FEATURED PILLARS ============ -->
+  <section class="ins-pillars" aria-labelledby="ins-pillars-title">
+    <div class="container">
+      <p class="ins-pillars__eyebrow">Start here</p>
+      <h2 id="ins-pillars-title" class="ins-pillars__title">The essential guides</h2>
+
+      <div class="ins-pillars__grid">
+        {PILLARS.map((p) => (
+          <a class="ins-pillar" href={p.href}>
+            <div class="ins-pillar__top">
+              <span class="ins-pillar__eyebrow">{p.cluster}</span>
+              <h3 class="ins-pillar__title">{p.title}</h3>
+            </div>
+            <div class="ins-pillar__bottom">
+              <p class="ins-pillar__desc">{p.description}</p>
+              <span class="ins-pillar__link">Read the guide <span aria-hidden="true">&rarr;</span></span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. ARTICLE GRID ============ -->
+  <section class="ins-grid-sec" aria-labelledby="ins-grid-title">
+    <div class="container">
+      <p class="ins-grid__eyebrow">Latest</p>
+      <h2 id="ins-grid-title" class="ins-grid__title">All articles</h2>
+
+      {articles.length > 0 ? (
+        <div class="ins-grid">
+          {articles.map((a) => (
+            <a class="ins-card" href={`/insights/${a.id}/`}>
+              <Badge text={a.data.cluster} variant="teal" />
+              <h3 class="ins-card__title">{a.data.title}</h3>
+              <p class="ins-card__desc">{a.data.description}</p>
+              <p class="ins-card__date">{fmtDate(a.data.pubDate)}</p>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="ins-empty">
+          Articles coming soon. In the meantime get in touch if you have a
+          specific question.
+        </p>
+      )}
+    </div>
+  </section>
+
+  <!-- ============ 4. NEWSLETTER ============ -->
+  <section class="ins-news" aria-labelledby="ins-news-title">
+    <div class="container">
+      <h2 id="ins-news-title" class="ins-news__title">Get new guides in your inbox</h2>
+      <p class="ins-news__body">
+        No fluff, no sales emails. Just practical insights on SEO and AI
+        visibility when we publish them.
+      </p>
+      <form class="ins-news__form" action="/#" method="post">
+        <label class="sr-only" for="ins-email">Email address</label>
+        <input
+          class="ins-news__input"
+          id="ins-email"
+          type="email"
+          name="email"
+          placeholder="your@email.com"
+          autocomplete="email"
+          required
+        />
+        <button type="submit" class="ins-news__btn">
+          Subscribe <span aria-hidden="true">&#x2197;</span>
+        </button>
+      </form>
+      <p class="ins-news__note">No spam. Unsubscribe any time.</p>
+    </div>
+  </section>
+
+</Page>
+
+<style>
+  /* ============================================================
+     1. HERO
+     ============================================================ */
+  .ins-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .ins-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ins-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .ins-hero__lead {
+    margin: 20px auto 0;
+    max-width: 520px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     SHARED section header bits
+     ============================================================ */
+  .ins-pillars__eyebrow,
+  .ins-grid__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ins-pillars__title,
+  .ins-grid__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+
+  /* ============================================================
+     2. FEATURED PILLARS
+     ============================================================ */
+  .ins-pillars { background: #FFFFFF; padding-block: 96px; }
+  .ins-pillars .container { max-width: 960px; }
+  .ins-pillars__grid {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .ins-pillar {
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+    border: 0.5px solid #E4E8EF;
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
+  }
+  .ins-pillar:hover {
+    transform: translateY(-3px);
+    border-color: #0C7B82;
+    box-shadow: 0 12px 24px rgba(12, 123, 130, 0.08);
+  }
+  .ins-pillar__top {
+    background: #0D1826;
+    padding: 28px;
+  }
+  .ins-pillar__eyebrow {
+    display: block;
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ins-pillar__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .ins-pillar__bottom {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .ins-pillar__desc {
+    margin: 0 0 16px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .ins-pillar__link {
+    margin-top: auto;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    color: #0C7B82;
+  }
+  .ins-pillar__link span {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .ins-pillar:hover .ins-pillar__link span { transform: translateX(3px); }
+
+  /* ============================================================
+     3. ARTICLE GRID
+     ============================================================ */
+  .ins-grid-sec { background: #F7F9FC; padding-block: 96px; }
+  .ins-grid-sec .container { max-width: 960px; }
+  .ins-grid {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .ins-card {
+    display: block;
+    background: #FFFFFF;
+    border: 0.5px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
+  }
+  .ins-card:hover {
+    transform: translateY(-2px);
+    border-color: #0C7B82;
+    box-shadow: 0 12px 24px rgba(12, 123, 130, 0.08);
+  }
+  .ins-card__title {
+    margin: 10px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .ins-card__desc {
+    margin: 8px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .ins-card__date {
+    margin: 16px 0 0;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 1;
+    color: #64748B;
+    letter-spacing: 0.04em;
+  }
+  .ins-empty {
+    margin: 48px auto 0;
+    max-width: 36rem;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     4. NEWSLETTER
+     ============================================================ */
+  .ins-news {
+    background: #0D1826;
+    padding-block: 64px;
+    text-align: center;
+  }
+  .ins-news .container { max-width: 600px; }
+  .ins-news__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .ins-news__body {
+    margin: 12px auto 0;
+    max-width: 440px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .ins-news__form {
+    margin: 28px auto 0;
+    display: flex;
+    gap: 12px;
+    max-width: 440px;
+  }
+  .ins-news__input {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid #1E3A4A;
+    background: #0A1520;
+    color: #FFFFFF;
+    border-radius: 8px;
+    padding: 11px 16px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.4;
+    transition: border-color var(--duration-fast) var(--ease-out);
+  }
+  .ins-news__input::placeholder { color: #64748B; }
+  .ins-news__input:focus {
+    outline: none;
+    border-color: #0C7B82;
+  }
+  .ins-news__btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #0C7B82;
+    color: #FFFFFF;
+    border: 1px solid #0C7B82;
+    border-radius: 8px;
+    padding: 11px 24px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.4;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+  .ins-news__btn:hover { background: #0A6970; border-color: #0A6970; }
+  .ins-news__note {
+    margin: 12px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #64748B;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 48rem) {
+    .ins-hero     { padding-block: 72px; }
+    .ins-pillars  { padding-block: 72px; }
+    .ins-grid-sec { padding-block: 72px; }
+    .ins-news__form {
+      flex-direction: column;
+    }
+    .ins-news__btn { justify-content: center; }
+  }
+</style>

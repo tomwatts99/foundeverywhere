@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Technical SEO Service UK | Found Everywhere</title>
+  <meta name="description" content="We fix the technical foundations that hold your site back. Core Web Vitals, crawlability, site structure, and internal linking done properly for UK businesses." />
+  <meta name="theme-color" content="#0C7B82" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="src/styles/global.css" />
+
+  <!-- FAQPage + BreadcrumbList JSON-LD: preview only. Astro emits these via
+       schemaExtras inside Base.astro's single @graph. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "FAQPage",
+        "@id": "https://foundeverywhere.co.uk/services/technical-seo/#faq",
+        "mainEntity": [
+          { "@type": "Question", "name": "Do you fix the issues or just report them?", "acceptedAnswer": { "@type": "Answer", "text": "We fix them. Every technical SEO engagement includes hands-on implementation. You get a report of what we found and a fixed site, not a to-do list." } },
+          { "@type": "Question", "name": "What platforms do you work with?", "acceptedAnswer": { "@type": "Answer", "text": "Any platform — WordPress, Webflow, Squarespace, Shopify, Astro, custom builds. If it has a URL we can audit and fix it." } },
+          { "@type": "Question", "name": "How long does technical SEO take to show results?", "acceptedAnswer": { "@type": "Answer", "text": "Some improvements show within days — particularly crawl and indexing fixes. Core Web Vitals improvements typically show in Google Search Console within two to four weeks. Ranking improvements follow over the subsequent weeks as Google re-crawls and re-evaluates the site." } },
+          { "@type": "Question", "name": "My site already has an SEO plugin. Do I still need this?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. SEO plugins handle on-page basics like title tags and meta descriptions. They do not fix Core Web Vitals, crawl errors, redirect chains, site architecture problems, or structured data implementation. Those require hands-on technical work." } },
+          { "@type": "Question", "name": "Will this affect my existing content or design?", "acceptedAnswer": { "@type": "Answer", "text": "No. Technical SEO work happens under the hood. Your content and design stay exactly as they are. We only touch the technical layer." } },
+          { "@type": "Question", "name": "How do I know if my site has technical SEO problems?", "acceptedAnswer": { "@type": "Answer", "text": "Almost every site does. Common signs include slow PageSpeed scores, pages not appearing in Google, rankings that have dropped without explanation, and Core Web Vitals failures in Search Console. Get in touch for a free audit and we will tell you exactly what your site needs." } }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://foundeverywhere.co.uk/services/technical-seo/#breadcrumbs",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home",          "item": "https://foundeverywhere.co.uk/" },
+          { "@type": "ListItem", "position": 2, "name": "Services",      "item": "https://foundeverywhere.co.uk/services/" },
+          { "@type": "ListItem", "position": 3, "name": "Technical SEO", "item": "https://foundeverywhere.co.uk/services/technical-seo/" }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" role="banner">
+    <div class="container nav__inner">
+      <a href="/" class="nav__brand" aria-label="Found Everywhere, home">
+        <img class="nav__logo" src="public/images/logo.svg" alt="Found Everywhere" height="61" />
+      </a>
+      <details class="nav__menu" id="nav-menu" open>
+        <summary class="nav__toggle" aria-label="Toggle navigation">
+          <span class="nav__toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="sr-only">Menu</span>
+        </summary>
+        <nav class="nav__panel" aria-label="Primary">
+          <ul class="nav__links" role="list">
+            <li class="nav__item nav__item--has-dropdown">
+              <a href="/services/" class="nav__link" aria-current="page">Services</a>
+            <button type="button" class="nav__chevron-btn" aria-expanded="false" aria-controls="submenu-services" aria-label="Toggle Services submenu">
+              <svg class="nav__chevron" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>
+            </button>
+            <ul class="nav__dropdown" id="submenu-services" role="list">
+              <li><a href="/services/seo-audit/"      class="nav__dropdown-link">SEO audit</a></li>
+              <li><a href="/services/llm-visibility/" class="nav__dropdown-link">LLM visibility</a></li>
+              <li><a href="/services/technical-seo/"  class="nav__dropdown-link" aria-current="page">Technical SEO</a></li>
+              <li><a href="/services/visibility-that-compounds/"       class="nav__dropdown-link">Visibility that compounds</a></li>
+              <li><a href="/services/local-seo/"      class="nav__dropdown-link">Local SEO and Google Business Profile</a></li>
+            </ul>
+            </li>
+            <li class="nav__item"><a href="/how-it-works/" class="nav__link">How it works</a></li>
+            <li class="nav__item"><a href="/insights/"     class="nav__link">Insights</a></li>
+            <li class="nav__item"><a href="/results/"      class="nav__link">Results</a></li>
+            <li class="nav__item"><a href="/about/"        class="nav__link">About</a></li>
+          </ul>
+          <div class="nav__cta"><a href="/contact/" class="btn">Book an audit</a></div>
+        </nav>
+      </details>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ 1. HERO ============ -->
+    <section class="ts-hero" aria-labelledby="ts-hero-title">
+      <div class="container">
+        <p class="ts-hero__eyebrow">Technical SEO</p>
+        <h1 id="ts-hero-title" class="ts-hero__title">The foundations everything else sits on</h1>
+        <p class="ts-hero__lead">Most SEO problems are technical problems. Slow pages, crawl errors, broken structure, missing schema. We find them, fix them, and make sure they stay fixed.</p>
+        <div class="ts-hero__cta">
+          <a href="/contact/" class="ts-btn ts-btn--primary">Get your free audit <span aria-hidden="true" class="ts-btn__arrow">&#x2197;</span></a>
+          <a href="/services/" class="ts-btn ts-btn--ghost">See all services</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 2. TWO-COLUMN BODY ============ -->
+    <section class="ts-body">
+      <div class="container">
+        <div class="ts-body__grid">
+
+          <!-- LEFT: content -->
+          <div class="ts-content">
+            <h2 class="ts-h2">What we fix</h2>
+            <ul class="ts-features" role="list">
+              <li class="ts-feature">
+                <span class="ts-feature__num">01</span>
+                <div>
+                  <h3 class="ts-feature__title">Crawl and indexing</h3>
+                  <p class="ts-feature__body">We make sure search engines can find, crawl, and index your site correctly. Blocked pages, noindex tags, redirect chains, and crawl budget issues — all identified and resolved.</p>
+                </div>
+              </li>
+              <li class="ts-feature">
+                <span class="ts-feature__num">02</span>
+                <div>
+                  <h3 class="ts-feature__title">Core Web Vitals</h3>
+                  <p class="ts-feature__body">Google uses Core Web Vitals as a ranking signal. We test your LCP, CLS, and INP scores, identify exactly what is causing them to fail, and fix the underlying issues rather than just treating the symptoms.</p>
+                </div>
+              </li>
+              <li class="ts-feature">
+                <span class="ts-feature__num">03</span>
+                <div>
+                  <h3 class="ts-feature__title">Site architecture</h3>
+                  <p class="ts-feature__body">A logical, flat site structure helps search engines understand your content and distribute authority effectively. We review your URL structure, category hierarchy, and navigation and fix what is not working.</p>
+                </div>
+              </li>
+              <li class="ts-feature">
+                <span class="ts-feature__num">04</span>
+                <div>
+                  <h3 class="ts-feature__title">Internal linking</h3>
+                  <p class="ts-feature__body">Internal links tell search engines which pages matter. Most sites have orphaned pages, broken links, and missed opportunities to pass authority to their most important content. We fix all of it.</p>
+                </div>
+              </li>
+              <li class="ts-feature">
+                <span class="ts-feature__num">05</span>
+                <div>
+                  <h3 class="ts-feature__title">Page speed</h3>
+                  <p class="ts-feature__body">Beyond Core Web Vitals, raw page speed affects both rankings and conversions. We optimise images, eliminate render-blocking resources, implement caching, and strip out anything slowing your site down.</p>
+                </div>
+              </li>
+              <li class="ts-feature">
+                <span class="ts-feature__num">06</span>
+                <div>
+                  <h3 class="ts-feature__title">Schema and structured data</h3>
+                  <p class="ts-feature__body">Structured data helps search engines and AI systems understand your content. We implement the right schema types for your business and make sure they validate correctly.</p>
+                </div>
+              </li>
+            </ul>
+
+            <h2 class="ts-h2 ts-h2--gap">What you get</h2>
+            <ul class="ts-deliverables" role="list">
+              <li class="ts-deliverable">
+                <svg class="ts-deliverable__check" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
+                <div>
+                  <h3 class="ts-deliverable__title">Full technical audit</h3>
+                  <p class="ts-deliverable__body">Every issue documented, scored by impact, explained in plain English.</p>
+                </div>
+              </li>
+              <li class="ts-deliverable">
+                <svg class="ts-deliverable__check" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
+                <div>
+                  <h3 class="ts-deliverable__title">Hands-on fixes</h3>
+                  <p class="ts-deliverable__body">We do not just tell you what is wrong. We fix it. Every issue resolved and verified.</p>
+                </div>
+              </li>
+              <li class="ts-deliverable">
+                <svg class="ts-deliverable__check" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
+                <div>
+                  <h3 class="ts-deliverable__title">Before and after scores</h3>
+                  <p class="ts-deliverable__body">PageSpeed, Core Web Vitals, and crawl stats before and after so you can see the improvement.</p>
+                </div>
+              </li>
+              <li class="ts-deliverable">
+                <svg class="ts-deliverable__check" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
+                <div>
+                  <h3 class="ts-deliverable__title">30 minute walkthrough</h3>
+                  <p class="ts-deliverable__body">We walk you through what we found and what we fixed so you understand what changed and why.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- RIGHT: sticky card -->
+          <aside class="ts-card" aria-label="Technical SEO summary">
+            <p class="ts-card__eyebrow">Investment</p>
+            <p class="ts-card__price">From £597</p>
+            <p class="ts-card__turnaround">Delivered within 2 weeks</p>
+
+            <hr class="ts-card__divider" />
+
+            <ul class="ts-card__checks" role="list">
+              <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Fixes included, not just a report</span></li>
+              <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Core Web Vitals guaranteed</span></li>
+              <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Any platform, any stack</span></li>
+            </ul>
+
+            <a href="/contact/" class="ts-card__cta">Get your free audit <span aria-hidden="true" class="ts-card__cta-arrow">&#x2197;</span></a>
+
+            <p class="ts-card__note">Not sure where to start? Get in touch and we will tell you honestly what your site needs.</p>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3. WHY IT MATTERS ============ -->
+    <section class="ts-why" aria-labelledby="ts-why-title">
+      <div class="container">
+        <p class="ts-why__eyebrow">Why it matters</p>
+        <h2 id="ts-why-title" class="ts-why__title">You cannot build on broken foundations</h2>
+        <p class="ts-why__body">Content, links, and strategy all matter. But none of them work properly if your technical foundations are broken. A slow site loses rankings before the content even gets a chance. A page Google cannot crawl does not exist. Schema errors mean AI systems cannot understand your business. Technical SEO is not the exciting part of the job. It is the part that makes everything else work.</p>
+      </div>
+    </section>
+
+    <!-- ============ 4. FAQ ============ -->
+    <section class="ts-faq" aria-labelledby="ts-faq-title">
+      <div class="container">
+        <p class="ts-faq__eyebrow">Common questions</p>
+        <h2 id="ts-faq-title" class="ts-faq__title">What people ask about technical SEO</h2>
+        <div class="ts-faq__list">
+          <details class="ui-faq">
+            <summary class="ui-faq__summary"><span class="ui-faq__q">Do you fix the issues or just report them?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+            <div class="ui-faq__answer"><p>We fix them. Every technical SEO engagement includes hands-on implementation. You get a report of what we found and a fixed site, not a to-do list.</p></div>
+          </details>
+          <details class="ui-faq">
+            <summary class="ui-faq__summary"><span class="ui-faq__q">What platforms do you work with?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+            <div class="ui-faq__answer"><p>Any platform — WordPress, Webflow, Squarespace, Shopify, Astro, custom builds. If it has a URL we can audit and fix it.</p></div>
+          </details>
+          <details class="ui-faq">
+            <summary class="ui-faq__summary"><span class="ui-faq__q">How long does technical SEO take to show results?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+            <div class="ui-faq__answer"><p>Some improvements show within days — particularly crawl and indexing fixes. Core Web Vitals improvements typically show in Google Search Console within two to four weeks. Ranking improvements follow over the subsequent weeks as Google re-crawls and re-evaluates the site.</p></div>
+          </details>
+          <details class="ui-faq">
+            <summary class="ui-faq__summary"><span class="ui-faq__q">My site already has an SEO plugin. Do I still need this?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+            <div class="ui-faq__answer"><p>Yes. SEO plugins handle on-page basics like title tags and meta descriptions. They do not fix Core Web Vitals, crawl errors, redirect chains, site architecture problems, or structured data implementation. Those require hands-on technical work.</p></div>
+          </details>
+          <details class="ui-faq">
+            <summary class="ui-faq__summary"><span class="ui-faq__q">Will this affect my existing content or design?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+            <div class="ui-faq__answer"><p>No. Technical SEO work happens under the hood. Your content and design stay exactly as they are. We only touch the technical layer.</p></div>
+          </details>
+          <details class="ui-faq">
+            <summary class="ui-faq__summary"><span class="ui-faq__q">How do I know if my site has technical SEO problems?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
+            <div class="ui-faq__answer"><p>Almost every site does. Common signs include slow PageSpeed scores, pages not appearing in Google, rankings that have dropped without explanation, and Core Web Vitals failures in Search Console. Get in touch for a free audit and we will tell you exactly what your site needs.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5. CTA ============ -->
+    <section class="cta" aria-labelledby="cta-title">
+      <div class="container">
+        <h2 id="cta-title" class="cta__title">Ready to be found everywhere?</h2>
+        <p class="cta__lead">Free audit. No commitment. Just clarity on where you stand.</p>
+        <a href="/contact/" class="cta__btn">Get your free audit <span aria-hidden="true" class="cta__btn-arrow">&#x2197;</span></a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="/" class="footer__brand-link" aria-label="Found Everywhere, home">
+          <img class="footer__logo" src="public/images/logo-white.svg" alt="Found Everywhere" height="48" />
+        </a>
+        <p class="footer__tagline">SEO and LLM visibility, built for the search era after search.</p>
+        <p class="footer__contact"><a href="mailto:hello@foundeverywhere.co.uk">hello@foundeverywhere.co.uk</a></p>
+      </div>
+      <nav class="footer__nav" aria-label="Footer">
+        <div class="footer__col">
+          <h2 class="footer__col-title">Services</h2>
+          <ul class="footer__col-list" role="list">
+            <li><a href="/services/seo-audit/"      class="footer__link">SEO audit</a></li>
+            <li><a href="/services/llm-visibility/" class="footer__link">LLM visibility</a></li>
+            <li><a href="/services/technical-seo/"  class="footer__link">Technical SEO</a></li>
+            <li><a href="/services/local-seo/"      class="footer__link">Local SEO</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h2 class="footer__col-title">Agency</h2>
+          <ul class="footer__col-list" role="list">
+            <li><a href="/about/"    class="footer__link">About</a></li>
+            <li><a href="/results/"  class="footer__link">Results</a></li>
+            <li><a href="/insights/" class="footer__link">Insights</a></li>
+            <li><a href="/contact/"  class="footer__link">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h2 class="footer__col-title">Resources</h2>
+          <ul class="footer__col-list" role="list">
+            <li><a href="/llms.txt"          class="footer__link mono">llms.txt</a></li>
+            <li><a href="/sitemap-index.xml" class="footer__link">Sitemap</a></li>
+            <li><a href="/rss.xml"           class="footer__link">RSS</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="container footer__legal">
+      <p class="footer__copy">© 2026 Found Everywhere Ltd. Registered in England &amp; Wales.</p>
+      <ul class="footer__meta" role="list">
+        <li><a href="/privacy"  class="footer__link">Privacy</a></li>
+        <li><a href="/terms"    class="footer__link">Terms</a></li>
+        <li><a href="/llms.txt" class="footer__link mono">llms.txt</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <style>
+    /* ---------- NAV chrome (shared) ---------- */
+    .nav {
+      position: sticky; top: 0; z-index: var(--z-nav);
+      background: #FFFFFF;
+      border-bottom: 0.5px solid #E4E8EF;
+    }
+    .nav__inner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-5);
+      /* Bar height tracks the logo — shrinks with it on scroll. */
+      min-height: 5rem;
+      transition: min-height 250ms ease;
+    }
+    .nav__brand { display: inline-flex; align-items: center; flex-shrink: 0; line-height: 0; }
+    .nav__logo {
+      display: block; width: auto;
+      height: 61px;            /* 10% smaller than the previous 68px */
+      transition: height 250ms ease;
+    }
+    .nav--scrolled .nav__inner { min-height: 3.5rem; }
+    .nav--scrolled .nav__logo  { height: 36px; }
+    .nav__menu { position: relative; }
+    .nav__menu > summary { list-style: none; }
+    .nav__menu > summary::-webkit-details-marker { display: none; }
+    .nav__menu > summary::marker { content: ''; }
+    .nav__toggle { display: none; width: 2.5rem; height: 2.5rem; border: 1px solid var(--color-line); border-radius: var(--radius-md); align-items: center; justify-content: center; cursor: pointer; background: var(--color-bg); }
+    .nav__toggle-bars { display: inline-flex; flex-direction: column; gap: 4px; }
+    .nav__toggle-bars span { display: block; width: 1rem; height: 1.5px; background: var(--color-text); border-radius: 2px; }
+    .nav__panel { display: flex; align-items: center; gap: var(--space-7); }
+    .nav__links { display: flex; align-items: center; gap: var(--space-5); padding: 0; margin: 0; list-style: none; }
+    .nav__links li + li { margin-top: 0; }
+    .nav__link { position: relative; display: inline-block; padding: var(--space-2) 0; font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text); }
+    .nav__link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1.5px; background: var(--color-accent); transform: scaleX(0); transform-origin: left; transition: transform var(--duration-base) var(--ease-out); }
+    .nav__link:hover::after, .nav__link[aria-current="page"]::after { transform: scaleX(1); }
+    .nav__link[aria-current="page"] { color: var(--color-accent); }
+
+    /* ---------- Services dropdown (mirrors Nav.astro) ---------- */
+    .nav__item { position: relative; display: inline-flex; align-items: center; gap: 2px; }
+    .nav__chevron-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.25rem; height: 1.25rem;
+      padding: 0; background: transparent; border: 0; border-radius: 4px;
+      color: var(--color-muted); cursor: pointer;
+      transition: color var(--duration-fast) var(--ease-out);
+    }
+    .nav__chevron-btn:hover { color: var(--color-text); }
+    .nav__chevron { display: block; transition: transform var(--duration-base) var(--ease-out); }
+
+    .nav__dropdown { list-style: none; margin: 0; padding: 0; }
+    .nav__dropdown li + li { margin-top: 0; }
+    .nav__dropdown-link {
+      display: block;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 14px; line-height: 1.4; text-decoration: none;
+      transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+    }
+    @media (min-width: 48.0625rem) {
+      .nav__dropdown {
+        position: absolute; top: calc(100% + 6px); left: -10px;
+        min-width: 280px; padding: 8px;
+        background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(13, 19, 33, 0.08), 0 2px 4px rgba(13, 19, 33, 0.04);
+        opacity: 0; visibility: hidden; transform: translateY(-4px);
+        transition: opacity var(--duration-base) var(--ease-out),
+                    transform var(--duration-base) var(--ease-out),
+                    visibility var(--duration-base) var(--ease-out);
+        z-index: calc(var(--z-nav) + 1);
+      }
+      .nav__item--has-dropdown:hover .nav__dropdown,
+      .nav__item--has-dropdown:focus-within .nav__dropdown,
+      .nav__item--has-dropdown .nav__chevron-btn[aria-expanded="true"] ~ .nav__dropdown {
+        opacity: 1; visibility: visible; transform: translateY(0);
+      }
+      .nav__item--has-dropdown:hover .nav__chevron,
+      .nav__item--has-dropdown:focus-within .nav__chevron,
+      .nav__chevron-btn[aria-expanded="true"] .nav__chevron {
+        transform: rotate(180deg);
+      }
+      .nav__dropdown-link { padding: 10px 16px; border-radius: 8px; color: #0D1321; }
+      .nav__dropdown-link:hover,
+      .nav__dropdown-link:focus-visible { background: #F7F9FC; color: #0C7B82; }
+      .nav__dropdown-link[aria-current="page"] { color: #0C7B82; background: #F7F9FC; }
+    }
+    @media (max-width: 48rem) {
+      .nav__toggle { display: inline-flex; }
+      .nav__panel { position: fixed; top: 4.5rem; left: 0; right: 0; max-height: calc(100dvh - 4.5rem); overflow-y: auto; flex-direction: column; align-items: stretch; gap: var(--space-5); padding: var(--space-6) var(--gutter); background: var(--color-bg); border-bottom: 1px solid var(--color-line); box-shadow: var(--shadow-lg); transform: translateY(-8px); opacity: 0; pointer-events: none; }
+      .nav__menu[open] .nav__panel { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      .nav__links { flex-direction: column; align-items: stretch; gap: 0; border-top: 1px solid var(--color-line); }
+      .nav__links li { border-bottom: 1px solid var(--color-line); }
+      .nav__link { display: block; padding: var(--space-4) 0; font-size: var(--text-md); }
+      .nav__link::after { display: none; }
+      .nav__item--has-dropdown {
+        display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: var(--space-3);
+      }
+      .nav__item--has-dropdown .nav__link { grid-column: 1; }
+      .nav__item--has-dropdown .nav__chevron-btn { grid-column: 2; width: 2.75rem; height: 2.75rem; color: var(--color-text); }
+      .nav__item--has-dropdown .nav__chevron-btn[aria-expanded="true"] .nav__chevron { transform: rotate(180deg); }
+      .nav__dropdown { grid-column: 1 / -1; max-height: 0; overflow: hidden; transition: max-height var(--duration-base) var(--ease-out); }
+      .nav__chevron-btn[aria-expanded="true"] ~ .nav__dropdown { max-height: 60vh; }
+      .nav__dropdown li { border-bottom: 0; }
+      .nav__dropdown-link {
+        padding: var(--space-3) var(--space-3) var(--space-3) var(--space-5);
+        color: var(--color-muted); font-size: var(--text-sm);
+      }
+      .nav__dropdown-link:hover, .nav__dropdown-link:active, .nav__dropdown-link[aria-current="page"] { color: var(--color-accent); }
+
+      .nav__cta .btn { width: 100%; }
+    }
+
+    /* ---------- FAQItem (mirrors src/components/ui/FAQItem.astro) ---------- */
+    .ui-faq { border-bottom: 1px solid #E4E8EF; }
+    .ui-faq:first-of-type { border-top: 1px solid #E4E8EF; }
+    .ui-faq > summary { list-style: none; cursor: pointer; }
+    .ui-faq > summary::-webkit-details-marker { display: none; }
+    .ui-faq > summary::marker { content: ''; }
+    .ui-faq__summary {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 20px 0;
+      font-family: var(--font-display); font-weight: 500;
+      font-size: 15px; line-height: 1.4; color: #0D1321;
+    }
+    .ui-faq__summary:hover { color: #0C7B82; }
+    .ui-faq__q { flex: 1; text-wrap: balance; }
+    .ui-faq__chevron {
+      flex-shrink: 0; width: 9px; height: 9px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: translateY(-2px) rotate(45deg);
+      transform-origin: center;
+      transition: transform var(--duration-base) var(--ease-out);
+      color: #64748B;
+    }
+    .ui-faq[open] .ui-faq__chevron {
+      transform: translateY(2px) rotate(225deg); color: #0C7B82;
+    }
+    .ui-faq__answer { padding: 0 0 24px; max-width: 60ch; }
+    .ui-faq__answer p {
+      margin: 0;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 14px; line-height: 1.65; color: #64748B;
+    }
+
+    /* ---------- 1. HERO ---------- */
+    .ts-hero { background: #0D1826; color: #FFFFFF; text-align: center; padding-block: 96px; }
+    .ts-hero__eyebrow { margin: 0 0 20px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .ts-hero__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(34px, 1.6rem + 3.6vw, 52px); line-height: 1.1; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance; }
+    .ts-hero__lead { margin: 20px auto 0; max-width: 560px; font-family: var(--font-body); font-weight: 400; font-size: 17px; line-height: 1.65; color: #94A3B8; text-wrap: pretty; }
+    .ts-hero__cta { margin-top: 32px; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .ts-btn { display: inline-flex; align-items: center; gap: 0.45rem; padding: 13px 22px; font-family: var(--font-display); font-weight: 600; font-size: 15px; line-height: 1; border-radius: 8px; text-decoration: none; transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
+    .ts-btn--primary { color: #FFFFFF; background: #0C7B82; border: 1px solid #0C7B82; }
+    .ts-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
+    .ts-btn--ghost { color: #FFFFFF; background: transparent; border: 1px solid rgba(255,255,255,0.25); }
+    .ts-btn--ghost:hover { border-color: rgba(255,255,255,0.55); }
+    .ts-btn__arrow { display: inline-block; transition: transform var(--duration-base) var(--ease-out); }
+    .ts-btn--primary:hover .ts-btn__arrow { transform: translate(2px, -2px); }
+
+    /* ---------- 2. TWO-COLUMN BODY ---------- */
+    .ts-body { background: #FFFFFF; padding-block: 96px; }
+    .ts-body__grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 64px; max-width: 960px; margin: 0 auto; align-items: start; }
+    .ts-h2 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(24px, 1.3rem + 1.4vw, 32px); line-height: 1.15; letter-spacing: -0.02em; color: #0D1321; }
+    .ts-h2--gap { margin-top: 64px; }
+    .ts-features { list-style: none; padding: 0; margin: 32px 0 0; display: flex; flex-direction: column; gap: 32px; }
+    .ts-feature { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; }
+    .ts-feature__num { font-family: var(--font-mono); font-weight: 500; font-size: 13px; line-height: 1.5; color: #0C7B82; letter-spacing: 0.04em; }
+    .ts-feature__title { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 16px; line-height: 1.3; letter-spacing: -0.01em; color: #0D1321; }
+    .ts-feature__body { margin: 6px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 15px; line-height: 1.65; color: #64748B; text-wrap: pretty; }
+    .ts-deliverables { list-style: none; padding: 0; margin: 32px 0 0; display: flex; flex-direction: column; gap: 24px; }
+    .ts-deliverable { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
+    .ts-deliverable__check { color: #0C7B82; margin-top: 2px; flex-shrink: 0; }
+    .ts-deliverable__title { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 15px; line-height: 1.3; letter-spacing: -0.01em; color: #0D1321; }
+    .ts-deliverable__body { margin: 5px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 14px; line-height: 1.6; color: #64748B; text-wrap: pretty; }
+
+    /* Sticky card */
+    .ts-card { position: sticky; top: calc(4.5rem + 24px); background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 16px; padding: 32px; align-self: start; }
+    .ts-card__eyebrow { margin: 0; font-family: var(--font-mono); font-size: 10px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .ts-card__price { margin: 8px 0 0; font-family: var(--font-display); font-weight: 700; font-size: 36px; line-height: 1; letter-spacing: -0.02em; color: #0C7B82; }
+    .ts-card__turnaround { margin: 6px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 13px; line-height: 1.4; color: #64748B; }
+    .ts-card__divider { border: 0; border-top: 1px solid #E4E8EF; margin: 20px 0; }
+    .ts-card__checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .ts-card__checks li { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-body); font-weight: 400; font-size: 14px; line-height: 1.4; color: #64748B; }
+    .ts-card__checks svg { color: #0C7B82; flex-shrink: 0; }
+    .ts-card__cta { display: inline-flex; width: 100%; align-items: center; justify-content: center; gap: 0.45rem; margin-top: 24px; padding: 12px 16px; font-family: var(--font-display); font-weight: 600; font-size: 14px; line-height: 1; color: #FFFFFF; background: #0C7B82; border: 1px solid #0C7B82; border-radius: 8px; text-decoration: none; transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out); }
+    .ts-card__cta:hover { background: #0A6970; border-color: #0A6970; }
+    .ts-card__cta-arrow { display: inline-block; transition: transform var(--duration-base) var(--ease-out); }
+    .ts-card__cta:hover .ts-card__cta-arrow { transform: translate(2px, -2px); }
+    .ts-card__note { margin: 12px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 12px; line-height: 1.55; color: #64748B; text-wrap: pretty; }
+
+    /* ---------- 3. WHY IT MATTERS (dark) ---------- */
+    .ts-why { background: #0D1826; padding-block: 96px; text-align: center; }
+    .ts-why .container { max-width: 800px; }
+    .ts-why__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .ts-why__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(24px, 1.3rem + 1.4vw, 32px); line-height: 1.2; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance; }
+    .ts-why__body { margin: 24px auto 0; max-width: 640px; font-family: var(--font-body); font-weight: 400; font-size: 17px; line-height: 1.75; color: #94A3B8; text-wrap: pretty; }
+
+    /* ---------- 4. FAQ ---------- */
+    .ts-faq { background: #FFFFFF; padding-block: 96px; }
+    .ts-faq .container { max-width: 800px; }
+    .ts-faq__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .ts-faq__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 1.5rem + 1.6vw, 36px); line-height: 1.15; letter-spacing: -0.02em; color: #0D1321; text-wrap: balance; }
+    .ts-faq__list { margin-top: 48px; display: flex; flex-direction: column; gap: 8px; }
+
+    @media (max-width: 56rem) {
+      .ts-body__grid { grid-template-columns: 1fr; gap: 48px; }
+      .ts-card { position: static; order: 1; }
+    }
+    @media (max-width: 48rem) {
+      .ts-hero { padding-block: 72px; }
+      .ts-body { padding-block: 72px; }
+      .ts-why  { padding-block: 72px; }
+      .ts-faq  { padding-block: 72px; }
+      .ts-card { padding: 24px; }
+    }
+
+    /* ---------- CTA (mirrors src/components/sections/CTABlock.astro) ---------- */
+    .cta { background: #0C7B82; padding-block: 96px; text-align: center; color: #FFFFFF; }
+    .cta__title {
+      margin: 0;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(28px, 1.6rem + 1.6vw, 36px);
+      line-height: 1.15; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance;
+    }
+    .cta__lead {
+      margin: 12px auto 0; max-width: 36rem;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 16px; line-height: 1.6;
+      color: rgba(255, 255, 255, 0.8); text-wrap: pretty;
+    }
+    .cta__btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      margin-top: 32px; padding: 11px 24px;
+      font-family: var(--font-display); font-weight: 600; font-size: 14px; line-height: 1;
+      color: #0C7B82; background: #FFFFFF;
+      border: 1px solid #FFFFFF; border-radius: 8px;
+      text-decoration: none;
+      transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+    }
+    .cta__btn:hover { background: #E0F4F5; border-color: #E0F4F5; }
+    .cta__btn-arrow { display: inline-block; transition: transform var(--duration-base) var(--ease-out); }
+    .cta__btn:hover .cta__btn-arrow { transform: translate(2px, -2px); }
+    @media (max-width: 48rem) { .cta { padding-block: 64px; } }
+
+    /* ---------- FOOTER chrome (shared) ---------- */
+    .footer { background: var(--color-dark); color: var(--color-dark-text); padding-block: var(--space-10) var(--space-6); border-top: 1px solid var(--color-dark-line); }
+    .footer__inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr); gap: var(--space-9); align-items: start; padding-bottom: var(--space-9); border-bottom: 1px solid var(--color-dark-line); }
+    .footer__brand-link { display: inline-flex; align-items: center; line-height: 0; }
+    .footer__logo { display: block; height: 48px; width: auto; }
+    .footer__tagline { margin-top: var(--space-4); max-width: 28ch; color: var(--color-dark-muted); font-size: var(--text-sm); line-height: var(--leading-relaxed); }
+    .footer__contact { margin-top: var(--space-4); font-family: var(--font-mono); font-size: var(--text-sm); }
+    .footer__contact a { color: var(--color-dark-text); text-decoration: underline; text-decoration-color: var(--color-accent); text-underline-offset: 0.25em; }
+    .footer__nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-7); }
+    .footer__col-title { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--color-dark-muted); font-weight: var(--weight-medium); margin-bottom: var(--space-4); }
+    .footer__col-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+    .footer__col-list li + li { margin-top: 0; }
+    .footer__link { color: var(--color-dark-text); font-size: var(--text-sm); }
+    .footer__link:hover { color: var(--color-accent); }
+    .footer__link.mono { font-family: var(--font-mono); }
+    .footer__legal { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); padding-top: var(--space-5); font-size: var(--text-xs); color: var(--color-dark-muted); font-family: var(--font-mono); letter-spacing: var(--tracking-mono); }
+    .footer__copy { margin: 0; }
+    .footer__meta { list-style: none; padding: 0; margin: 0; display: flex; gap: var(--space-5); }
+    .footer__meta li + li { margin-top: 0; }
+    @media (max-width: 56rem) { .footer__inner { grid-template-columns: 1fr; gap: var(--space-8); } }
+    @media (max-width: 36rem) { .footer__nav { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); } }
+  </style>
+
+  <script>
+    (function () {
+      var menu = document.getElementById('nav-menu');
+      if (!menu) return;
+      var mq = window.matchMedia('(max-width: 48rem)');
+      function isMobile() { return mq.matches; }
+      function sync() { menu.open = !isMobile(); }
+      sync();
+      mq.addEventListener('change', sync);
+      menu.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { if (isMobile()) menu.open = false; });
+      });
+
+      var chevrons = menu.querySelectorAll('.nav__chevron-btn');
+      chevrons.forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          var expanded = btn.getAttribute('aria-expanded') === 'true';
+          chevrons.forEach(function (other) {
+            if (other !== btn) other.setAttribute('aria-expanded', 'false');
+          });
+          btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        });
+      });
+      document.addEventListener('click', function (e) {
+        if (isMobile()) return;
+        chevrons.forEach(function (btn) {
+          if (btn.getAttribute('aria-expanded') !== 'true') return;
+          var wrap = btn.closest('.nav__item--has-dropdown');
+          if (wrap && !wrap.contains(e.target)) btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape' || isMobile()) return;
+        chevrons.forEach(function (btn) { btn.setAttribute('aria-expanded', 'false'); });
+      });
+      mq.addEventListener('change', function () {
+        chevrons.forEach(function (btn) { btn.setAttribute('aria-expanded', 'false'); });
+      });
+    })();
+  </script>
+  <script>
+    (function () {
+      var nav = document.querySelector('.nav');
+      if (!nav) return;
+      var THRESHOLD = 60;
+      var ticking = false;
+      function update() {
+        ticking = false;
+        var shouldBeScrolled = window.scrollY > THRESHOLD;
+        var isScrolled = nav.classList.contains('nav--scrolled');
+        if (shouldBeScrolled !== isScrolled) {
+          nav.classList.toggle('nav--scrolled', shouldBeScrolled);
+        }
+      }
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      update();
+    })();
+  </script>
+</body>
+</html>

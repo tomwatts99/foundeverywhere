@@ -1,0 +1,436 @@
+---
+/**
+ * how-it-works.astro: process / methodology page.
+ *
+ * Schema flow: a BreadcrumbList (Home > How It Works) flows through
+ * schemaExtras into the single <head> @graph.
+ */
+import Page from '../layouts/Page.astro';
+import FAQItem from '../components/ui/FAQItem.astro';
+import CTABlock from '../components/sections/CTABlock.astro';
+import { breadcrumbSchema } from '../lib/schema';
+import { SITE } from '../lib/site';
+
+const STAGES = [
+  {
+    num: '01',
+    when: 'Week 1',
+    title: 'Discovery and audit',
+    body: 'We start with a conversation. You tell us about your business, your customers, and what you are trying to achieve. Then we get to work. We crawl your site, test it across every major AI system, score your PageSpeed and Core Web Vitals, and document every issue we find.',
+    points: [
+      'Full technical crawl and audit',
+      'AI visibility test across 8 platforms',
+      'PageSpeed and Core Web Vitals baseline',
+    ],
+  },
+  {
+    num: '02',
+    when: 'Week 2',
+    title: 'Report and walkthrough',
+    body: 'You get a full audit report — every issue documented, scored by impact, and explained in plain English. Then we walk you through it on a 30 minute call. No jargon. No upselling. Just a clear explanation of what we found, what it means, and what we recommend.',
+    points: [
+      'Prioritised fix list by impact',
+      'Plain English throughout',
+      '30 minute walkthrough call',
+    ],
+  },
+  {
+    num: '03',
+    when: 'Weeks 3 and 4',
+    title: 'Implementation',
+    body: 'We get to work on the fixes. Technical issues resolved, schema implemented, llms.txt written, content restructured for AI visibility. We work directly on your site or alongside your developer — whatever suits you. You see the changes as they go in and we verify every fix.',
+    points: [
+      'Hands-on implementation',
+      'Changes verified before sign-off',
+      'Before and after scores provided',
+    ],
+  },
+  {
+    num: '04',
+    when: 'Ongoing',
+    title: 'Monitor and compound',
+    body: 'For clients on a retainer we keep working after the initial project is done. Monthly monitoring, AI visibility tracking, content improvements, and clear reporting. Search changes constantly. We stay on top of it so you do not have to.',
+    points: [
+      'Monthly visibility monitoring',
+      'AI citation tracking across 8 platforms',
+      'Clear monthly reporting',
+    ],
+  },
+] as const;
+
+const DIFFERENTIATORS = [
+  {
+    title: 'We fix, not just report',
+    body: 'Most audits are documents. Ours come with implementation. You get the report and the fixed site.',
+  },
+  {
+    title: 'We test on the AI systems',
+    body: 'Every engagement includes a real test of your visibility across ChatGPT, Perplexity, Gemini, Copilot, Claude, Bing, Grok, and Google. Not an estimate. An actual test.',
+  },
+  {
+    title: 'We tell you the truth',
+    body: 'If your site does not need a retainer yet, we will tell you. If a free tool would solve your problem, we will point you to it. We would rather give you the right answer than the expensive one.',
+  },
+] as const;
+
+const HIW_FAQS = [
+  {
+    question: 'How do I get started?',
+    answer:
+      'Get in touch via the contact page. Tell us your website URL and a bit about your business. We will come back to you within one working day.',
+  },
+  {
+    question: 'Do I need to sign a contract?',
+    answer:
+      'For one-off projects like the audit and fix there is no long term contract — just a simple statement of work. For retainers we ask for an initial three month commitment, then it runs month to month.',
+  },
+  {
+    question: 'How do you access my site to make changes?',
+    answer:
+      'We ask for the access we need — usually WordPress admin, FTP, or Google Search Console access depending on the work. We document everything we do and return access at the end of the project if requested.',
+  },
+  {
+    question: 'Do you work with businesses outside the UK?',
+    answer:
+      'Our focus is UK businesses but we work with clients internationally. Get in touch and we will let you know if we are a good fit.',
+  },
+  {
+    question: 'How quickly will I see results?',
+    answer:
+      'Technical fixes and schema changes can show in Search Console within days. Ranking improvements typically follow over four to eight weeks. AI visibility improvements can show within weeks as systems re-crawl and update.',
+  },
+];
+
+const pageUrl = `${SITE.url}/how-it-works/`;
+const schemaExtras = [
+  breadcrumbSchema(
+    [
+      { name: 'Home',         item: `${SITE.url}/` },
+      { name: 'How It Works', item: pageUrl },
+    ],
+    pageUrl,
+  ),
+];
+---
+
+<Page
+  title="How Found Everywhere Works | SEO and LLM Visibility Process"
+  description="From audit to ongoing visibility management. Here is exactly how we work, what you can expect, and what happens at each stage."
+  path="/how-it-works/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="hiw-hero" aria-labelledby="hiw-hero-title">
+    <div class="container">
+      <p class="hiw-hero__eyebrow">The process</p>
+      <h1 id="hiw-hero-title" class="hiw-hero__title">Simple, transparent, no surprises</h1>
+      <p class="hiw-hero__lead">
+        We do not believe in mystery. Here is exactly how we work, what
+        happens at each stage, and what you can expect from us.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 2. THE FOUR STAGES ============ -->
+  <section class="hiw-stages" aria-label="Our process, stage by stage">
+    <div class="container">
+      <ol class="hiw-stages__list" role="list">
+        {STAGES.map((stage) => (
+          <li class="hiw-stage">
+            <span class="hiw-stage__num" aria-hidden="true">{stage.num}</span>
+            <div class="hiw-stage__content">
+              <p class="hiw-stage__when">{stage.when}</p>
+              <h2 class="hiw-stage__title">{stage.title}</h2>
+              <p class="hiw-stage__body">{stage.body}</p>
+              <ul class="hiw-stage__points" role="list">
+                {stage.points.map((p) => (
+                  <li class="hiw-point">
+                    <span class="hiw-point__dot" aria-hidden="true"></span>
+                    <span>{p}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ 3. WHAT MAKES US DIFFERENT ============ -->
+  <section class="hiw-diff" aria-labelledby="hiw-diff-title">
+    <div class="container">
+      <header class="hiw-diff__head">
+        <p class="hiw-diff__eyebrow">Our approach</p>
+        <h2 id="hiw-diff-title" class="hiw-diff__title">A few things we do differently</h2>
+      </header>
+      <div class="hiw-diff__grid">
+        {DIFFERENTIATORS.map((card) => (
+          <article class="hiw-diff-card">
+            <h3 class="hiw-diff-card__title">{card.title}</h3>
+            <p class="hiw-diff-card__body">{card.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. FAQ ============ -->
+  <section class="hiw-faq" aria-labelledby="hiw-faq-title">
+    <div class="container">
+      <p class="hiw-faq__eyebrow">Common questions</p>
+      <h2 id="hiw-faq-title" class="hiw-faq__title">What people ask about working with us</h2>
+      <div class="hiw-faq__list">
+        {HIW_FAQS.map((faq) => (
+          <FAQItem question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. CTA ============ -->
+  <CTABlock />
+
+</Page>
+
+<style>
+  /* ============================================================
+     1. HERO
+     ============================================================ */
+  .hiw-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .hiw-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .hiw-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .hiw-hero__lead {
+    margin: 20px auto 0;
+    max-width: 560px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     2. STAGES
+     ============================================================ */
+  .hiw-stages { background: #FFFFFF; padding-block: 96px; }
+  .hiw-stages .container { max-width: 860px; }
+
+  .hiw-stages__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .hiw-stage {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  /* Thin divider between stages; gap is split into padding either side. */
+  .hiw-stage + .hiw-stage {
+    margin-top: 80px;
+    padding-top: 80px;
+    border-top: 1px solid #E4E8EF;
+  }
+
+  .hiw-stage__num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 80px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: #E0F4F5;
+  }
+
+  .hiw-stage__when {
+    margin: 0 0 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .hiw-stage__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 1.3rem + 1.4vw, 32px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .hiw-stage__body {
+    margin: 16px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  .hiw-stage__points {
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hiw-point {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #64748B;
+  }
+  .hiw-point__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #0C7B82;
+    margin-top: 0.5em;
+  }
+
+  /* ============================================================
+     3. DIFFERENTIATORS
+     ============================================================ */
+  .hiw-diff { background: #F7F9FC; padding-block: 96px; }
+  .hiw-diff .container { max-width: 960px; }
+  .hiw-diff__head {
+    text-align: center;
+    max-width: 36rem;
+    margin: 0 auto 48px;
+  }
+  .hiw-diff__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .hiw-diff__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .hiw-diff__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .hiw-diff-card {
+    background: #FFFFFF;
+    border: 0.5px solid #E4E8EF;
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .hiw-diff-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .hiw-diff-card__body {
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     4. FAQ
+     ============================================================ */
+  .hiw-faq { background: #FFFFFF; padding-block: 96px; }
+  .hiw-faq .container { max-width: 800px; }
+  .hiw-faq__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .hiw-faq__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .hiw-faq__list {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 48rem) {
+    .hiw-hero   { padding-block: 72px; }
+    .hiw-stages { padding-block: 72px; }
+    .hiw-diff   { padding-block: 72px; }
+    .hiw-faq    { padding-block: 72px; }
+
+    /* Stack the big number above the content. */
+    .hiw-stage {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .hiw-stage__num { font-size: 64px; }
+    .hiw-stage + .hiw-stage { margin-top: 56px; padding-top: 56px; }
+
+    .hiw-diff__grid { grid-template-columns: 1fr; }
+  }
+</style>
