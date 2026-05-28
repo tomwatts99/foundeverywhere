@@ -1,0 +1,177 @@
+---
+/**
+ * TeamStrip.astro — founders' section.
+ *
+ * Dark band #0D1826, 96px top/bottom. Two white cards centred under
+ * a single eyebrow + headline + intro paragraph. Stacks on mobile.
+ */
+const PEOPLE = [
+  {
+    name: 'Tom Watts',
+    role: 'The maker',
+    photo: '/images/tom.jpg',
+    bio: 'Tom has spent over a decade building websites, running digital campaigns, and producing content for brands and publishers. Through Digital Heroes Studio he has delivered everything from full website builds to video and editorial work. He understands both the creative and the operational side, which means projects actually ship properly.',
+  },
+  {
+    name: 'Mark Reynolds',
+    role: 'The strategist',
+    photo: '/images/mark.jpg',
+    bio: 'Mark leads digital strategy, SEO and web performance for everyone from blue-chip brands to growing SMEs. As Director of Clarus Digital he has spent years making sure clients\u2019 digital activity actually drives growth, not just clicks. Member of the Chartered Institute of Marketing.',
+  },
+] as const;
+---
+
+<section class="team" aria-labelledby="team-title">
+  <div class="container">
+
+    <header class="team__head">
+      <p class="team__eyebrow">Who we are</p>
+      <h2 id="team-title" class="team__title">Built by people who have done the work</h2>
+      <p class="team__intro">
+        Found Everywhere is Tom Watts and Mark Reynolds. Between us we have built
+        hundreds of websites, run digital strategy for blue-chip brands, and spent
+        more time in Search Console than we care to admit. We started this because
+        the SEO industry was slow to notice that search had fundamentally changed.
+        We were not.
+      </p>
+    </header>
+
+    <div class="team__grid">
+      {PEOPLE.map((person) => (
+        <article class="team-card">
+          <img
+            class="team-card__photo"
+            src={person.photo}
+            alt={`Portrait of ${person.name}`}
+            width="120"
+            height="120"
+            loading="lazy"
+            decoding="async"
+          />
+          <h3 class="team-card__name">{person.name}</h3>
+          <p class="team-card__role">{person.role}</p>
+          <p class="team-card__bio">{person.bio}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ============================================================
+     SHELL
+     ============================================================ */
+  .team {
+    background: #0D1826;
+    color: #FFFFFF;
+    padding-block: 96px;
+  }
+
+  /* ---------- Header block ---------- */
+  .team__head { text-align: center; }
+  .team__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .team__title {
+    margin: 0 auto;
+    max-width: 600px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.6rem + 1.8vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .team__intro {
+    margin: 16px auto 0;
+    max-width: 580px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     CARDS
+     ============================================================ */
+  .team__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    max-width: 860px;
+    margin: 56px auto 0;
+  }
+
+  .team-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 32px;
+  }
+
+  .team-card__photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #0C7B82;
+    display: block;
+  }
+
+  .team-card__name {
+    margin: 16px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+
+  .team-card__role {
+    margin: 6px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .team-card__bio {
+    margin: 12px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #64748B;
+    text-align: left;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     MOBILE
+     ============================================================ */
+  @media (max-width: 48rem) {
+    .team { padding-block: 64px; }
+    .team__grid {
+      grid-template-columns: 1fr;
+      margin-top: 40px;
+      gap: 20px;
+      max-width: 28rem;
+    }
+    .team-card { padding: 28px; }
+  }
+</style>

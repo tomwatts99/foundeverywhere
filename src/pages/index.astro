@@ -13,6 +13,7 @@ import StatsRow from '../components/sections/StatsRow.astro';
 import ServicesGrid from '../components/sections/ServicesGrid.astro';
 import HowItWorks from '../components/sections/HowItWorks.astro';
 import FAQSection from '../components/sections/FAQSection.astro';
+import TeamStrip from '../components/sections/TeamStrip.astro';
 import CTABlock from '../components/sections/CTABlock.astro';
 import { HOME_FAQS } from '../lib/faqs';
 import { faqPageSchema } from '../lib/schema';
@@ -32,5 +33,6 @@ const schemaExtras = [faqPageSchema(HOME_FAQS)];
   <ServicesGrid />
   <HowItWorks />
   <FAQSection />
+  <TeamStrip />
   <CTABlock />
 </Page>

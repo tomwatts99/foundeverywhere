@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Book a free audit | Found Everywhere</title>
+  <meta name="description" content="Book your free SEO and LLM visibility audit. No commitment — just clarity on where your site stands and what needs fixing." />
+  <meta name="theme-color" content="#0C7B82" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="src/styles/global.css" />
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" role="banner">
+    <div class="container nav__inner">
+      <a href="/" class="nav__brand" aria-label="Found Everywhere — home">
+        <span class="nav__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+        </span>
+        <span class="nav__wordmark">Found Everywhere</span>
+      </a>
+      <details class="nav__menu" id="nav-menu" open>
+        <summary class="nav__toggle" aria-label="Toggle navigation">
+          <span class="nav__toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="sr-only">Menu</span>
+        </summary>
+        <nav class="nav__panel" aria-label="Primary">
+          <ul class="nav__links" role="list">
+            <li><a href="/services/"     class="nav__link">Services</a></li>
+            <li><a href="/how-it-works/" class="nav__link">How it works</a></li>
+            <li><a href="/insights/"     class="nav__link">Insights</a></li>
+            <li><a href="/results/"      class="nav__link">Results</a></li>
+            <li><a href="/about/"        class="nav__link">About</a></li>
+          </ul>
+          <div class="nav__cta"><a href="/contact/" class="btn">Book an audit</a></div>
+        </nav>
+      </details>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="contact-hero" aria-labelledby="contact-title">
+      <div class="container">
+        <p class="contact-hero__eyebrow">Get in touch</p>
+        <h1 id="contact-title" class="contact-hero__title">Book your free audit</h1>
+        <p class="contact-hero__lead">
+          No commitment. Just clarity on where you stand and what needs fixing.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ FORM ============ -->
+    <section class="contact-form-section">
+      <div class="container">
+        <form class="contact-card" action="mailto:hello@foundeverywhere.co.uk" method="POST" enctype="text/plain" aria-label="Audit request form">
+          <div class="field">
+            <label class="field__label" for="contact-name">Name</label>
+            <input class="field__input" type="text" id="contact-name" name="Name" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label class="field__label" for="contact-email">Email</label>
+            <input class="field__input" type="email" id="contact-email" name="Email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label class="field__label" for="contact-url">Website URL</label>
+            <input class="field__input" type="url" id="contact-url" name="Website" placeholder="https://" autocomplete="url" required />
+          </div>
+          <div class="field">
+            <label class="field__label" for="contact-message">Tell us about your site</label>
+            <textarea class="field__input field__textarea" id="contact-message" name="Message" rows="4"></textarea>
+          </div>
+          <button class="contact-submit" type="submit">
+            Send my audit request
+            <span aria-hidden="true" class="contact-submit__arrow">&#x2197;</span>
+          </button>
+        </form>
+
+        <ul class="contact-trust" role="list">
+          <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Free audit</span></li>
+          <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>No commitment</span></li>
+          <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Response within 24 hours</span></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="/" class="footer__brand-link" aria-label="Found Everywhere — home">
+          <span class="footer__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+          </span>
+          <span class="footer__wordmark">Found Everywhere</span>
+        </a>
+        <p class="footer__tagline">SEO and LLM visibility, built for the search era after search.</p>
+        <p class="footer__contact"><a href="mailto:hello@foundeverywhere.co.uk">hello@foundeverywhere.co.uk</a></p>
+      </div>
+
+      <nav class="footer__nav" aria-label="Footer">
+        <div class="footer__col">
+          <h2 class="footer__col-title">Services</h2>
+          <ul class="footer__col-list" role="list">
+            <li><a href="/services/seo"     class="footer__link">Technical SEO</a></li>
+            <li><a href="/services/llm"     class="footer__link">LLM visibility</a></li>
+            <li><a href="/services/content" class="footer__link">Content &amp; E-E-A-T</a></li>
+            <li><a href="/services/audit"   class="footer__link">Audits</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h2 class="footer__col-title">Agency</h2>
+          <ul class="footer__col-list" role="list">
+            <li><a href="/about"    class="footer__link">About</a></li>
+            <li><a href="/work"     class="footer__link">Case studies</a></li>
+            <li><a href="/insights" class="footer__link">Insights</a></li>
+            <li><a href="/contact"  class="footer__link">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h2 class="footer__col-title">Resources</h2>
+          <ul class="footer__col-list" role="list">
+            <li><a href="/llms.txt"          class="footer__link mono">llms.txt</a></li>
+            <li><a href="/sitemap-index.xml" class="footer__link">Sitemap</a></li>
+            <li><a href="/rss.xml"           class="footer__link">RSS</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="container footer__legal">
+      <p class="footer__copy">© 2026 Found Everywhere Ltd. Registered in England &amp; Wales.</p>
+      <ul class="footer__meta" role="list">
+        <li><a href="/privacy"  class="footer__link">Privacy</a></li>
+        <li><a href="/terms"    class="footer__link">Terms</a></li>
+        <li><a href="/llms.txt" class="footer__link mono">llms.txt</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <style>
+    /* ---------- NAV ---------- */
+    .nav { position: sticky; top: 0; z-index: var(--z-nav);
+      background: color-mix(in oklab, var(--color-bg) 88%, transparent);
+      backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px);
+      border-bottom: 1px solid var(--color-line); }
+    .nav__inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-5); min-height: 4.5rem; }
+    .nav__brand { display: inline-flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: var(--weight-semibold); font-size: var(--text-md); letter-spacing: var(--tracking-tight); color: var(--color-text); flex-shrink: 0; white-space: nowrap; }
+    .nav__mark { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--radius-md); background: var(--color-accent); color: var(--color-accent-ink); }
+    .nav__menu { position: relative; }
+    .nav__menu > summary { list-style: none; }
+    .nav__menu > summary::-webkit-details-marker { display: none; }
+    .nav__menu > summary::marker { content: ''; }
+    .nav__toggle { display: none; width: 2.5rem; height: 2.5rem; border: 1px solid var(--color-line); border-radius: var(--radius-md); align-items: center; justify-content: center; cursor: pointer; background: var(--color-bg); }
+    .nav__toggle-bars { display: inline-flex; flex-direction: column; gap: 4px; }
+    .nav__toggle-bars span { display: block; width: 1rem; height: 1.5px; background: var(--color-text); border-radius: 2px; }
+    .nav__panel { display: flex; align-items: center; gap: var(--space-7); }
+    .nav__links { display: flex; align-items: center; gap: var(--space-5); padding: 0; margin: 0; list-style: none; }
+    .nav__links li + li { margin-top: 0; }
+    .nav__link { position: relative; display: inline-block; padding: var(--space-2) 0; font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text); }
+    .nav__link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1.5px; background: var(--color-accent); transform: scaleX(0); transform-origin: left; transition: transform var(--duration-base) var(--ease-out); }
+    .nav__link:hover::after { transform: scaleX(1); }
+    @media (max-width: 48rem) {
+      .nav__toggle { display: inline-flex; }
+      .nav__panel { position: absolute; top: calc(100% + 1px); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: var(--space-5); padding: var(--space-6) var(--gutter); background: var(--color-bg); border-bottom: 1px solid var(--color-line); box-shadow: var(--shadow-lg); transform: translateY(-8px); opacity: 0; pointer-events: none; }
+      .nav__menu[open] .nav__panel { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      .nav__links { flex-direction: column; align-items: stretch; gap: 0; border-top: 1px solid var(--color-line); }
+      .nav__links li { border-bottom: 1px solid var(--color-line); }
+      .nav__link { display: block; padding: var(--space-4) 0; font-size: var(--text-md); }
+      .nav__link::after { display: none; }
+      .nav__cta .btn { width: 100%; }
+    }
+
+    /* ---------- CONTACT HERO ---------- */
+    .contact-hero { background: #0D1826; color: #FFFFFF; text-align: center; padding-block: 80px; }
+    .contact-hero__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .contact-hero__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(32px, 1.6rem + 3vw, 48px); line-height: 1.1; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance; }
+    .contact-hero__lead { margin: 16px auto 0; max-width: 36rem; font-family: var(--font-body); font-weight: 400; font-size: 16px; line-height: 1.6; color: #94A3B8; text-wrap: pretty; }
+
+    /* ---------- FORM ---------- */
+    .contact-form-section { background: #FFFFFF; padding-block: 80px; }
+    .contact-card { max-width: 600px; margin: 0 auto; padding: 40px; background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 16px; display: flex; flex-direction: column; gap: 20px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field__label { font-family: var(--font-body); font-weight: 500; font-size: 13px; line-height: 1.4; color: #0D1321; }
+    .field__input {
+      width: 100%; padding: 10px 14px;
+      font-family: var(--font-body); font-size: 14px; line-height: 1.5; color: #0D1321;
+      background: #FFFFFF; border: 1px solid #E4E8EF; border-radius: 8px;
+      transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+    }
+    .field__input::placeholder { color: #94A3B8; }
+    .field__input:focus, .field__input:focus-visible {
+      outline: none; border-color: #0C7B82;
+      box-shadow: 0 0 0 3px rgba(12, 123, 130, 0.15);
+    }
+    .field__textarea { resize: vertical; min-height: calc(4 * 1.5em + 20px); font-family: var(--font-body); }
+
+    .contact-submit {
+      width: 100%; margin-top: 8px; padding: 14px 24px;
+      font-family: var(--font-display); font-weight: 600; font-size: 15px; line-height: 1;
+      color: #FFFFFF; background: #0C7B82; border: 1px solid #0C7B82; border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+      transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+    }
+    .contact-submit:hover { background: #0A6970; border-color: #0A6970; }
+    .contact-submit:active { transform: translateY(1px); }
+    .contact-submit__arrow { display: inline-block; transition: transform var(--duration-base) var(--ease-out); }
+    .contact-submit:hover .contact-submit__arrow { transform: translate(2px, -2px); }
+
+    /* ---------- TRUST ---------- */
+    .contact-trust {
+      list-style: none; margin: 32px 0 0; padding: 0;
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+      column-gap: 32px; row-gap: 12px;
+      font-family: var(--font-body); font-size: 13px; color: #64748B;
+    }
+    .contact-trust li { display: inline-flex; align-items: center; gap: 8px; }
+    .contact-trust li + li { margin-top: 0; }
+    .contact-trust svg { color: #0C7B82; flex-shrink: 0; }
+
+    @media (max-width: 48rem) {
+      .contact-hero { padding-block: 64px; }
+      .contact-form-section { padding-block: 56px; }
+      .contact-card { padding: 28px; }
+      .contact-trust { column-gap: 20px; }
+    }
+
+    /* ---------- FOOTER ---------- */
+    .footer { background: var(--color-dark); color: var(--color-dark-text); padding-block: var(--space-10) var(--space-6); border-top: 1px solid var(--color-dark-line); }
+    .footer__inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr); gap: var(--space-9); align-items: start; padding-bottom: var(--space-9); border-bottom: 1px solid var(--color-dark-line); }
+    .footer__brand-link { display: inline-flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: var(--weight-semibold); font-size: var(--text-md); color: var(--color-dark-text); letter-spacing: var(--tracking-tight); }
+    .footer__mark { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--radius-md); background: var(--color-accent); color: var(--color-accent-ink); }
+    .footer__tagline { margin-top: var(--space-4); max-width: 28ch; color: var(--color-dark-muted); font-size: var(--text-sm); line-height: var(--leading-relaxed); }
+    .footer__contact { margin-top: var(--space-4); font-family: var(--font-mono); font-size: var(--text-sm); }
+    .footer__contact a { color: var(--color-dark-text); text-decoration: underline; text-decoration-color: var(--color-accent); text-underline-offset: 0.25em; }
+    .footer__nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-7); }
+    .footer__col-title { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--color-dark-muted); font-weight: var(--weight-medium); margin-bottom: var(--space-4); }
+    .footer__col-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+    .footer__col-list li + li { margin-top: 0; }
+    .footer__link { color: var(--color-dark-text); font-size: var(--text-sm); }
+    .footer__link:hover { color: var(--color-accent); }
+    .footer__link.mono { font-family: var(--font-mono); }
+    .footer__legal { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); padding-top: var(--space-5); font-size: var(--text-xs); color: var(--color-dark-muted); font-family: var(--font-mono); letter-spacing: var(--tracking-mono); }
+    .footer__copy { margin: 0; }
+    .footer__meta { list-style: none; padding: 0; margin: 0; display: flex; gap: var(--space-5); }
+    .footer__meta li + li { margin-top: 0; }
+    @media (max-width: 56rem) { .footer__inner { grid-template-columns: 1fr; gap: var(--space-8); } }
+    @media (max-width: 36rem) { .footer__nav { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); } }
+  </style>
+
+  <script>
+    (function () {
+      var menu = document.getElementById('nav-menu');
+      if (!menu) return;
+      var mq = window.matchMedia('(max-width: 48rem)');
+      function isMobile() { return mq.matches; }
+      function sync() { menu.open = !isMobile(); }
+      sync();
+      mq.addEventListener('change', sync);
+      menu.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { if (isMobile()) menu.open = false; });
+      });
+    })();
+  </script>
+</body>
+</html>
