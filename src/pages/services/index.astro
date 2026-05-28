@@ -1,0 +1,274 @@
+---
+/**
+ * services/index.astro: services overview page.
+ *
+ * Three sections: dark hero, four detailed service blocks separated
+ * by hairlines, CTA. The service rows alternate nothing (per brief);
+ * left column is copy, right column is a four-item feature list.
+ */
+import Page from '../../layouts/Page.astro';
+import CTABlock from '../../components/sections/CTABlock.astro';
+
+const SERVICES = [
+  {
+    num: '01',
+    name: 'SEO audit',
+    href: '/services/seo-audit/',
+    description:
+      'A complete technical review of your site. We crawl it the way Google does, score every element, and give you a prioritised fix list in plain English. You will know exactly what is holding you back and what to do about it.',
+    features: [
+      '40+ point technical review',
+      'PageSpeed and Core Web Vitals analysis',
+      'Prioritised fix list by impact',
+      'Before and after scoring',
+    ],
+  },
+  {
+    num: '02',
+    name: 'LLM visibility',
+    href: '/services/llm-visibility/',
+    description:
+      'Most sites are invisible to ChatGPT, Perplexity, and Gemini. We change that. Schema markup, entity signals, llms.txt, and content structured so AI systems cite you rather than your competitors.',
+    features: [
+      'Schema markup implementation',
+      'llms.txt setup and optimisation',
+      'Entity and brand signal audit',
+      'AI citation monitoring',
+    ],
+  },
+  {
+    num: '03',
+    name: 'Technical SEO',
+    href: '/services/technical-seo/',
+    description:
+      'The foundations that everything else sits on. Indexing, site structure, Core Web Vitals, internal linking, and the technical details that most agencies overlook or defer indefinitely.',
+    features: [
+      'Crawl and indexing audit',
+      'Core Web Vitals fixes',
+      'Site architecture review',
+      'Internal linking optimisation',
+    ],
+  },
+  {
+    num: '04',
+    name: 'Visibility that compounds',
+    href: '/services/retainer/',
+    description:
+      'We keep working after the initial project is done. Monthly monitoring, content updates, AI search tracking, and regular reporting so your visibility grows over time rather than slipping back.',
+    features: [
+      'Monthly performance monitoring',
+      'AI search visibility tracking',
+      'Content and schema updates',
+      'Clear monthly reporting',
+    ],
+  },
+] as const;
+---
+
+<Page
+  title="SEO and LLM Visibility Services | Found Everywhere"
+  description="Technical SEO audits, LLM visibility optimisation, schema markup, and ongoing visibility management for UK businesses. Built to be found by Google and AI search."
+  path="/services/"
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="services-hero" aria-labelledby="services-hero-title">
+    <div class="container">
+      <p class="services-hero__eyebrow">What we do</p>
+      <h1 id="services-hero-title" class="services-hero__title">
+        Services built for the way search works now
+      </h1>
+      <p class="services-hero__lead">
+        Not just Google. ChatGPT, Perplexity, Gemini, and Copilot too.
+        We cover every place your customers are searching.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 2. SERVICE BLOCKS ============ -->
+  <section class="services-detail" aria-label="Services in detail">
+    <div class="container">
+      <div class="services-detail__list">
+        {SERVICES.map((s) => (
+          <article class="svc">
+            <div class="svc__copy">
+              <p class="svc__num">{s.num}</p>
+              <h2 class="svc__name">{s.name}</h2>
+              <p class="svc__desc">{s.description}</p>
+              <a href={s.href} class="svc__link">
+                Learn more
+                <svg aria-hidden="true" class="svc__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 8h10" />
+                  <path d="m9 4 4 4-4 4" />
+                </svg>
+              </a>
+            </div>
+
+            <ul class="svc__features" role="list">
+              {s.features.map((f) => <li>{f}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. CTA ============ -->
+  <CTABlock />
+
+</Page>
+
+<style>
+  /* ============================================================
+     1. HERO
+     ============================================================ */
+  .services-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .services-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .services-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .services-hero__lead {
+    margin: 20px auto 0;
+    max-width: 560px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     2. SERVICE BLOCKS
+     ============================================================ */
+  .services-detail {
+    background: #FFFFFF;
+    padding-block: 96px;
+  }
+  .services-detail__list {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .svc {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 64px;
+    padding-block: 56px;
+    border-top: 1px solid #E4E8EF;
+  }
+  .svc:first-child { border-top: 0; padding-top: 0; }
+  .svc:last-child  { padding-bottom: 0; }
+
+  /* ---------- Copy column ---------- */
+  .svc__num {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    letter-spacing: 0.08em;
+  }
+  .svc__name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(22px, 1.2rem + 1.4vw, 28px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .svc__desc {
+    margin: 16px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .svc__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 20px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 15px;
+    color: #0C7B82;
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .svc__link:hover { color: #0A6970; }
+  .svc__arrow { transition: transform var(--duration-base) var(--ease-out); }
+  .svc__link:hover .svc__arrow { transform: translateX(3px); }
+
+  /* ---------- Features column ---------- */
+  .svc__features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-self: start;
+  }
+  .svc__features li {
+    position: relative;
+    padding-left: 20px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #64748B;
+  }
+  .svc__features li + li { margin-top: 0; }
+  .svc__features li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #0C7B82;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 56rem) {
+    .svc {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      padding-block: 48px;
+    }
+  }
+  @media (max-width: 48rem) {
+    .services-hero   { padding-block: 72px; }
+    .services-detail { padding-block: 72px; }
+  }
+</style>
