@@ -1,0 +1,544 @@
+---
+/**
+ * services/llm-visibility.astro: detail page for the LLM visibility service.
+ *
+ * Six sections: hero, "the problem" with 3 stat cards, "what we do" with
+ * 5 numbered feature blocks, "how it works" with a 4-step row, FAQ, CTA.
+ *
+ * Schema: FAQPage (6 questions) + BreadcrumbList (Home / Services /
+ * LLM Visibility) flow through schemaExtras into the head @graph.
+ */
+import Page from '../../layouts/Page.astro';
+import FAQItem from '../../components/ui/FAQItem.astro';
+import CTABlock from '../../components/sections/CTABlock.astro';
+import { faqPageSchema, breadcrumbSchema } from '../../lib/schema';
+import { SITE } from '../../lib/site';
+
+const STATS = [
+  { value: '1 in 3',   label: 'searches now involve an AI tool in some form' },
+  { value: 'Zero',     label: 'most businesses appearing in AI-generated answers' },
+  { value: '5 signals',label: 'that determine whether AI systems cite your site' },
+] as const;
+
+const FEATURES = [
+  {
+    num: '01',
+    title: 'Schema markup implementation',
+    body: 'We implement comprehensive structured data across your site: Organisation, WebSite, Service, FAQPage, BreadcrumbList, and Article schema. This is the primary signal AI systems use to understand what your business does and whether to cite it.',
+  },
+  {
+    num: '02',
+    title: 'llms.txt setup',
+    body: 'A plain text file at your domain root that tells AI crawlers exactly what your site is about and which content is most useful to index. Several major AI systems already check for this. We write it, structure it correctly, and keep it updated.',
+  },
+  {
+    num: '03',
+    title: 'Entity and brand signal audit',
+    body: 'AI systems think in entities, not just keywords. We audit your brand presence across the web (consistency of your business name, description, and details across every platform) and fix the gaps that make AI systems uncertain about recommending you.',
+  },
+  {
+    num: '04',
+    title: 'AI-ready content structure',
+    body: 'We restructure your key pages so they answer questions directly and clearly. Question-led headings, concise answers at the top of sections, FAQ blocks with schema: the format AI systems extract from when building their answers.',
+  },
+  {
+    num: '05',
+    title: 'AI citation monitoring',
+    body: 'We test your brand across the major AI systems before and after the work. You will see exactly where you appear, where you do not, and how that changes over time.',
+  },
+] as const;
+
+const STEPS = [
+  { num: '01', title: 'Audit',     desc: 'We test your site across all five major AI systems and document exactly where you appear and where you do not.' },
+  { num: '02', title: 'Implement', desc: 'Schema, llms.txt, entity signals, and content restructuring: all done for you within two weeks.' },
+  { num: '03', title: 'Verify',    desc: 'We retest across all AI systems and show you the before and after comparison.' },
+  { num: '04', title: 'Monitor',   desc: 'Monthly checks to track your AI citation presence as the systems evolve.' },
+] as const;
+
+const LLM_FAQS = [
+  {
+    question: 'What is LLM visibility?',
+    answer:
+      'LLM visibility means your website appears as a cited source when people use AI tools like ChatGPT, Perplexity, or Gemini to search for your services. These systems pull from specific sources when building their answers. We implement the signals that make your site one of those sources.',
+  },
+  {
+    question: 'How is this different from normal SEO?',
+    answer:
+      'Traditional SEO optimises for Google\u2019s ranking algorithm. LLM visibility optimises for how AI systems understand, trust, and cite content. The signals overlap but they are not the same. Schema markup, entity consistency, and question-led content structure matter far more for AI visibility than they do for traditional rankings.',
+  },
+  {
+    question: 'How long does it take to see results?',
+    answer:
+      'Schema and llms.txt changes can be picked up by AI crawlers within days. Appearing consistently in AI-generated answers typically takes four to eight weeks as the systems re-index and update their responses.',
+  },
+  {
+    question: 'Can you guarantee we will appear in ChatGPT?',
+    answer:
+      'No, and anyone who says they can is not being straight with you. What we can guarantee is that we implement every known signal correctly and test your visibility before and after. The AI systems make their own decisions, but right now most sites are not even trying. We make sure yours is.',
+  },
+  {
+    question: 'Do we need this if we already rank well in Google?',
+    answer:
+      'Yes. Google rankings and AI citation are separate. A site can rank first in Google and be completely absent from AI-generated answers. The signals are different enough that one does not guarantee the other.',
+  },
+  {
+    question: 'What does it cost?',
+    answer:
+      'The LLM visibility service starts from £697 as a standalone project. It is also included as part of our ongoing retainer. Get in touch for a free audit and we will tell you exactly what your site needs.',
+  },
+];
+
+const pageUrl = `${SITE.url}/services/llm-visibility/`;
+const schemaExtras = [
+  faqPageSchema(LLM_FAQS, pageUrl),
+  breadcrumbSchema(
+    [
+      { name: 'Home',           item: `${SITE.url}/` },
+      { name: 'Services',       item: `${SITE.url}/services/` },
+      { name: 'LLM Visibility', item: pageUrl },
+    ],
+    pageUrl,
+  ),
+];
+---
+
+<Page
+  title="LLM Visibility and AI Search Optimisation UK | Found Everywhere"
+  description="We optimise your website to appear as a cited source in ChatGPT, Perplexity, Gemini, and Copilot. Schema markup, llms.txt, entity signals, and AI-ready content for UK businesses."
+  path="/services/llm-visibility/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="llm-hero" aria-labelledby="llm-hero-title">
+    <div class="container">
+      <p class="llm-hero__eyebrow">LLM visibility</p>
+      <h1 id="llm-hero-title" class="llm-hero__title">
+        Get cited by ChatGPT, Perplexity, and Gemini
+      </h1>
+      <p class="llm-hero__lead">
+        AI search is already sending traffic. Most websites are invisible to it.
+        We implement the technical signals that make AI systems cite your business
+        rather than your competitors.
+      </p>
+      <div class="llm-hero__cta">
+        <a href="/contact/" class="llm-btn llm-btn--primary">
+          Get your free audit <span aria-hidden="true" class="llm-btn__arrow">&#x2197;</span>
+        </a>
+        <a href="/how-it-works/" class="llm-btn llm-btn--ghost">How it works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. THE PROBLEM ============ -->
+  <section class="llm-problem" aria-labelledby="llm-problem-title">
+    <div class="container">
+      <div class="llm-problem__inner">
+        <p class="eyebrow-teal">Why this matters</p>
+        <h2 id="llm-problem-title" class="llm-problem__title">
+          Your customers are asking AI tools which business to use. What is it saying about you?
+        </h2>
+
+        <div class="llm-stats">
+          {STATS.map((stat) => (
+            <article class="llm-stat-card">
+              <div class="llm-stat-card__value">{stat.value}</div>
+              <p class="llm-stat-card__label">{stat.label}</p>
+            </article>
+          ))}
+        </div>
+
+        <p class="llm-problem__body">
+          ChatGPT, Perplexity, Gemini, and Copilot are answering your customers&apos;
+          questions right now. They pull from specific sources. They cite specific
+          businesses. The businesses that show up are not necessarily the biggest or
+          the best known. They are the ones whose websites send the right signals.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. WHAT WE DO ============ -->
+  <section class="llm-features" aria-labelledby="llm-features-title">
+    <div class="container">
+      <div class="llm-features__inner">
+        <header class="llm-features__head">
+          <p class="eyebrow-teal">What is included</p>
+          <h2 id="llm-features-title" class="llm-features__title">
+            Everything your site needs to be found by AI
+          </h2>
+        </header>
+
+        <div class="llm-features__grid">
+          {FEATURES.map((f) => (
+            <article class="llm-feature">
+              <p class="llm-feature__num">{f.num}</p>
+              <h3 class="llm-feature__title">{f.title}</h3>
+              <p class="llm-feature__body">{f.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. HOW IT WORKS ============ -->
+  <section class="llm-process" aria-labelledby="llm-process-title">
+    <div class="container">
+      <div class="llm-process__inner">
+        <header class="llm-process__head">
+          <p class="eyebrow-teal">The process</p>
+          <h2 id="llm-process-title" class="llm-process__title">From invisible to cited</h2>
+        </header>
+
+        <ol class="llm-steps" role="list">
+          {STEPS.map((step) => (
+            <li class="llm-step">
+              <span class="llm-step__num">{step.num}</span>
+              <h3 class="llm-step__title">{step.title}</h3>
+              <p class="llm-step__desc">{step.desc}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. FAQ ============ -->
+  <section class="llm-faq" aria-labelledby="llm-faq-title">
+    <div class="container">
+      <div class="llm-faq__inner">
+        <header class="llm-faq__head">
+          <p class="eyebrow-teal">Common questions</p>
+          <h2 id="llm-faq-title" class="llm-faq__title">What people ask about LLM visibility</h2>
+        </header>
+
+        <div class="llm-faq__list">
+          {LLM_FAQS.map((faq) => (
+            <FAQItem question={faq.question} answer={faq.answer} />
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. CTA ============ -->
+  <CTABlock />
+
+</Page>
+
+<style>
+  /* Shared eyebrow style used across all section headers. */
+  .eyebrow-teal {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ============================================================
+     1. HERO
+     ============================================================ */
+  .llm-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .llm-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .llm-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .llm-hero__lead {
+    margin: 20px auto 0;
+    max-width: 560px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .llm-hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .llm-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 11px 24px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+  .llm-btn--primary { background: #0C7B82; color: #FFFFFF; border-color: #0C7B82; }
+  .llm-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
+  .llm-btn--ghost { background: transparent; color: #94A3B8; border-color: #2D3748; }
+  .llm-btn--ghost:hover { color: #FFFFFF; border-color: #94A3B8; }
+  .llm-btn__arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .llm-btn--primary:hover .llm-btn__arrow { transform: translate(2px, -2px); }
+
+  /* ============================================================
+     2. PROBLEM
+     ============================================================ */
+  .llm-problem {
+    background: #F7F9FC;
+    padding-block: 96px;
+  }
+  .llm-problem__inner {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .llm-problem__inner .eyebrow-teal { display: inline-flex; }
+  .llm-problem__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 1.4rem + 1.6vw, 32px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .llm-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .llm-stat-card {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: left;
+  }
+  .llm-stat-card__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .llm-stat-card__label {
+    margin: 12px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #64748B;
+  }
+  .llm-problem__body {
+    margin: 48px auto 0;
+    max-width: 640px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     3. FEATURES
+     ============================================================ */
+  .llm-features {
+    background: #FFFFFF;
+    padding-block: 96px;
+  }
+  .llm-features__inner { max-width: 960px; margin: 0 auto; }
+  .llm-features__head { margin-bottom: 48px; }
+  .llm-features__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .llm-features__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+  .llm-feature__num {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    letter-spacing: 0.08em;
+  }
+  .llm-feature__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .llm-feature__body {
+    margin: 8px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     4. PROCESS
+     ============================================================ */
+  .llm-process {
+    background: #F7F9FC;
+    padding-block: 96px;
+  }
+  .llm-process__inner { max-width: 960px; margin: 0 auto; }
+  .llm-process__head { margin-bottom: 48px; }
+  .llm-process__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .llm-steps {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+  .llm-step { position: relative; display: flex; flex-direction: column; gap: 8px; }
+  .llm-step + .llm-step { margin-top: 0; }
+  .llm-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: calc(100% + 4px);
+    width: 32px;
+    height: 1px;
+    background: #E4E8EF;
+  }
+  .llm-step__num {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    letter-spacing: 0.08em;
+  }
+  .llm-step__title {
+    margin: 12px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .llm-step__desc {
+    margin: 8px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     5. FAQ
+     ============================================================ */
+  .llm-faq {
+    background: #FFFFFF;
+    padding-block: 96px;
+  }
+  .llm-faq__inner { max-width: 800px; margin: 0 auto; }
+  .llm-faq__head { margin-bottom: 48px; }
+  .llm-faq__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .llm-faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 64rem) {
+    .llm-steps {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+    .llm-step:nth-child(2n)::after { display: none; }
+  }
+  @media (max-width: 48rem) {
+    .llm-hero { padding-block: 72px; }
+    .llm-problem { padding-block: 72px; }
+    .llm-features { padding-block: 72px; }
+    .llm-process { padding-block: 72px; }
+    .llm-faq { padding-block: 72px; }
+
+    .llm-stats { grid-template-columns: 1fr; gap: 12px; }
+    .llm-features__grid { grid-template-columns: 1fr; gap: 28px; }
+    .llm-steps { grid-template-columns: 1fr; gap: 28px; }
+    .llm-step:not(:last-child)::after { display: none; }
+
+    .llm-hero__cta { flex-direction: column; align-items: stretch; max-width: 22rem; margin-inline: auto; }
+    .llm-btn { justify-content: center; padding-block: 14px; }
+  }
+</style>
