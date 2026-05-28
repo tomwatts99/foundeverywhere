@@ -174,7 +174,7 @@
     .nav__link:hover::after { transform: scaleX(1); }
     @media (max-width: 48rem) {
       .nav__toggle { display: inline-flex; }
-      .nav__panel { position: absolute; top: calc(100% + 1px); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: var(--space-5); padding: var(--space-6) var(--gutter); background: var(--color-bg); border-bottom: 1px solid var(--color-line); box-shadow: var(--shadow-lg); transform: translateY(-8px); opacity: 0; pointer-events: none; }
+      .nav__panel { position: fixed; top: 4.5rem; left: 0; right: 0; max-height: calc(100dvh - 4.5rem); overflow-y: auto; flex-direction: column; align-items: stretch; gap: var(--space-5); padding: var(--space-6) var(--gutter); background: var(--color-bg); border-bottom: 1px solid var(--color-line); box-shadow: var(--shadow-lg); transform: translateY(-8px); opacity: 0; pointer-events: none; }
       .nav__menu[open] .nav__panel { transform: translateY(0); opacity: 1; pointer-events: auto; }
       .nav__links { flex-direction: column; align-items: stretch; gap: 0; border-top: 1px solid var(--color-line); }
       .nav__links li { border-bottom: 1px solid var(--color-line); }

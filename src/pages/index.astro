@@ -14,6 +14,7 @@ import ServicesGrid from '../components/sections/ServicesGrid.astro';
 import HowItWorks from '../components/sections/HowItWorks.astro';
 import FAQSection from '../components/sections/FAQSection.astro';
 import TeamStrip from '../components/sections/TeamStrip.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
 import CTABlock from '../components/sections/CTABlock.astro';
 import { HOME_FAQS } from '../lib/faqs';
 import { faqPageSchema } from '../lib/schema';
@@ -34,5 +35,6 @@ const schemaExtras = [faqPageSchema(HOME_FAQS)];
   <HowItWorks />
   <FAQSection />
   <TeamStrip />
+  <Testimonials />
   <CTABlock />
 </Page>

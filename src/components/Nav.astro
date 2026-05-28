@@ -179,10 +179,15 @@ const isCurrent = (href: string) =>
     .nav__toggle { display: inline-flex; }
 
     .nav__panel {
-      position: absolute;
-      top: calc(100% + 1px);
+      /* Pin to the viewport just below the sticky nav so the panel
+         spans the full screen width instead of inheriting the small
+         toggle-area width that `position: absolute` would give us. */
+      position: fixed;
+      top: 4.5rem;
       left: 0;
       right: 0;
+      max-height: calc(100dvh - 4.5rem);
+      overflow-y: auto;
       flex-direction: column;
       align-items: stretch;
       gap: var(--space-5);
