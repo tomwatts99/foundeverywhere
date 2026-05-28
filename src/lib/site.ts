@@ -33,11 +33,11 @@ export const SITE = {
 } as const;
 
 export const NAV: ReadonlyArray<{ href: string; label: string }> = [
-  { href: '/services',  label: 'Services' },
-  { href: '/approach',  label: 'Approach' },
-  { href: '/work',      label: 'Case studies' },
-  { href: '/insights',  label: 'Insights' },
-  { href: '/about',     label: 'About' },
+  { href: '/services/',     label: 'Services' },
+  { href: '/how-it-works/', label: 'How it works' },
+  { href: '/insights/',     label: 'Insights' },
+  { href: '/results/',      label: 'Results' },
+  { href: '/about/',        label: 'About' },
 ];
 
 export const FOOTER_NAV: ReadonlyArray<{
