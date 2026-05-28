@@ -32,8 +32,21 @@ export const SITE = {
   },
 } as const;
 
-export const NAV: ReadonlyArray<{ href: string; label: string }> = [
-  { href: '/services/',     label: 'Services' },
+export type NavChild = { href: string; label: string };
+export type NavItem  = { href: string; label: string; children?: ReadonlyArray<NavChild> };
+
+export const NAV: ReadonlyArray<NavItem> = [
+  {
+    href: '/services/',
+    label: 'Services',
+    children: [
+      { href: '/services/seo-audit/',      label: 'SEO audit' },
+      { href: '/services/llm-visibility/', label: 'LLM visibility' },
+      { href: '/services/technical-seo/',  label: 'Technical SEO' },
+      { href: '/services/retainer/',       label: 'Visibility that compounds' },
+      { href: '/services/local-seo/',      label: 'Local SEO and Google Business Profile' },
+    ],
+  },
   { href: '/how-it-works/', label: 'How it works' },
   { href: '/insights/',     label: 'Insights' },
   { href: '/results/',      label: 'Results' },

@@ -19,13 +19,12 @@ const isCurrent = (href: string) =>
   <div class="container nav__inner">
 
     <a href="/" class="nav__brand" aria-label={`${SITE.name}, home`}>
-      <span class="nav__mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="7" />
-          <path d="m20 20-3.5-3.5" />
-        </svg>
-      </span>
-      <span class="nav__wordmark">Found Everywhere</span>
+      <img
+        class="nav__logo"
+        src="/images/logo.svg"
+        alt="Found Everywhere"
+        height="61"
+      />
     </a>
 
     <details class="nav__menu" id="nav-menu" open>
@@ -39,7 +38,7 @@ const isCurrent = (href: string) =>
       <nav class="nav__panel" aria-label="Primary">
         <ul class="nav__links" role="list">
           {NAV.map((item) => (
-            <li>
+            <li class:list={['nav__item', { 'nav__item--has-dropdown': item.children }]}>
               <a
                 href={item.href}
                 class="nav__link"
@@ -47,12 +46,57 @@ const isCurrent = (href: string) =>
               >
                 {item.label}
               </a>
+
+              {item.children && (
+                <>
+                  <button
+                    type="button"
+                    class="nav__chevron-btn"
+                    aria-expanded="false"
+                    aria-controls={`submenu-${item.label.replace(/\s+/g, '-').toLowerCase()}`}
+                    aria-label={`Toggle ${item.label} submenu`}
+                  >
+                    <svg
+                      class="nav__chevron"
+                      viewBox="0 0 16 16"
+                      width="11"
+                      height="11"
+                      aria-hidden="true"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="m4 6 4 4 4-4" />
+                    </svg>
+                  </button>
+
+                  <ul
+                    class="nav__dropdown"
+                    id={`submenu-${item.label.replace(/\s+/g, '-').toLowerCase()}`}
+                    role="list"
+                  >
+                    {item.children.map((child) => (
+                      <li>
+                        <a
+                          href={child.href}
+                          class="nav__dropdown-link"
+                          aria-current={isCurrent(child.href) ? 'page' : undefined}
+                        >
+                          {child.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
             </li>
           ))}
         </ul>
 
         <div class="nav__cta">
-          <a href="/contact" class="btn">Book an audit</a>
+          <a href="/contact/" class="btn">Book an audit</a>
         </div>
       </nav>
     </details>
@@ -64,10 +108,8 @@ const isCurrent = (href: string) =>
     position: sticky;
     top: 0;
     z-index: var(--z-nav);
-    background: color-mix(in oklab, var(--color-bg) 88%, transparent);
-    backdrop-filter: saturate(140%) blur(10px);
-    -webkit-backdrop-filter: saturate(140%) blur(10px);
-    border-bottom: 1px solid var(--color-line);
+    background: #FFFFFF;
+    border-bottom: 0.5px solid #E4E8EF;
   }
 
   .nav__inner {
@@ -75,32 +117,28 @@ const isCurrent = (href: string) =>
     align-items: center;
     justify-content: space-between;
     gap: var(--space-5);
-    min-height: 4.5rem;
+    /* Bar height tracks the logo — shrinks alongside it on scroll. */
+    min-height: 5rem;
+    transition: min-height 250ms ease;
   }
 
   /* ---------- Brand ---------- */
   .nav__brand {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-3);
-    font-family: var(--font-display);
-    font-weight: var(--weight-semibold);
-    font-size: var(--text-md);
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-text);
     flex-shrink: 0;
-    white-space: nowrap;
+    line-height: 0;            /* kill inline-flow whitespace under SVG */
   }
 
-  .nav__mark {
-    display: grid;
-    place-items: center;
-    width: 2rem;
-    height: 2rem;
-    border-radius: var(--radius-md);
-    background: var(--color-accent);
-    color: var(--color-accent-ink);
+  .nav__logo {
+    display: block;
+    height: 61px;              /* 10% smaller than the previous 68px */
+    width: auto;
+    transition: height 250ms ease;
   }
+  /* Past 60px of scroll the logo shrinks AND the bar shrinks with it. */
+  .nav--scrolled .nav__inner { min-height: 3.5rem; }
+  .nav--scrolled .nav__logo  { height: 36px; }
 
   /* ---------- Menu (details) ---------- */
   .nav__menu { position: relative; }
@@ -151,6 +189,15 @@ const isCurrent = (href: string) =>
   }
   .nav__links li + li { margin-top: 0; }
 
+  /* Each top-level item is a flex row so the link and chevron sit
+     on the same baseline without inheriting the parent list's gap. */
+  .nav__item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
   .nav__link {
     position: relative;
     display: inline-block;
@@ -173,6 +220,100 @@ const isCurrent = (href: string) =>
   .nav__link:hover::after,
   .nav__link[aria-current="page"]::after { transform: scaleX(1); }
   .nav__link[aria-current="page"] { color: var(--color-accent); }
+
+  /* ---------- Dropdown chevron (button) ---------- */
+  .nav__chevron-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    color: var(--color-muted);
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .nav__chevron-btn:hover { color: var(--color-text); }
+  .nav__chevron {
+    display: block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  /* ---------- Dropdown panel ---------- */
+  .nav__dropdown {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav__dropdown li + li { margin-top: 0; }
+  .nav__dropdown-link {
+    display: block;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.4;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  /* ====== DESKTOP dropdown — absolutely positioned, hover/focus driven ====== */
+  @media (min-width: 48.0625rem) {
+    .nav__dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: -10px;
+      min-width: 280px;
+      padding: 8px;
+      background: #FFFFFF;
+      border: 0.5px solid #E4E8EF;
+      border-radius: 12px;
+      box-shadow:
+        0 8px 24px rgba(13, 19, 33, 0.08),
+        0 2px 4px rgba(13, 19, 33, 0.04);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px);
+      transition:
+        opacity   var(--duration-base) var(--ease-out),
+        transform var(--duration-base) var(--ease-out),
+        visibility var(--duration-base) var(--ease-out);
+      z-index: calc(var(--z-nav) + 1);
+    }
+    /* Show on hover, on keyboard focus inside the item, or when the
+       chevron toggle has been clicked open. */
+    .nav__item--has-dropdown:hover .nav__dropdown,
+    .nav__item--has-dropdown:focus-within .nav__dropdown,
+    .nav__item--has-dropdown .nav__chevron-btn[aria-expanded="true"] ~ .nav__dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    /* Rotate chevron when the dropdown is open by any means. */
+    .nav__item--has-dropdown:hover .nav__chevron,
+    .nav__item--has-dropdown:focus-within .nav__chevron,
+    .nav__chevron-btn[aria-expanded="true"] .nav__chevron {
+      transform: rotate(180deg);
+    }
+    .nav__dropdown-link {
+      padding: 10px 16px;
+      border-radius: 8px;
+      color: #0D1321;
+    }
+    .nav__dropdown-link:hover,
+    .nav__dropdown-link:focus-visible {
+      background: #F7F9FC;
+      color: #0C7B82;
+    }
+    .nav__dropdown-link[aria-current="page"] {
+      color: #0C7B82;
+      background: #F7F9FC;
+    }
+  }
 
   /* ---------- Mobile breakpoint ---------- */
   @media (max-width: 48rem) {
@@ -224,11 +365,90 @@ const isCurrent = (href: string) =>
     }
     .nav__link::after { display: none; }
 
+    /* Items with a dropdown: link + chevron sit on the same row,
+       submenu expands underneath when chevron is tapped. */
+    .nav__item--has-dropdown {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      column-gap: var(--space-3);
+    }
+    .nav__item--has-dropdown .nav__link {
+      grid-column: 1;
+    }
+    .nav__item--has-dropdown .nav__chevron-btn {
+      grid-column: 2;
+      width: 2.75rem;
+      height: 2.75rem;
+      color: var(--color-text);
+    }
+    .nav__item--has-dropdown .nav__chevron-btn[aria-expanded="true"] .nav__chevron {
+      transform: rotate(180deg);
+    }
+    .nav__dropdown {
+      grid-column: 1 / -1;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--duration-base) var(--ease-out);
+    }
+    .nav__chevron-btn[aria-expanded="true"] ~ .nav__dropdown {
+      /* Generous cap — enough for any plausible submenu length. */
+      max-height: 60vh;
+    }
+    .nav__dropdown li {
+      border-bottom: 0;
+    }
+    .nav__dropdown-link {
+      padding: var(--space-3) var(--space-3) var(--space-3) var(--space-5);
+      color: var(--color-muted);
+      font-size: var(--text-sm);
+    }
+    .nav__dropdown-link:hover,
+    .nav__dropdown-link:active,
+    .nav__dropdown-link[aria-current="page"] {
+      color: var(--color-accent);
+    }
+
     .nav__cta .btn { width: 100%; }
   }
 </style>
 
 <script>
+  /**
+   * Scroll-driven nav state.
+   *
+   * Default: bar is white, logo 68px.
+   * After scrolling > 60px: toggle .nav--scrolled, which shrinks the
+   * logo to 40px via the CSS transition. The bar itself stays the
+   * same height — only the logo changes.
+   */
+  (function () {
+    const nav = document.querySelector('.nav') as HTMLElement | null;
+    if (!nav) return;
+
+    const THRESHOLD = 60;
+
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const shouldBeScrolled = window.scrollY > THRESHOLD;
+      const isScrolled = nav.classList.contains('nav--scrolled');
+      if (shouldBeScrolled !== isScrolled) {
+        nav.classList.toggle('nav--scrolled', shouldBeScrolled);
+      }
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Initial sync (handles back-button / mid-page reload).
+    update();
+  })();
+
   /**
    * Nav <details> behaviour.
    *
@@ -279,5 +499,50 @@ const isCurrent = (href: string) =>
     menu.querySelectorAll('a').forEach((a) =>
       a.addEventListener('click', () => { if (isMobile()) close(); })
     );
+
+    /**
+     * Dropdown chevrons.
+     * Desktop already opens on :hover / :focus-within, but clicking
+     * the chevron toggles a sticky open state via aria-expanded so
+     * touch-on-desktop and keyboard users get a click-to-open path.
+     * On mobile the chevron is the only way the submenu opens.
+     */
+    const chevrons = menu.querySelectorAll<HTMLButtonElement>('.nav__chevron-btn');
+    chevrons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        // Close any other open dropdowns so only one submenu is open at a time.
+        chevrons.forEach((other) => {
+          if (other !== btn) other.setAttribute('aria-expanded', 'false');
+        });
+        btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      });
+    });
+
+    // Desktop: clicking outside a sticky-open dropdown closes it.
+    document.addEventListener('click', (e) => {
+      if (isMobile()) return;
+      const target = e.target as Node;
+      chevrons.forEach((btn) => {
+        if (btn.getAttribute('aria-expanded') !== 'true') return;
+        const wrap = btn.closest('.nav__item--has-dropdown');
+        if (wrap && !wrap.contains(target)) {
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    // Esc closes any sticky-open dropdown on desktop.
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || isMobile()) return;
+      chevrons.forEach((btn) => btn.setAttribute('aria-expanded', 'false'));
+    });
+
+    // Reset chevron state whenever we cross the mobile / desktop boundary
+    // so stale aria-expanded doesn't leak across viewports.
+    mq.addEventListener('change', () => {
+      chevrons.forEach((btn) => btn.setAttribute('aria-expanded', 'false'));
+    });
   }
 </script>

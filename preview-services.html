@@ -19,13 +19,7 @@
   <header class="nav" role="banner">
     <div class="container nav__inner">
       <a href="/" class="nav__brand" aria-label="Found Everywhere, home">
-        <span class="nav__mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="7" />
-            <path d="m20 20-3.5-3.5" />
-          </svg>
-        </span>
-        <span class="nav__wordmark">Found Everywhere</span>
+        <img class="nav__logo" src="public/images/logo.svg" alt="Found Everywhere" height="61" />
       </a>
       <details class="nav__menu" id="nav-menu" open>
         <summary class="nav__toggle" aria-label="Toggle navigation">
@@ -34,11 +28,23 @@
         </summary>
         <nav class="nav__panel" aria-label="Primary">
           <ul class="nav__links" role="list">
-            <li><a href="/services/"     class="nav__link" aria-current="page">Services</a></li>
-            <li><a href="/how-it-works/" class="nav__link">How it works</a></li>
-            <li><a href="/insights/"     class="nav__link">Insights</a></li>
-            <li><a href="/results/"      class="nav__link">Results</a></li>
-            <li><a href="/about/"        class="nav__link">About</a></li>
+            <li class="nav__item nav__item--has-dropdown">
+              <a href="/services/" class="nav__link" aria-current="page">Services</a>
+            <button type="button" class="nav__chevron-btn" aria-expanded="false" aria-controls="submenu-services" aria-label="Toggle Services submenu">
+              <svg class="nav__chevron" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>
+            </button>
+            <ul class="nav__dropdown" id="submenu-services" role="list">
+              <li><a href="/services/seo-audit/"      class="nav__dropdown-link">SEO audit</a></li>
+              <li><a href="/services/llm-visibility/" class="nav__dropdown-link">LLM visibility</a></li>
+              <li><a href="/services/technical-seo/"  class="nav__dropdown-link">Technical SEO</a></li>
+              <li><a href="/services/retainer/"       class="nav__dropdown-link">Visibility that compounds</a></li>
+              <li><a href="/services/local-seo/"      class="nav__dropdown-link">Local SEO and Google Business Profile</a></li>
+            </ul>
+            </li>
+            <li class="nav__item"><a href="/how-it-works/" class="nav__link">How it works</a></li>
+            <li class="nav__item"><a href="/insights/"     class="nav__link">Insights</a></li>
+            <li class="nav__item"><a href="/results/"      class="nav__link">Results</a></li>
+            <li class="nav__item"><a href="/about/"        class="nav__link">About</a></li>
           </ul>
           <div class="nav__cta"><a href="/contact/" class="btn">Book an audit</a></div>
         </nav>
@@ -218,13 +224,26 @@
 
   <style>
     /* ---------- NAV (chrome) ---------- */
-    .nav { position: sticky; top: 0; z-index: var(--z-nav);
-      background: color-mix(in oklab, var(--color-bg) 88%, transparent);
-      backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px);
-      border-bottom: 1px solid var(--color-line); }
-    .nav__inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-5); min-height: 4.5rem; }
-    .nav__brand { display: inline-flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: var(--weight-semibold); font-size: var(--text-md); letter-spacing: var(--tracking-tight); color: var(--color-text); flex-shrink: 0; white-space: nowrap; }
-    .nav__mark { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--radius-md); background: var(--color-accent); color: var(--color-accent-ink); }
+    .nav {
+      position: sticky; top: 0; z-index: var(--z-nav);
+      background: #FFFFFF;
+      border-bottom: 0.5px solid #E4E8EF;
+    }
+    .nav__inner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-5);
+      /* Bar height tracks the logo — shrinks with it on scroll. */
+      min-height: 5rem;
+      transition: min-height 250ms ease;
+    }
+    .nav__brand { display: inline-flex; align-items: center; flex-shrink: 0; line-height: 0; }
+    .nav__logo {
+      display: block; width: auto;
+      height: 61px;            /* 10% smaller than the previous 68px */
+      transition: height 250ms ease;
+    }
+    .nav--scrolled .nav__inner { min-height: 3.5rem; }
+    .nav--scrolled .nav__logo  { height: 36px; }
     .nav__menu { position: relative; }
     .nav__menu > summary { list-style: none; }
     .nav__menu > summary::-webkit-details-marker { display: none; }
@@ -239,6 +258,54 @@
     .nav__link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1.5px; background: var(--color-accent); transform: scaleX(0); transform-origin: left; transition: transform var(--duration-base) var(--ease-out); }
     .nav__link:hover::after, .nav__link[aria-current="page"]::after { transform: scaleX(1); }
     .nav__link[aria-current="page"] { color: var(--color-accent); }
+
+    /* ---------- Services dropdown (mirrors Nav.astro) ---------- */
+    .nav__item { position: relative; display: inline-flex; align-items: center; gap: 2px; }
+    .nav__chevron-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.25rem; height: 1.25rem;
+      padding: 0; background: transparent; border: 0; border-radius: 4px;
+      color: var(--color-muted); cursor: pointer;
+      transition: color var(--duration-fast) var(--ease-out);
+    }
+    .nav__chevron-btn:hover { color: var(--color-text); }
+    .nav__chevron { display: block; transition: transform var(--duration-base) var(--ease-out); }
+
+    .nav__dropdown { list-style: none; margin: 0; padding: 0; }
+    .nav__dropdown li + li { margin-top: 0; }
+    .nav__dropdown-link {
+      display: block;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 14px; line-height: 1.4; text-decoration: none;
+      transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+    }
+    @media (min-width: 48.0625rem) {
+      .nav__dropdown {
+        position: absolute; top: calc(100% + 6px); left: -10px;
+        min-width: 280px; padding: 8px;
+        background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(13, 19, 33, 0.08), 0 2px 4px rgba(13, 19, 33, 0.04);
+        opacity: 0; visibility: hidden; transform: translateY(-4px);
+        transition: opacity var(--duration-base) var(--ease-out),
+                    transform var(--duration-base) var(--ease-out),
+                    visibility var(--duration-base) var(--ease-out);
+        z-index: calc(var(--z-nav) + 1);
+      }
+      .nav__item--has-dropdown:hover .nav__dropdown,
+      .nav__item--has-dropdown:focus-within .nav__dropdown,
+      .nav__item--has-dropdown .nav__chevron-btn[aria-expanded="true"] ~ .nav__dropdown {
+        opacity: 1; visibility: visible; transform: translateY(0);
+      }
+      .nav__item--has-dropdown:hover .nav__chevron,
+      .nav__item--has-dropdown:focus-within .nav__chevron,
+      .nav__chevron-btn[aria-expanded="true"] .nav__chevron {
+        transform: rotate(180deg);
+      }
+      .nav__dropdown-link { padding: 10px 16px; border-radius: 8px; color: #0D1321; }
+      .nav__dropdown-link:hover,
+      .nav__dropdown-link:focus-visible { background: #F7F9FC; color: #0C7B82; }
+      .nav__dropdown-link[aria-current="page"] { color: #0C7B82; background: #F7F9FC; }
+    }
     @media (max-width: 48rem) {
       .nav__toggle { display: inline-flex; }
       .nav__panel { position: fixed; top: 4.5rem; left: 0; right: 0; max-height: calc(100dvh - 4.5rem); overflow-y: auto; flex-direction: column; align-items: stretch; gap: var(--space-5); padding: var(--space-6) var(--gutter); background: var(--color-bg); border-bottom: 1px solid var(--color-line); box-shadow: var(--shadow-lg); transform: translateY(-8px); opacity: 0; pointer-events: none; }
@@ -247,6 +314,21 @@
       .nav__links li { border-bottom: 1px solid var(--color-line); }
       .nav__link { display: block; padding: var(--space-4) 0; font-size: var(--text-md); }
       .nav__link::after { display: none; }
+      .nav__item--has-dropdown {
+        display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: var(--space-3);
+      }
+      .nav__item--has-dropdown .nav__link { grid-column: 1; }
+      .nav__item--has-dropdown .nav__chevron-btn { grid-column: 2; width: 2.75rem; height: 2.75rem; color: var(--color-text); }
+      .nav__item--has-dropdown .nav__chevron-btn[aria-expanded="true"] .nav__chevron { transform: rotate(180deg); }
+      .nav__dropdown { grid-column: 1 / -1; max-height: 0; overflow: hidden; transition: max-height var(--duration-base) var(--ease-out); }
+      .nav__chevron-btn[aria-expanded="true"] ~ .nav__dropdown { max-height: 60vh; }
+      .nav__dropdown li { border-bottom: 0; }
+      .nav__dropdown-link {
+        padding: var(--space-3) var(--space-3) var(--space-3) var(--space-5);
+        color: var(--color-muted); font-size: var(--text-sm);
+      }
+      .nav__dropdown-link:hover, .nav__dropdown-link:active, .nav__dropdown-link[aria-current="page"] { color: var(--color-accent); }
+
       .nav__cta .btn { width: 100%; }
     }
 
@@ -403,6 +485,56 @@
       menu.querySelectorAll('a').forEach(function (a) {
         a.addEventListener('click', function () { if (isMobile()) menu.open = false; });
       });
+
+      var chevrons = menu.querySelectorAll('.nav__chevron-btn');
+      chevrons.forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          var expanded = btn.getAttribute('aria-expanded') === 'true';
+          chevrons.forEach(function (other) {
+            if (other !== btn) other.setAttribute('aria-expanded', 'false');
+          });
+          btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        });
+      });
+      document.addEventListener('click', function (e) {
+        if (isMobile()) return;
+        chevrons.forEach(function (btn) {
+          if (btn.getAttribute('aria-expanded') !== 'true') return;
+          var wrap = btn.closest('.nav__item--has-dropdown');
+          if (wrap && !wrap.contains(e.target)) btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape' || isMobile()) return;
+        chevrons.forEach(function (btn) { btn.setAttribute('aria-expanded', 'false'); });
+      });
+      mq.addEventListener('change', function () {
+        chevrons.forEach(function (btn) { btn.setAttribute('aria-expanded', 'false'); });
+      });
+    })();
+  </script>
+  <script>
+    (function () {
+      var nav = document.querySelector('.nav');
+      if (!nav) return;
+      var THRESHOLD = 60;
+      var ticking = false;
+      function update() {
+        ticking = false;
+        var shouldBeScrolled = window.scrollY > THRESHOLD;
+        var isScrolled = nav.classList.contains('nav--scrolled');
+        if (shouldBeScrolled !== isScrolled) {
+          nav.classList.toggle('nav--scrolled', shouldBeScrolled);
+        }
+      }
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      update();
     })();
   </script>
 </body>
