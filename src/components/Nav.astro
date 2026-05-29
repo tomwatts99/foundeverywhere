@@ -117,7 +117,7 @@ const isCurrent = (href: string) =>
     align-items: center;
     justify-content: space-between;
     gap: var(--space-5);
-    /* Bar height tracks the logo — shrinks alongside it on scroll. */
+    /* Bar height tracks the logo - shrinks alongside it on scroll. */
     min-height: 5rem;
     transition: min-height 250ms ease;
   }
@@ -261,7 +261,7 @@ const isCurrent = (href: string) =>
       color var(--duration-fast) var(--ease-out);
   }
 
-  /* ====== DESKTOP dropdown — absolutely positioned, hover/focus driven ====== */
+  /* ====== DESKTOP dropdown - absolutely positioned, hover/focus driven ====== */
   @media (min-width: 48.0625rem) {
     .nav__dropdown {
       position: absolute;
@@ -392,7 +392,7 @@ const isCurrent = (href: string) =>
       transition: max-height var(--duration-base) var(--ease-out);
     }
     .nav__chevron-btn[aria-expanded="true"] ~ .nav__dropdown {
-      /* Generous cap — enough for any plausible submenu length. */
+      /* Generous cap - enough for any plausible submenu length. */
       max-height: 60vh;
     }
     .nav__dropdown li {
@@ -420,7 +420,7 @@ const isCurrent = (href: string) =>
    * Default: bar is white, logo 68px.
    * After scrolling > 60px: toggle .nav--scrolled, which shrinks the
    * logo to 40px via the CSS transition. The bar itself stays the
-   * same height — only the logo changes.
+   * same height - only the logo changes.
    */
   (function () {
     const nav = document.querySelector('.nav') as HTMLElement | null;

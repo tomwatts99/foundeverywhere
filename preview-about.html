@@ -43,6 +43,15 @@
             </ul>
             </li>
             <li class="nav__item"><a href="/how-it-works/" class="nav__link">How it works</a></li>
+            <li class="nav__item nav__item--has-dropdown">
+              <a href="/industries/automotive/" class="nav__link">Industries</a>
+            <button type="button" class="nav__chevron-btn" aria-expanded="false" aria-controls="submenu-industries" aria-label="Toggle Industries submenu">
+              <svg class="nav__chevron" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>
+            </button>
+            <ul class="nav__dropdown" id="submenu-industries" role="list">
+              <li><a href="/industries/automotive/" class="nav__dropdown-link">Automotive</a></li>
+            </ul>
+            </li>
             <li class="nav__item"><a href="/insights/"     class="nav__link">Insights</a></li>
             <li class="nav__item"><a href="/results/"      class="nav__link">Results</a></li>
             <li class="nav__item"><a href="/about/"        class="nav__link" aria-current="page">About</a></li>
@@ -223,6 +232,7 @@
             <li><a href="/services/technical-seo/"             class="footer__link">Technical SEO</a></li>
             <li><a href="/services/visibility-that-compounds/" class="footer__link">Visibility that compounds</a></li>
             <li><a href="/services/local-seo/"                 class="footer__link">Local SEO</a></li>
+            <li><a href="/services/expert-content/"            class="footer__link">Expert content</a></li>
           </ul>
         </div>
         <div class="footer__col">
@@ -232,6 +242,12 @@
             <li><a href="/results/"  class="footer__link">Results</a></li>
             <li><a href="/insights/" class="footer__link">Insights</a></li>
             <li><a href="/contact/"  class="footer__link">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h2 class="footer__col-title">Industries</h2>
+          <ul class="footer__col-list" role="list">
+            <li><a href="/industries/automotive/" class="footer__link">Automotive</a></li>
           </ul>
         </div>
         <div class="footer__col">
@@ -263,7 +279,7 @@
     .nav__inner {
       display: flex; align-items: center; justify-content: space-between;
       gap: var(--space-5);
-      /* Bar height tracks the logo — shrinks with it on scroll. */
+      /* Bar height tracks the logo - shrinks with it on scroll. */
       min-height: 5rem;
       transition: min-height 250ms ease;
     }

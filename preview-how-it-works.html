@@ -61,6 +61,15 @@
             </ul>
             </li>
             <li class="nav__item"><a href="/how-it-works/" class="nav__link" aria-current="page">How it works</a></li>
+            <li class="nav__item nav__item--has-dropdown">
+              <a href="/industries/automotive/" class="nav__link">Industries</a>
+            <button type="button" class="nav__chevron-btn" aria-expanded="false" aria-controls="submenu-industries" aria-label="Toggle Industries submenu">
+              <svg class="nav__chevron" viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>
+            </button>
+            <ul class="nav__dropdown" id="submenu-industries" role="list">
+              <li><a href="/industries/automotive/" class="nav__dropdown-link">Automotive</a></li>
+            </ul>
+            </li>
             <li class="nav__item"><a href="/insights/"     class="nav__link">Insights</a></li>
             <li class="nav__item"><a href="/results/"      class="nav__link">Results</a></li>
             <li class="nav__item"><a href="/about/"        class="nav__link">About</a></li>
@@ -104,7 +113,7 @@
             <div class="hiw-stage__content">
               <p class="hiw-stage__when">Week 2</p>
               <h2 class="hiw-stage__title">Report and walkthrough</h2>
-              <p class="hiw-stage__body">You get a full audit report — every issue documented, scored by impact, and explained in plain English. Then we walk you through it on a 30 minute call. No jargon. No upselling. Just a clear explanation of what we found, what it means, and what we recommend.</p>
+              <p class="hiw-stage__body">You get a full audit report - every issue documented, scored by impact, and explained in plain English. Then we walk you through it on a 30 minute call. No jargon. No upselling. Just a clear explanation of what we found, what it means, and what we recommend.</p>
               <ul class="hiw-stage__points" role="list">
                 <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Prioritised fix list by impact</span></li>
                 <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Plain English throughout</span></li>
@@ -117,7 +126,7 @@
             <div class="hiw-stage__content">
               <p class="hiw-stage__when">Weeks 3 and 4</p>
               <h2 class="hiw-stage__title">Implementation</h2>
-              <p class="hiw-stage__body">We get to work on the fixes. Technical issues resolved, schema implemented, llms.txt written, content restructured for AI visibility. We work directly on your site or alongside your developer — whatever suits you. You see the changes as they go in and we verify every fix.</p>
+              <p class="hiw-stage__body">We get to work on the fixes. Technical issues resolved, schema implemented, llms.txt written, content restructured for AI visibility. We work directly on your site or alongside your developer - whatever suits you. You see the changes as they go in and we verify every fix.</p>
               <ul class="hiw-stage__points" role="list">
                 <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Hands-on implementation</span></li>
                 <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Changes verified before sign-off</span></li>
@@ -178,11 +187,11 @@
           </details>
           <details class="ui-faq">
             <summary class="ui-faq__summary"><span class="ui-faq__q">Do I need to sign a contract?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
-            <div class="ui-faq__answer"><p>For one-off projects like the audit and fix there is no long term contract — just a simple statement of work. For retainers we ask for an initial three month commitment, then it runs month to month.</p></div>
+            <div class="ui-faq__answer"><p>For one-off projects like the audit and fix there is no long term contract - just a simple statement of work. For retainers we ask for an initial three month commitment, then it runs month to month.</p></div>
           </details>
           <details class="ui-faq">
             <summary class="ui-faq__summary"><span class="ui-faq__q">How do you access my site to make changes?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
-            <div class="ui-faq__answer"><p>We ask for the access we need — usually WordPress admin, FTP, or Google Search Console access depending on the work. We document everything we do and return access at the end of the project if requested.</p></div>
+            <div class="ui-faq__answer"><p>We ask for the access we need - usually WordPress admin, FTP, or Google Search Console access depending on the work. We document everything we do and return access at the end of the project if requested.</p></div>
           </details>
           <details class="ui-faq">
             <summary class="ui-faq__summary"><span class="ui-faq__q">Do you work with businesses outside the UK?</span><span class="ui-faq__chevron" aria-hidden="true"></span></summary>
@@ -225,6 +234,7 @@
             <li><a href="/services/technical-seo/"             class="footer__link">Technical SEO</a></li>
             <li><a href="/services/visibility-that-compounds/" class="footer__link">Visibility that compounds</a></li>
             <li><a href="/services/local-seo/"                 class="footer__link">Local SEO</a></li>
+            <li><a href="/services/expert-content/"            class="footer__link">Expert content</a></li>
           </ul>
         </div>
         <div class="footer__col">
@@ -234,6 +244,12 @@
             <li><a href="/results/"  class="footer__link">Results</a></li>
             <li><a href="/insights/" class="footer__link">Insights</a></li>
             <li><a href="/contact/"  class="footer__link">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h2 class="footer__col-title">Industries</h2>
+          <ul class="footer__col-list" role="list">
+            <li><a href="/industries/automotive/" class="footer__link">Automotive</a></li>
           </ul>
         </div>
         <div class="footer__col">
@@ -265,7 +281,7 @@
     .nav__inner {
       display: flex; align-items: center; justify-content: space-between;
       gap: var(--space-5);
-      /* Bar height tracks the logo — shrinks with it on scroll. */
+      /* Bar height tracks the logo - shrinks with it on scroll. */
       min-height: 5rem;
       transition: min-height 250ms ease;
     }

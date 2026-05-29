@@ -49,6 +49,13 @@ export const NAV: ReadonlyArray<NavItem> = [
     ],
   },
   { href: '/how-it-works/', label: 'How it works' },
+  {
+    href: '/industries/automotive/',
+    label: 'Industries',
+    children: [
+      { href: '/industries/automotive/', label: 'Automotive' },
+    ],
+  },
   { href: '/insights/',     label: 'Insights' },
   { href: '/results/',      label: 'Results' },
   { href: '/about/',        label: 'About' },
@@ -66,6 +73,7 @@ export const FOOTER_NAV: ReadonlyArray<{
       { href: '/services/technical-seo/',             label: 'Technical SEO' },
       { href: '/services/visibility-that-compounds/', label: 'Visibility that compounds' },
       { href: '/services/local-seo/',                 label: 'Local SEO' },
+      { href: '/services/expert-content/',            label: 'Expert content' },
     ],
   },
   {
@@ -75,6 +83,12 @@ export const FOOTER_NAV: ReadonlyArray<{
       { href: '/results/',  label: 'Results' },
       { href: '/insights/', label: 'Insights' },
       { href: '/contact/',  label: 'Contact' },
+    ],
+  },
+  {
+    title: 'Industries',
+    items: [
+      { href: '/industries/automotive/', label: 'Automotive' },
     ],
   },
   {

@@ -1,0 +1,735 @@
+---
+/**
+ * industries/automotive.astro: industry landing page for automotive
+ * businesses (franchised dealers, independents, dealer groups).
+ *
+ * Schema flow: FAQPage + BreadcrumbList (Home > Industries > Automotive)
+ * + an AutoDealer LocalBusiness node, all folded into the <head> @graph
+ * via schemaExtras.
+ */
+import Page from '../../layouts/Page.astro';
+import FAQItem from '../../components/ui/FAQItem.astro';
+import CTABlock from '../../components/sections/CTABlock.astro';
+import { faqPageSchema, breadcrumbSchema } from '../../lib/schema';
+import { SITE } from '../../lib/site';
+
+const PROBLEM_CARDS = [
+  {
+    title: 'Rising acquisition costs',
+    body: 'Marketplace fees increase every year. Cost per lead climbs. Margins compress.',
+  },
+  {
+    title: 'No ownership of the relationship',
+    body: 'The marketplace owns the customer data. You get the enquiry, not the relationship.',
+  },
+  {
+    title: 'Zero control over demand',
+    body: 'When the platform changes, your leads change. You have no independent channel to fall back on.',
+  },
+] as const;
+
+const STATS = [
+  { value: '76%', label: 'of people who search for a local business on mobile visit within 24 hours' },
+  { value: '3x',  label: 'more enquiries from top local pack positions versus page one organic results' },
+  { value: '#1',  label: 'Google Business Profile is the single highest-impact local SEO asset for dealers' },
+] as const;
+
+const FEATURES = [
+  {
+    num: '01',
+    title: 'Local SEO and rank tracking',
+    body: 'We optimise your site for local search and track exactly where you appear across your town or city - not just a single average position but a geo-grid showing your visibility street by street. You always know where you are winning and where there is ground to gain.',
+  },
+  {
+    num: '02',
+    title: 'Google Business Profile',
+    body: 'Your GBP is the single most important local ranking asset you have. We optimise every element - categories, services, photos, posts, attributes, and Q and A - and manage it on an ongoing basis so it stays current and competitive.',
+  },
+  {
+    num: '03',
+    title: 'Citation management',
+    body: 'Consistent business information across hundreds of online directories is a core local ranking signal. We audit your existing citations, fix inconsistencies, and build new listings so search engines find the same accurate information about your business everywhere it appears.',
+  },
+  {
+    num: '04',
+    title: 'Review generation and management',
+    body: 'Reviews drive both rankings and buyer trust. We implement a review generation process that reaches customers at the right moment, monitors incoming reviews across all major platforms, and displays your best reviews on your website automatically.',
+  },
+  {
+    num: '05',
+    title: 'Reputation management',
+    body: 'We collect internal feedback before directing customers to leave a public review. This means your best experiences reach Google while giving you the chance to resolve issues directly with the customer before they go public.',
+  },
+  {
+    num: '06',
+    title: 'AI and LLM visibility',
+    body: 'Automotive buyers are increasingly using AI tools to research and shortlist businesses. We make sure your dealership appears when someone asks ChatGPT or Perplexity to recommend a dealer in your area - with the schema, entity signals, and structured data that make that possible.',
+  },
+] as const;
+
+const AUDIENCE = [
+  {
+    title: 'Franchised dealers',
+    body: 'Single-site or multi-site franchised dealers looking to generate more direct enquiries and reduce cost per lead from third-party platforms.',
+  },
+  {
+    title: 'Independent dealers',
+    body: 'Independent used car dealers who need to compete with larger operations on local search without a large marketing budget.',
+  },
+  {
+    title: 'Dealer groups',
+    body: 'Multi-site dealer groups who need consistent local visibility management across multiple locations and brands.',
+  },
+] as const;
+
+const AUTO_FAQS = [
+  {
+    question: 'Can you work alongside our existing Auto Trader or marketplace activity?',
+    answer:
+      'Yes. We are not anti-marketplace - they serve a purpose. We work alongside your existing activity to build the organic and local channel so you are less dependent on any single platform over time.',
+  },
+  {
+    question: 'How long does it take to see results in local search?',
+    answer:
+      'GBP improvements can show within weeks. Local organic rankings typically improve over two to three months as citations are built and the site is optimised. Review volume builds steadily from the first month.',
+  },
+  {
+    question: 'Do you work with multi-site dealer groups?',
+    answer:
+      'Yes. Multi-site groups get a scoped programme that covers all locations with consistent management and consolidated reporting.',
+  },
+  {
+    question: 'Can you help us get more Google reviews?',
+    answer:
+      'Yes. Review generation is included in the monthly management service. We implement a process that reaches customers at the right moment and makes it easy to leave a review.',
+  },
+  {
+    question: 'How do you track local rankings for a dealership?',
+    answer:
+      'We use geo-grid rank tracking that shows your visibility across your town or city at a granular level - not just a single average position. You can see exactly where you appear and where competitors are outranking you.',
+  },
+  {
+    question: 'Do AI tools recommend local businesses like car dealers?',
+    answer:
+      'Increasingly yes. When someone asks ChatGPT or Perplexity to recommend a dealer in their area, these systems pull from structured data, reviews, and local signals. We make sure your business sends the right signals to appear in those recommendations.',
+  },
+];
+
+const pageUrl = `${SITE.url}/industries/automotive/`;
+const localBusiness = {
+  '@type': 'ProfessionalService',
+  '@id': `${pageUrl}#service`,
+  name: 'Found Everywhere - Automotive SEO & LLM Visibility',
+  url: pageUrl,
+  parentOrganization: { '@id': `${SITE.url}/#organization` },
+  areaServed: 'United Kingdom',
+  serviceType: 'Local SEO and AI search visibility for automotive businesses',
+  audience: {
+    '@type': 'BusinessAudience',
+    name: 'Car dealers, independent dealers, and dealer groups',
+  },
+};
+const schemaExtras = [
+  faqPageSchema(AUTO_FAQS, pageUrl),
+  breadcrumbSchema(
+    [
+      { name: 'Home',       item: `${SITE.url}/` },
+      { name: 'Industries', item: `${SITE.url}/industries/` },
+      { name: 'Automotive', item: pageUrl },
+    ],
+    pageUrl,
+  ),
+  localBusiness,
+];
+---
+
+<Page
+  title="SEO and LLM Visibility for Car Dealers and Automotive Businesses | Found Everywhere"
+  description="Local SEO, Google Business Profile management, and AI search visibility for franchised dealers, independents, and dealer groups. Stop depending on Auto Trader. Start owning your own demand."
+  path="/industries/automotive/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="au-hero" aria-labelledby="au-hero-title">
+    <div class="container">
+      <p class="au-hero__eyebrow">Automotive</p>
+      <h1 id="au-hero-title" class="au-hero__title">Stop renting your customers from Auto Trader</h1>
+      <p class="au-hero__lead">
+        Every lead that comes through a marketplace is a lead you paid for
+        twice - once in fees, once in lost relationship. We help automotive
+        businesses build search visibility they own, so direct enquiries
+        grow and marketplace dependency shrinks.
+      </p>
+      <div class="au-hero__cta">
+        <a href="/contact/" class="au-btn au-btn--primary">
+          Talk to us <span aria-hidden="true" class="au-btn__arrow">&#x2197;</span>
+        </a>
+        <a href="/how-it-works/" class="au-btn au-btn--ghost">How it works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. THE PROBLEM ============ -->
+  <section class="au-problem" aria-labelledby="au-problem-title">
+    <div class="container">
+      <div class="au-problem__grid">
+        <div class="au-problem__copy">
+          <p class="au-eyebrow">The problem</p>
+          <h2 id="au-problem-title" class="au-h2">Marketplace dependency is a slow leak</h2>
+          <p class="au-problem__body">
+            Most automotive businesses know this feeling. Lead costs creep
+            up year on year. Auto Trader changes its algorithm or its
+            pricing and enquiries dip. The business owns very little of its
+            own demand and has limited ability to change that quickly.
+          </p>
+          <p class="au-problem__body">
+            The businesses winning in automotive search right now are not
+            the ones with the biggest marketplace budgets. They are the
+            ones that showed up consistently in local search, built trust
+            through reviews, and made sure Google and AI tools could find
+            them when a buyer was ready.
+          </p>
+        </div>
+        <div class="au-problem__cards">
+          {PROBLEM_CARDS.map((c) => (
+            <div class="au-pcard">
+              <h3 class="au-pcard__title">{c.title}</h3>
+              <p class="au-pcard__body">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. THE OPPORTUNITY ============ -->
+  <section class="au-opp" aria-labelledby="au-opp-title">
+    <div class="container">
+      <p class="au-eyebrow au-eyebrow--center">The opportunity</p>
+      <h2 id="au-opp-title" class="au-h2 au-h2--center">Local search is the channel you own</h2>
+      <p class="au-opp__body">
+        Most automotive buyers start their search online. Google Maps and
+        local results drive first contact. A buyer searching for a used car
+        dealer in their town will call the business that appears at the top
+        of local results - not necessarily the one with the biggest Ad
+        budget or the most marketplace listings. Local visibility is one of
+        the few scalable channels a dealer owns outright.
+      </p>
+      <div class="au-stats">
+        {STATS.map((s) => (
+          <div class="au-stat">
+            <div class="au-stat__value">{s.value}</div>
+            <div class="au-stat__label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. WHAT WE DO ============ -->
+  <section class="au-do" aria-labelledby="au-do-title">
+    <div class="container">
+      <p class="au-eyebrow">What we do</p>
+      <h2 id="au-do-title" class="au-h2">Everything a dealer needs to own local search</h2>
+      <ul class="au-features" role="list">
+        {FEATURES.map((f) => (
+          <li class="au-feature">
+            <span class="au-feature__num">{f.num}</span>
+            <h3 class="au-feature__title">{f.title}</h3>
+            <p class="au-feature__body">{f.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 5. WHO THIS IS FOR (dark) ============ -->
+  <section class="au-who" aria-labelledby="au-who-title">
+    <div class="container">
+      <p class="au-eyebrow au-eyebrow--center">Who this is for</p>
+      <h2 id="au-who-title" class="au-h2 au-h2--center au-h2--light">Built for automotive businesses serious about direct demand</h2>
+      <div class="au-who__grid">
+        {AUDIENCE.map((a) => (
+          <article class="au-who-card">
+            <h3 class="au-who-card__title">{a.title}</h3>
+            <p class="au-who-card__body">{a.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. PRICING ============ -->
+  <section class="au-pricing" aria-labelledby="au-pricing-title">
+    <div class="container">
+      <p class="au-eyebrow au-eyebrow--center">Investment</p>
+      <h2 id="au-pricing-title" class="au-h2 au-h2--center">Straightforward pricing, no surprises</h2>
+      <p class="au-pricing__body">
+        Automotive visibility work is scoped as part of our ongoing
+        retainer service. We start with a full local SEO and AI visibility
+        audit so you know exactly where you stand, then move into monthly
+        management. Everything is transparent and reported clearly every
+        month.
+      </p>
+
+      <div class="au-plans">
+        <article class="au-plan">
+          <p class="au-plan__eyebrow">Start here</p>
+          <h3 class="au-plan__title">Automotive SEO audit</h3>
+          <p class="au-plan__price">From £497</p>
+          <p class="au-plan__desc">Full local SEO audit, GBP review, citation audit, AI visibility test, and prioritised fix list. Delivered within two weeks.</p>
+          <ul class="au-plan__checks" role="list">
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Local rank tracking included</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>GBP audit and recommendations</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>AI visibility across 8 platforms</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Plain English report</span></li>
+          </ul>
+          <a href="/contact/" class="au-plan__cta">Book your audit <span aria-hidden="true">&#x2197;</span></a>
+        </article>
+
+        <article class="au-plan au-plan--featured">
+          <p class="au-plan__eyebrow">Ongoing</p>
+          <h3 class="au-plan__title">Monthly visibility management</h3>
+          <p class="au-plan__price">From £697/mo</p>
+          <p class="au-plan__desc">Full monthly management of local SEO, GBP, citations, review generation, and AI visibility tracking. Clear monthly reporting.</p>
+          <ul class="au-plan__checks" role="list">
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>GBP management included</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Review generation and monitoring</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>AI citation tracking</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Monthly performance report</span></li>
+          </ul>
+          <a href="/contact/" class="au-plan__cta">Talk to us <span aria-hidden="true">&#x2197;</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. FAQ ============ -->
+  <section class="au-faq" aria-labelledby="au-faq-title">
+    <div class="container">
+      <p class="au-eyebrow">Common questions</p>
+      <h2 id="au-faq-title" class="au-h2">What automotive businesses ask us</h2>
+      <div class="au-faq__list">
+        {AUTO_FAQS.map((faq) => (
+          <FAQItem question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. CTA ============ -->
+  <CTABlock
+    title="Ready to own your own demand?"
+    lead="Start with a free conversation about where your dealership stands in local search and AI visibility."
+  />
+
+</Page>
+
+<style>
+  /* Shared section atoms */
+  .au-eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .au-eyebrow--center { text-align: center; }
+  .au-h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .au-h2--center { text-align: center; }
+  .au-h2--light { color: #FFFFFF; line-height: 1.2; }
+
+  /* ============ 1. HERO ============ */
+  .au-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .au-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .au-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .au-hero__lead {
+    margin: 20px auto 0;
+    max-width: 580px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .au-hero__cta {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .au-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 13px 22px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+  .au-btn--primary { color: #FFFFFF; background: #0C7B82; border: 1px solid #0C7B82; }
+  .au-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
+  .au-btn--ghost {
+    color: #FFFFFF;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .au-btn--ghost:hover { border-color: rgba(255, 255, 255, 0.55); }
+  .au-btn__arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .au-btn--primary:hover .au-btn__arrow { transform: translate(2px, -2px); }
+
+  /* ============ 2. THE PROBLEM ============ */
+  .au-problem { background: #FFFFFF; padding-block: 96px; }
+  .au-problem .container { max-width: 960px; }
+  .au-problem__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .au-problem__body {
+    margin: 16px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .au-problem__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .au-pcard {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-left: 3px solid #EF4444;
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .au-pcard__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .au-pcard__body {
+    margin: 6px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 3. THE OPPORTUNITY ============ */
+  .au-opp { background: #F7F9FC; padding-block: 96px; }
+  .au-opp .container { max-width: 960px; }
+  .au-opp__body {
+    margin: 24px auto 0;
+    max-width: 680px;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .au-stats {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .au-stat {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .au-stat__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .au-stat__label {
+    margin-top: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 4. WHAT WE DO ============ */
+  .au-do { background: #FFFFFF; padding-block: 96px; }
+  .au-do .container { max-width: 960px; }
+  .au-features {
+    list-style: none;
+    padding: 0;
+    margin: 48px 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .au-feature__num {
+    display: block;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    letter-spacing: 0.08em;
+  }
+  .au-feature__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .au-feature__body {
+    margin: 8px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 5. WHO THIS IS FOR (dark) ============ */
+  .au-who { background: #0D1826; padding-block: 96px; }
+  .au-who .container { max-width: 960px; }
+  .au-who__grid {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .au-who-card {
+    background: #0A1520;
+    border: 0.5px solid #1E3A4A;
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .au-who-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+  }
+  .au-who-card__body {
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============ 6. PRICING ============ */
+  .au-pricing { background: #F7F9FC; padding-block: 96px; }
+  .au-pricing .container { max-width: 800px; }
+  .au-pricing__body {
+    margin: 24px auto 0;
+    max-width: 580px;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .au-plans {
+    margin: 48px auto 0;
+    max-width: 720px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .au-plan {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: left;
+  }
+  .au-plan--featured { border: 1.5px solid #0C7B82; }
+  .au-plan__eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .au-plan__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .au-plan__price {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .au-plan__desc {
+    margin: 12px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .au-plan__checks {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .au-plan__checks li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #64748B;
+  }
+  .au-plan__checks svg { color: #0C7B82; flex-shrink: 0; }
+  .au-plan__cta {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 24px;
+    padding: 12px 16px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    color: #FFFFFF;
+    background: #0C7B82;
+    border: 1px solid #0C7B82;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+  .au-plan__cta:hover { background: #0A6970; border-color: #0A6970; }
+  .au-plan__cta span {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .au-plan__cta:hover span { transform: translate(2px, -2px); }
+
+  /* ============ 7. FAQ ============ */
+  .au-faq { background: #FFFFFF; padding-block: 96px; }
+  .au-faq .container { max-width: 800px; }
+  .au-faq__list {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 56rem) {
+    .au-problem__grid { grid-template-columns: 1fr; gap: 40px; }
+    .au-stats { grid-template-columns: 1fr; }
+    .au-features { grid-template-columns: 1fr; gap: 28px; }
+    .au-who__grid { grid-template-columns: 1fr; }
+    .au-plans { grid-template-columns: 1fr; max-width: 28rem; }
+  }
+  @media (max-width: 48rem) {
+    .au-hero    { padding-block: 72px; }
+    .au-problem { padding-block: 72px; }
+    .au-opp     { padding-block: 72px; }
+    .au-do      { padding-block: 72px; }
+    .au-who     { padding-block: 72px; }
+    .au-pricing { padding-block: 72px; }
+    .au-faq     { padding-block: 72px; }
+  }
+</style>

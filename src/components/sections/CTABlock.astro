@@ -5,13 +5,25 @@
  * Full-width, teal #0C7B82, 96px top/bottom. Centred headline + lead
  * + a single inverted button (white bg, teal text) that hovers toward
  * the soft-teal tint used by the .ui-btn--ghost component.
+ *
+ * Copy is overridable via props so individual pages (e.g. industry
+ * landing pages) can tailor the headline/lead; defaults match the
+ * site-wide message.
  */
+export interface Props {
+  title?: string;
+  lead?: string;
+}
+const {
+  title = 'Ready to be found everywhere?',
+  lead = 'Free audit. No commitment. Just clarity on where you stand.',
+} = Astro.props;
 ---
 
 <section class="cta" aria-labelledby="cta-title">
   <div class="container">
-    <h2 id="cta-title" class="cta__title">Ready to be found everywhere?</h2>
-    <p class="cta__lead">Free audit. No commitment. Just clarity on where you stand.</p>
+    <h2 id="cta-title" class="cta__title">{title}</h2>
+    <p class="cta__lead">{lead}</p>
 
     <a href="/contact/" class="cta__btn">
       Get your free audit
