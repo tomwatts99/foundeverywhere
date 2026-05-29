@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://foundeverywhere.co.uk',
-  trailingSlash: 'never',
+  trailingSlash: 'always',
   compressHTML: true,
   build: {
     inlineStylesheets: 'auto',
@@ -12,8 +12,23 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      changefreq: 'weekly',
-      priority: 0.7,
+      filter: (page) => !page.includes('/404'),
+      serialize(item) {
+        if (item.url === 'https://foundeverywhere.co.uk/') {
+          item.priority = 1.0;
+          item.changefreq = 'daily';
+        } else if (item.url.includes('/services/')) {
+          item.priority = 0.9;
+          item.changefreq = 'weekly';
+        } else if (item.url.includes('/insights') || item.url.includes('/results')) {
+          item.priority = 0.8;
+          item.changefreq = 'weekly';
+        } else {
+          item.priority = 0.7;
+          item.changefreq = 'monthly';
+        }
+        return item;
+      },
       lastmod: new Date(),
     }),
   ],

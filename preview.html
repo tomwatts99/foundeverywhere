@@ -61,6 +61,7 @@
               <li><a href="/services/technical-seo/"  class="nav__dropdown-link">Technical SEO</a></li>
               <li><a href="/services/visibility-that-compounds/"       class="nav__dropdown-link">Visibility that compounds</a></li>
               <li><a href="/services/local-seo/"      class="nav__dropdown-link">Local SEO and Google Business Profile</a></li>
+              <li><a href="/services/expert-content/" class="nav__dropdown-link">Expert content</a></li>
             </ul>
             </li>
             <li class="nav__item"><a href="/how-it-works/" class="nav__link">How it works</a></li>
@@ -121,20 +122,49 @@
     </section>
 
     <!-- ============ STATS ROW ============ -->
-    <section class="stats" aria-label="By the numbers">
+    <section class="stats" aria-label="Our own PageSpeed Insights scores">
       <div class="container">
-        <div class="stats__row" id="stats-row">
+        <p class="stats__eyebrow">Our own PageSpeed Insights scores</p>
+        <div class="stats__row" id="stats-row" style="--circ:219.9">
           <div class="stat">
-            <div class="stat__value" data-target="98" data-suffix="">0</div>
-            <div class="stat__label">Our PageSpeed score</div>
+            <div class="stat__gauge">
+              <svg class="stat__ring" viewBox="0 0 80 80" aria-hidden="true">
+                <circle class="stat__track" cx="40" cy="40" r="35"></circle>
+                <circle class="stat__arc" cx="40" cy="40" r="35" data-pct="0.9800"></circle>
+              </svg>
+              <span class="stat__value" data-target="98">0</span>
+            </div>
+            <div class="stat__label">Performance</div>
           </div>
           <div class="stat">
-            <div class="stat__value" data-target="100" data-suffix="">0</div>
-            <div class="stat__label">Our SEO score</div>
+            <div class="stat__gauge">
+              <svg class="stat__ring" viewBox="0 0 80 80" aria-hidden="true">
+                <circle class="stat__track" cx="40" cy="40" r="35"></circle>
+                <circle class="stat__arc" cx="40" cy="40" r="35" data-pct="0.9600"></circle>
+              </svg>
+              <span class="stat__value" data-target="96">0</span>
+            </div>
+            <div class="stat__label">Accessibility</div>
           </div>
           <div class="stat">
-            <div class="stat__value" data-target="100" data-suffix="">0</div>
-            <div class="stat__label">Our best practices score</div>
+            <div class="stat__gauge">
+              <svg class="stat__ring" viewBox="0 0 80 80" aria-hidden="true">
+                <circle class="stat__track" cx="40" cy="40" r="35"></circle>
+                <circle class="stat__arc" cx="40" cy="40" r="35" data-pct="1.0000"></circle>
+              </svg>
+              <span class="stat__value" data-target="100">0</span>
+            </div>
+            <div class="stat__label">Best Practices</div>
+          </div>
+          <div class="stat">
+            <div class="stat__gauge">
+              <svg class="stat__ring" viewBox="0 0 80 80" aria-hidden="true">
+                <circle class="stat__track" cx="40" cy="40" r="35"></circle>
+                <circle class="stat__arc" cx="40" cy="40" r="35" data-pct="1.0000"></circle>
+              </svg>
+              <span class="stat__value" data-target="100">0</span>
+            </div>
+            <div class="stat__label">SEO</div>
           </div>
         </div>
       </div>
@@ -233,6 +263,22 @@
             <span class="ui-card__num">05</span>
             <h3 class="ui-card__title">Local SEO and Google Business Profile</h3>
             <p class="ui-card__desc">Google Business Profile, local citations, and location schema so you show up when nearby customers are searching.</p>
+            <span class="ui-card__cta" aria-hidden="true">
+              <span>Learn more</span>
+              <svg class="ui-card__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
+            </span>
+          </a>
+
+          <a href="/services/expert-content/" class="ui-card" aria-label="Expert content">
+            <span class="ui-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 4c-3 0-6.5 1.7-9 4.5C7.6 11.2 6 14.6 6 18l1 1c3.4 0 6.8-1.6 9.5-4 2.8-2.5 4.5-6 4.5-9 0-1-.5-2-2-2Z" />
+                <path d="M5 19c1.5-3 3.5-5 6-6.5" />
+              </svg>
+            </span>
+            <span class="ui-card__num">06</span>
+            <h3 class="ui-card__title">Expert content</h3>
+            <p class="ui-card__desc">Content that only you could publish. First-hand experience, unique perspectives, and expert takes that AI systems actually cite rather than skip.</p>
             <span class="ui-card__cta" aria-hidden="true">
               <span>Learn more</span>
               <svg class="ui-card__arrow" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="m9 4 4 4-4 4"/></svg>
@@ -421,19 +467,20 @@
         <div class="footer__col">
           <h2 class="footer__col-title">Services</h2>
           <ul class="footer__col-list" role="list">
-            <li><a href="/services/seo"     class="footer__link">Technical SEO</a></li>
-            <li><a href="/services/llm"     class="footer__link">LLM visibility</a></li>
-            <li><a href="/services/content" class="footer__link">Content &amp; E-E-A-T</a></li>
-            <li><a href="/services/audit"   class="footer__link">Audits</a></li>
+            <li><a href="/services/seo-audit/"                 class="footer__link">SEO audit</a></li>
+            <li><a href="/services/llm-visibility/"            class="footer__link">LLM visibility</a></li>
+            <li><a href="/services/technical-seo/"             class="footer__link">Technical SEO</a></li>
+            <li><a href="/services/visibility-that-compounds/" class="footer__link">Visibility that compounds</a></li>
+            <li><a href="/services/local-seo/"                 class="footer__link">Local SEO</a></li>
           </ul>
         </div>
         <div class="footer__col">
           <h2 class="footer__col-title">Agency</h2>
           <ul class="footer__col-list" role="list">
-            <li><a href="/about"    class="footer__link">About</a></li>
-            <li><a href="/work"     class="footer__link">Case studies</a></li>
-            <li><a href="/insights" class="footer__link">Insights</a></li>
-            <li><a href="/contact"  class="footer__link">Contact</a></li>
+            <li><a href="/about/"    class="footer__link">About</a></li>
+            <li><a href="/results/"  class="footer__link">Results</a></li>
+            <li><a href="/insights/" class="footer__link">Insights</a></li>
+            <li><a href="/contact/"  class="footer__link">Contact</a></li>
           </ul>
         </div>
         <div class="footer__col">
@@ -441,7 +488,6 @@
           <ul class="footer__col-list" role="list">
             <li><a href="/llms.txt"           class="footer__link mono">llms.txt</a></li>
             <li><a href="/sitemap-index.xml"  class="footer__link">Sitemap</a></li>
-            <li><a href="/rss.xml"            class="footer__link">RSS</a></li>
           </ul>
         </div>
       </nav>
@@ -796,10 +842,7 @@
       .services__grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (min-width: 64rem) {
-      .services__grid { grid-template-columns: repeat(6, 1fr); }
-      .services__grid > * { grid-column: span 2; }
-      .services__grid > :nth-child(4) { grid-column: 2 / span 2; }
-      .services__grid > :nth-child(5) { grid-column: 4 / span 2; }
+      .services__grid { grid-template-columns: repeat(3, 1fr); }
     }
     .services__all { margin: 48px 0 0; text-align: center; }
     .services__all-link {
@@ -1091,24 +1134,34 @@
 
     /* ---------- StatsRow (mirrors src/components/sections/StatsRow.astro) ---------- */
     .stats { background: #F7F9FC; padding-block: 48px; }
-    .stats__row {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 32px; text-align: center; align-items: start;
+    .stats__eyebrow {
+      margin: 0 0 32px; text-align: center;
+      font-family: var(--font-mono); font-size: 10px; line-height: 1.4;
+      color: #64748B; text-transform: uppercase; letter-spacing: 0.08em;
     }
+    .stats__row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 24px; justify-items: center; align-items: start;
+    }
+    .stat { display: flex; flex-direction: column; align-items: center; }
+    .stat__gauge { position: relative; width: 80px; height: 80px; }
+    .stat__ring { width: 80px; height: 80px; transform: rotate(-90deg); }
+    .stat__track { fill: none; stroke: #E0F4F5; stroke-width: 6; }
+    .stat__arc { fill: none; stroke: #0C7B82; stroke-width: 6; stroke-linecap: round; }
     .stat__value {
+      position: absolute; inset: 0; display: grid; place-items: center;
       font-family: var(--font-display); font-weight: 700;
-      font-size: 48px; line-height: 1; letter-spacing: -0.02em;
-      color: #0D1321; font-variant-numeric: tabular-nums;
+      font-size: 18px; line-height: 1; color: #0D1321;
+      font-variant-numeric: tabular-nums;
     }
     .stat__label {
-      margin-top: 6px;
+      margin-top: 10px; text-align: center;
       font-family: var(--font-body); font-weight: 400;
-      font-size: 13px; line-height: 1.5; color: #64748B;
+      font-size: 13px; line-height: 1.4; color: #64748B;
     }
     @media (max-width: 48rem) {
       .stats { padding-block: 40px; }
-      .stats__row { grid-template-columns: 1fr; gap: 24px; }
-      .stat__value { font-size: 36px; }
+      .stats__row { grid-template-columns: repeat(2, 1fr); gap: 28px 24px; }
     }
   </style>
 
@@ -1146,44 +1199,67 @@
     (function () {
       var row = document.getElementById('stats-row');
       if (!row) return;
-      var cells = row.querySelectorAll('.stat__value');
-      if (!cells.length) return;
+      var circ = parseFloat(getComputedStyle(row).getPropertyValue('--circ')) || 219.9;
+      var arcs = row.querySelectorAll('.stat__arc');
+      var nums = row.querySelectorAll('.stat__value');
+      if (!arcs.length) return;
 
       var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduced) {
-        cells.forEach(function (cell) {
-          var target = parseInt(cell.getAttribute('data-target') || '0', 10);
-          var suffix = cell.getAttribute('data-suffix') || '';
-          cell.textContent = target + suffix;
+
+      function setStatic() {
+        arcs.forEach(function (arc) {
+          var pct = parseFloat(arc.getAttribute('data-pct') || '0');
+          arc.style.strokeDasharray = circ;
+          arc.style.strokeDashoffset = circ * (1 - pct);
         });
-        return;
+        nums.forEach(function (num) {
+          num.textContent = num.getAttribute('data-target') || '0';
+        });
       }
 
+      arcs.forEach(function (arc) {
+        arc.style.strokeDasharray = circ;
+        arc.style.strokeDashoffset = circ;
+      });
+
+      if (reduced) { setStatic(); return; }
+
       function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-      function countUp(cell) {
-        var target = parseInt(cell.getAttribute('data-target') || '0', 10);
-        var suffix = cell.getAttribute('data-suffix') || '';
-        var duration = 1200;
+
+      function animate() {
+        var duration = 1400;
         var start = null;
+        var targets = [];
+        nums.forEach(function (num) { targets.push(parseInt(num.getAttribute('data-target') || '0', 10)); });
+        var pcts = [];
+        arcs.forEach(function (arc) { pcts.push(parseFloat(arc.getAttribute('data-pct') || '0')); });
+
         function frame(now) {
           if (start === null) start = now;
           var t = Math.min(1, (now - start) / duration);
-          var value = Math.round(target * easeOutCubic(t));
-          cell.textContent = (t < 1) ? String(value) : (target + suffix);
-          if (t < 1) requestAnimationFrame(frame);
+          var e = easeOutCubic(t);
+          for (var i = 0; i < arcs.length; i++) {
+            arcs[i].style.strokeDashoffset = circ * (1 - pcts[i] * e);
+            nums[i].textContent = String(Math.round(targets[i] * e));
+          }
+          if (t < 1) {
+            requestAnimationFrame(frame);
+          } else {
+            for (var j = 0; j < arcs.length; j++) {
+              arcs[j].style.strokeDashoffset = circ * (1 - pcts[j]);
+              nums[j].textContent = String(targets[j]);
+            }
+          }
         }
         requestAnimationFrame(frame);
       }
 
-      if (typeof IntersectionObserver === 'undefined') {
-        cells.forEach(countUp);
-        return;
-      }
+      if (typeof IntersectionObserver === 'undefined') { animate(); return; }
 
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
-            cells.forEach(countUp);
+            animate();
             io.disconnect();
           }
         });

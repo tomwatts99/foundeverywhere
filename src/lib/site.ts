@@ -45,6 +45,7 @@ export const NAV: ReadonlyArray<NavItem> = [
       { href: '/services/technical-seo/',  label: 'Technical SEO' },
       { href: '/services/visibility-that-compounds/',       label: 'Visibility that compounds' },
       { href: '/services/local-seo/',      label: 'Local SEO and Google Business Profile' },
+      { href: '/services/expert-content/', label: 'Expert content' },
     ],
   },
   { href: '/how-it-works/', label: 'How it works' },
@@ -60,27 +61,27 @@ export const FOOTER_NAV: ReadonlyArray<{
   {
     title: 'Services',
     items: [
-      { href: '/services/seo',          label: 'Technical SEO' },
-      { href: '/services/llm',          label: 'LLM visibility' },
-      { href: '/services/content',      label: 'Content & E-E-A-T' },
-      { href: '/services/audit',        label: 'Audits' },
+      { href: '/services/seo-audit/',                 label: 'SEO audit' },
+      { href: '/services/llm-visibility/',            label: 'LLM visibility' },
+      { href: '/services/technical-seo/',             label: 'Technical SEO' },
+      { href: '/services/visibility-that-compounds/', label: 'Visibility that compounds' },
+      { href: '/services/local-seo/',                 label: 'Local SEO' },
     ],
   },
   {
     title: 'Agency',
     items: [
-      { href: '/about',    label: 'About' },
-      { href: '/work',     label: 'Case studies' },
-      { href: '/insights', label: 'Insights' },
-      { href: '/contact',  label: 'Contact' },
+      { href: '/about/',    label: 'About' },
+      { href: '/results/',  label: 'Results' },
+      { href: '/insights/', label: 'Insights' },
+      { href: '/contact/',  label: 'Contact' },
     ],
   },
   {
     title: 'Resources',
     items: [
-      { href: '/llms.txt',   label: 'llms.txt' },
+      { href: '/llms.txt',          label: 'llms.txt' },
       { href: '/sitemap-index.xml', label: 'Sitemap' },
-      { href: '/rss.xml',    label: 'RSS' },
     ],
   },
 ];

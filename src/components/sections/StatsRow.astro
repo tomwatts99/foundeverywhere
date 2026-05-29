@@ -1,93 +1,135 @@
 ---
 /**
- * StatsRow.astro: three-up animated stats band.
+ * StatsRow.astro: four circular PageSpeed-style score rings.
  *
- * Surface #F7F9FC, 48px top/bottom. Numbers count up from 0 to their
- * target the first time the section enters the viewport, using an
- * ease-out cubic over 1200ms. The "2 weeks" stat counts only the
- * digit and the " weeks" suffix is appended once the count completes.
+ * Surface #F7F9FC. Each score is a circular SVG gauge — a faint track
+ * plus a teal progress arc that sweeps from 0 to its target the first
+ * time the row enters the viewport, while the centre number counts up
+ * in step. Styled after Google PageSpeed Insights but in brand teal
+ * (#0C7B82) rather than green.
  *
- * Reduced motion: no animation; the final values render immediately.
+ * Geometry: 80×80 viewBox, r=35 → circumference = 2·π·35 ≈ 219.9.
+ * The arc is rotated -90° so it starts at 12 o'clock.
+ *
+ * Reduced motion: no animation; final arcs + numbers render immediately.
  */
+const CIRC = 2 * Math.PI * 35; // 219.9
+
 const STATS = [
-  { value: 98,  suffix: '', label: 'Our PageSpeed score' },
-  { value: 100, suffix: '', label: 'Our SEO score' },
-  { value: 100, suffix: '', label: 'Our best practices score' },
+  { value: 98,  max: 100, label: 'Performance' },
+  { value: 96,  max: 100, label: 'Accessibility' },
+  { value: 100, max: 100, label: 'Best Practices' },
+  { value: 100, max: 100, label: 'SEO' },
 ] as const;
 ---
 
-<section class="stats" aria-label="By the numbers">
+<section class="stats" aria-label="Our own PageSpeed Insights scores">
   <div class="container">
-    <div class="stats__row" id="stats-row">
-      {STATS.map((stat) => (
-        <div class="stat">
-          <div
-            class="stat__value"
-            data-target={stat.value}
-            data-suffix={stat.suffix}
-          >0</div>
-          <div class="stat__label">{stat.label}</div>
-        </div>
-      ))}
+    <p class="stats__eyebrow">Our own PageSpeed Insights scores</p>
+
+    <div class="stats__row" id="stats-row" style={`--circ:${CIRC.toFixed(1)}`}>
+      {STATS.map((stat) => {
+        const pct = Math.max(0, Math.min(1, stat.value / stat.max));
+        return (
+          <div class="stat">
+            <div class="stat__gauge">
+              <svg class="stat__ring" viewBox="0 0 80 80" aria-hidden="true">
+                <circle class="stat__track" cx="40" cy="40" r="35" />
+                <circle
+                  class="stat__arc"
+                  cx="40"
+                  cy="40"
+                  r="35"
+                  data-pct={pct.toFixed(4)}
+                />
+              </svg>
+              <span class="stat__value" data-target={stat.value}>0</span>
+            </div>
+            <div class="stat__label">{stat.label}</div>
+          </div>
+        );
+      })}
     </div>
   </div>
 </section>
 
 <script is:inline>
   /**
-   * Count-up controller. Plays once when the row first intersects the
-   * viewport. Each cell carries `data-target` (final integer) and
-   * optionally `data-suffix` (appended after the count finishes).
+   * Gauge controller. On first viewport intersection, sweeps each arc
+   * from full offset (empty) to its target and counts the centre number
+   * up in lock-step over the same duration. Plays once.
    */
   (function () {
     var row = document.getElementById('stats-row');
     if (!row) return;
-    var cells = row.querySelectorAll('.stat__value');
-    if (!cells.length) return;
+
+    var circ = parseFloat(getComputedStyle(row).getPropertyValue('--circ')) || 219.9;
+    var arcs = row.querySelectorAll('.stat__arc');
+    var nums = row.querySelectorAll('.stat__value');
+    if (!arcs.length) return;
 
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Reduced motion: write final values now and bail.
-    if (reduced) {
-      cells.forEach(function (cell) {
-        var target = parseInt(cell.getAttribute('data-target') || '0', 10);
-        var suffix = cell.getAttribute('data-suffix') || '';
-        cell.textContent = target + suffix;
+    function setStatic() {
+      arcs.forEach(function (arc) {
+        var pct = parseFloat(arc.getAttribute('data-pct') || '0');
+        arc.style.strokeDasharray = circ;
+        arc.style.strokeDashoffset = circ * (1 - pct);
       });
-      return;
+      nums.forEach(function (num) {
+        num.textContent = num.getAttribute('data-target') || '0';
+      });
     }
+
+    // Prime the arcs as empty (full offset) so the first paint isn't a full ring.
+    arcs.forEach(function (arc) {
+      arc.style.strokeDasharray = circ;
+      arc.style.strokeDashoffset = circ;
+    });
+
+    if (reduced) { setStatic(); return; }
 
     function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
-    function countUp(cell) {
-      var target = parseInt(cell.getAttribute('data-target') || '0', 10);
-      var suffix = cell.getAttribute('data-suffix') || '';
-      var duration = 1200;
+    function animate() {
+      var duration = 1400;
       var start = null;
+      var targets = [];
+      nums.forEach(function (num) {
+        targets.push(parseInt(num.getAttribute('data-target') || '0', 10));
+      });
+      var pcts = [];
+      arcs.forEach(function (arc) {
+        pcts.push(parseFloat(arc.getAttribute('data-pct') || '0'));
+      });
 
       function frame(now) {
         if (start === null) start = now;
-        var elapsed = now - start;
-        var t = Math.min(1, elapsed / duration);
-        var value = Math.round(target * easeOutCubic(t));
-        // During the animation, show only the integer; append the suffix
-        // once we hit the final value.
-        cell.textContent = (t < 1) ? String(value) : (target + suffix);
-        if (t < 1) requestAnimationFrame(frame);
+        var t = Math.min(1, (now - start) / duration);
+        var e = easeOutCubic(t);
+        for (var i = 0; i < arcs.length; i++) {
+          arcs[i].style.strokeDashoffset = circ * (1 - pcts[i] * e);
+          nums[i].textContent = String(Math.round(targets[i] * e));
+        }
+        if (t < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          // Snap to exact final values.
+          for (var j = 0; j < arcs.length; j++) {
+            arcs[j].style.strokeDashoffset = circ * (1 - pcts[j]);
+            nums[j].textContent = String(targets[j]);
+          }
+        }
       }
       requestAnimationFrame(frame);
     }
 
-    // Fallback for very old browsers: run immediately.
-    if (typeof IntersectionObserver === 'undefined') {
-      cells.forEach(countUp);
-      return;
-    }
+    if (typeof IntersectionObserver === 'undefined') { animate(); return; }
 
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          cells.forEach(countUp);
+          animate();
           io.disconnect();
         }
       });
@@ -101,36 +143,79 @@ const STATS = [
     background: #F7F9FC;
     padding-block: 48px;
   }
+  .stats__eyebrow {
+    margin: 0 0 32px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.4;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
   .stats__row {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 32px;
-    text-align: center;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 24px;
+    justify-items: center;
     align-items: start;
   }
 
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Gauge: SVG ring with the number layered dead-centre. */
+  .stat__gauge {
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .stat__ring {
+    width: 80px;
+    height: 80px;
+    /* Start the arc at 12 o'clock and sweep clockwise. */
+    transform: rotate(-90deg);
+  }
+  .stat__track {
+    fill: none;
+    stroke: #E0F4F5;
+    stroke-width: 6;
+  }
+  .stat__arc {
+    fill: none;
+    stroke: #0C7B82;
+    stroke-width: 6;
+    stroke-linecap: round;
+  }
   .stat__value {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 48px;
+    font-size: 18px;
     line-height: 1;
-    letter-spacing: -0.02em;
     color: #0D1321;
-    /* Reserve digit-width slot so the count doesn't reflow neighbours. */
     font-variant-numeric: tabular-nums;
   }
+
   .stat__label {
-    margin-top: 6px;
+    margin-top: 10px;
+    text-align: center;
     font-family: var(--font-body);
     font-weight: 400;
     font-size: 13px;
-    line-height: 1.5;
+    line-height: 1.4;
     color: #64748B;
   }
 
   @media (max-width: 48rem) {
     .stats { padding-block: 40px; }
-    .stats__row { grid-template-columns: 1fr; gap: 24px; }
-    .stat__value { font-size: 36px; }
+    .stats__row { grid-template-columns: repeat(2, 1fr); gap: 28px 24px; }
   }
 </style>

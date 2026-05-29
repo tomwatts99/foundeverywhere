@@ -1,0 +1,489 @@
+---
+/**
+ * services/expert-content.astro: detail page for the expert content service.
+ *
+ * Schema flow: FAQPage built from the same EC_FAQS source rendered
+ * on-page, plus a BreadcrumbList (Home > Services > this page). Both
+ * flow through schemaExtras into the single <head> @graph.
+ */
+import Page from '../../layouts/Page.astro';
+import FAQItem from '../../components/ui/FAQItem.astro';
+import CTABlock from '../../components/sections/CTABlock.astro';
+import { faqPageSchema, breadcrumbSchema } from '../../lib/schema';
+import { SITE } from '../../lib/site';
+
+const FEATURES = [
+  {
+    num: '01',
+    title: 'Content audit',
+    body: 'We review your existing content and identify what is commodity and what has real value. You find out which pages are worth improving and which are holding your site back.',
+  },
+  {
+    num: '02',
+    title: 'Editorial strategy',
+    body: 'We identify the topics where your business has genuine expertise and unique perspective — the angles that only you could cover properly. Then we build a content plan around them.',
+  },
+  {
+    num: '03',
+    title: 'Expert article creation',
+    body: 'We interview you or your team, extract the real expertise and experience, and turn it into well-structured content that reads like a human wrote it — because one did, drawing on knowledge a generalist could not have.',
+  },
+  {
+    num: '04',
+    title: 'Structured for search and AI',
+    body: 'Every piece is structured to answer questions clearly, with proper heading hierarchy, FAQ sections with schema, and the content signals that help AI systems understand and cite it.',
+  },
+  {
+    num: '05',
+    title: 'Ongoing content programme',
+    body: 'For retainer clients we run an ongoing content programme — regular expert pieces, content refreshes, and a rolling editorial calendar built around your expertise and search opportunities.',
+  },
+] as const;
+
+const STANDARDS = [
+  {
+    title: 'First-hand experience',
+    body: 'Content based on what you have actually done, seen, and learned. A review written by someone who used the product. A guide written by someone who solved the problem. Google calls this Experience in E-E-A-T.',
+  },
+  {
+    title: 'Unique perspective',
+    body: 'A point of view that stands out from the crowd. Not a summary of what everyone else has said. An opinion, an insight, or an angle that only your business could bring to the topic.',
+  },
+  {
+    title: 'Genuine expertise',
+    body: 'Deep knowledge of your subject that goes beyond surface-level information. The kind of content that makes a reader think — I could not have found this anywhere else.',
+  },
+] as const;
+
+const EC_FAQS = [
+  {
+    question: 'Do you write the content or do we?',
+    answer:
+      'Both, depending on what works best for you. For most clients we interview the relevant person in your business, extract the expertise and experience, and write the piece ourselves. Some clients prefer to write a rough draft and have us structure and optimise it. We work either way.',
+  },
+  {
+    question: 'How is this different from regular content writing?',
+    answer:
+      'Most content agencies write generic articles based on keyword research. We build content around your specific expertise and experience — the things only your business knows. The output is fundamentally different because the input is different.',
+  },
+  {
+    question: 'We already have a lot of content. Is it all commodity?',
+    answer:
+      'Probably some of it is and some of it is not. The content audit tells you which is which. Often there are pieces worth improving rather than replacing — adding first-hand experience, unique data, or expert perspective to an existing article can transform it.',
+  },
+  {
+    question: 'How many pieces do you produce per month?',
+    answer:
+      'It depends on the engagement. Standalone projects typically cover four to eight pieces. Retainer content programmes are scoped based on your goals and budget. Quality matters more than volume here — one genuinely expert piece is worth more than ten commodity articles.',
+  },
+  {
+    question: 'Will AI-generated content hurt our rankings?',
+    answer:
+      'Using AI as a writing tool is fine. Publishing content that provides no unique value — whether written by a human or an AI — is what Google penalises. The standard is not how it was written, it is whether it says something worth reading.',
+  },
+  {
+    question: 'How do we get started?',
+    answer:
+      'Get in touch and tell us about your business and what you know. We will have a conversation about where your real expertise lies and what content opportunities exist. No commitment needed at that stage.',
+  },
+];
+
+const pageUrl = `${SITE.url}/services/expert-content/`;
+const schemaExtras = [
+  faqPageSchema(EC_FAQS, pageUrl),
+  breadcrumbSchema(
+    [
+      { name: 'Home',           item: `${SITE.url}/` },
+      { name: 'Services',       item: `${SITE.url}/services/` },
+      { name: 'Expert Content', item: pageUrl },
+    ],
+    pageUrl,
+  ),
+];
+---
+
+<Page
+  title="Expert Content Service UK | Found Everywhere"
+  description="Content that only your business could publish. We create experience-led, non-commodity content that Google rewards and AI systems cite. For UK businesses serious about search."
+  path="/services/expert-content/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="ec-hero" aria-labelledby="ec-hero-title">
+    <div class="container">
+      <p class="ec-hero__eyebrow">Expert content</p>
+      <h1 id="ec-hero-title" class="ec-hero__title">Content that only you could publish</h1>
+      <p class="ec-hero__lead">
+        Google is explicitly rewarding content built on real experience
+        and unique perspective. AI systems cite sources that say something
+        worth citing. We help you create that content.
+      </p>
+      <div class="ec-hero__cta">
+        <a href="/contact/" class="ec-btn ec-btn--primary">
+          Get in touch <span aria-hidden="true" class="ec-btn__arrow">&#x2197;</span>
+        </a>
+        <a href="/services/" class="ec-btn ec-btn--ghost">See all services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. THE PROBLEM ============ -->
+  <section class="ec-problem" aria-labelledby="ec-problem-title">
+    <div class="container">
+      <p class="ec-problem__eyebrow">The problem</p>
+      <h2 id="ec-problem-title" class="ec-problem__title">Most content on the internet says the same thing</h2>
+      <p class="ec-problem__body">
+        Google calls it commodity content. The kind of article that could
+        have been written by anyone, about anything, with no real
+        experience behind it. Seven tips for first-time homebuyers. How to
+        improve your SEO in five steps. Content that restates what everyone
+        else has already said.
+      </p>
+      <p class="ec-problem__body">
+        Google has explicitly said it is deprioritising this content in
+        search results and in AI-generated answers. AI systems are trained
+        to recognise and favour content that provides unique insight,
+        first-hand experience, and perspectives that go beyond the obvious.
+        If your content reads like it could have been generated by an AI,
+        it probably will not rank like it used to.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 3. WHAT WE DO ============ -->
+  <section class="ec-do" aria-labelledby="ec-do-title">
+    <div class="container">
+      <p class="ec-do__eyebrow">What is included</p>
+      <h2 id="ec-do-title" class="ec-do__title">Content with your expertise at the centre</h2>
+
+      <ul class="ec-features" role="list">
+        {FEATURES.map((f) => (
+          <li class="ec-feature">
+            <span class="ec-feature__num">{f.num}</span>
+            <h3 class="ec-feature__title">{f.title}</h3>
+            <p class="ec-feature__body">{f.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 4. THE STANDARD (dark) ============ -->
+  <section class="ec-std" aria-labelledby="ec-std-title">
+    <div class="container">
+      <p class="ec-std__eyebrow">The standard</p>
+      <h2 id="ec-std-title" class="ec-std__title">What Google and AI systems actually reward</h2>
+
+      <div class="ec-std__grid">
+        {STANDARDS.map((s) => (
+          <article class="ec-std-card">
+            <h3 class="ec-std-card__title">{s.title}</h3>
+            <p class="ec-std-card__body">{s.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. FAQ ============ -->
+  <section class="ec-faq" aria-labelledby="ec-faq-title">
+    <div class="container">
+      <p class="ec-faq__eyebrow">Common questions</p>
+      <h2 id="ec-faq-title" class="ec-faq__title">What people ask about expert content</h2>
+      <div class="ec-faq__list">
+        {EC_FAQS.map((faq) => (
+          <FAQItem question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. CTA ============ -->
+  <CTABlock />
+
+</Page>
+
+<style>
+  /* ============================================================
+     1. HERO
+     ============================================================ */
+  .ec-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .ec-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ec-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .ec-hero__lead {
+    margin: 20px auto 0;
+    max-width: 560px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .ec-hero__cta {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .ec-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 13px 22px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+  .ec-btn--primary {
+    color: #FFFFFF;
+    background: #0C7B82;
+    border: 1px solid #0C7B82;
+  }
+  .ec-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
+  .ec-btn--ghost {
+    color: #FFFFFF;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .ec-btn--ghost:hover { border-color: rgba(255, 255, 255, 0.55); }
+  .ec-btn__arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .ec-btn--primary:hover .ec-btn__arrow { transform: translate(2px, -2px); }
+
+  /* ============================================================
+     2. THE PROBLEM
+     ============================================================ */
+  .ec-problem {
+    background: #F7F9FC;
+    padding-block: 96px;
+    text-align: center;
+  }
+  .ec-problem .container { max-width: 800px; }
+  .ec-problem__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ec-problem__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 1.3rem + 1.4vw, 32px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .ec-problem__body {
+    margin: 24px auto 0;
+    max-width: 640px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     3. WHAT WE DO
+     ============================================================ */
+  .ec-do { background: #FFFFFF; padding-block: 96px; }
+  .ec-do .container { max-width: 960px; }
+  .ec-do__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ec-do__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .ec-features {
+    list-style: none;
+    padding: 0;
+    margin: 48px 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .ec-feature__num {
+    display: block;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    letter-spacing: 0.08em;
+  }
+  .ec-feature__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .ec-feature__body {
+    margin: 8px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     4. THE STANDARD (dark)
+     ============================================================ */
+  .ec-std { background: #0D1826; padding-block: 96px; }
+  .ec-std .container { max-width: 960px; }
+  .ec-std__eyebrow {
+    margin: 0 0 16px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ec-std__title {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .ec-std__grid {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .ec-std-card {
+    background: #0A1520;
+    border: 0.5px solid #1E3A4A;
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .ec-std-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+  }
+  .ec-std-card__body {
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     5. FAQ
+     ============================================================ */
+  .ec-faq { background: #FFFFFF; padding-block: 96px; }
+  .ec-faq .container { max-width: 800px; }
+  .ec-faq__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ec-faq__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .ec-faq__list {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 56rem) {
+    .ec-features { grid-template-columns: 1fr; gap: 28px; }
+    .ec-std__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 48rem) {
+    .ec-hero    { padding-block: 72px; }
+    .ec-problem { padding-block: 72px; }
+    .ec-do      { padding-block: 72px; }
+    .ec-std     { padding-block: 72px; }
+    .ec-faq     { padding-block: 72px; }
+  }
+</style>
