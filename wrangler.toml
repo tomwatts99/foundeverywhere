@@ -1,0 +1,14 @@
+name = "foundeverywhere-report"
+main = "workers/report/index.js"
+compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "REPORTS"
+id = "275fa1d80c6d4f7bb8764714855a4735"
+
+[[kv_namespaces]]
+binding = "REPORT_REQUESTS"
+id = "c02c46592ff94583b78cb0ca936e489a"
+
+[vars]
+ALLOWED_ORIGIN = "https://foundeverywhere.co.uk"

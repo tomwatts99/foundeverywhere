@@ -25,10 +25,13 @@ const {
     <h2 id="cta-title" class="cta__title">{title}</h2>
     <p class="cta__lead">{lead}</p>
 
-    <a href="/contact/" class="cta__btn">
-      Get your free audit
-      <span aria-hidden="true" class="cta__btn-arrow">&#x2197;</span>
-    </a>
+    <div class="cta__actions">
+      <a href="/free-visibility-report/" class="cta__btn">
+        Get your free report
+        <span aria-hidden="true" class="cta__btn-arrow">&#x2197;</span>
+      </a>
+      <a href="/contact/" class="cta__btn cta__btn--ghost">Book an audit</a>
+    </div>
   </div>
 </section>
 
@@ -62,11 +65,18 @@ const {
     text-wrap: pretty;
   }
 
+  .cta__actions {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
   .cta__btn {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    margin-top: 32px;
     padding: 11px 24px;
     font-family: var(--font-display);
     font-weight: 600;
@@ -80,6 +90,7 @@ const {
     transition:
       background-color var(--duration-fast) var(--ease-out),
       border-color    var(--duration-fast) var(--ease-out),
+      color           var(--duration-fast) var(--ease-out),
       transform       var(--duration-fast) var(--ease-out);
   }
   .cta__btn:hover {
@@ -87,6 +98,17 @@ const {
     border-color: #E0F4F5;
   }
   .cta__btn:active { transform: translateY(1px); }
+
+  .cta__btn--ghost {
+    background: transparent;
+    color: #FFFFFF;
+    border-color: rgba(255, 255, 255, 0.45);
+  }
+  .cta__btn--ghost:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.8);
+    color: #FFFFFF;
+  }
 
   .cta__btn-arrow {
     display: inline-block;

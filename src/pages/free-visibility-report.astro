@@ -1,0 +1,506 @@
+---
+export const prerender = true;
+
+/**
+ * free-visibility-report.astro: the report request page.
+ *
+ * Dark hero with trust signals → white form card (vanilla JS fetch to
+ * the report Worker) → "what you get" surface section → CTABlock.
+ *
+ * The Turnstile widget reads its site key from PUBLIC_TURNSTILE_SITE_KEY
+ * at build time. The form POSTs JSON to /api/generate-report and, on
+ * success, redirects to /report/pending/.
+ */
+import Page from '../layouts/Page.astro';
+import CTABlock from '../components/sections/CTABlock.astro';
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
+
+const SECTORS = [
+  'Restaurant or cafe',
+  'Hotel or accommodation',
+  'Pub or bar',
+  'Car dealer',
+  'Professional services',
+  'Healthcare or dental',
+  'Home services',
+  'Ecommerce',
+  'Other',
+];
+
+const REPORT_INCLUDES = [
+  {
+    title: 'Overall visibility score',
+    body: 'A single score out of 100 showing how visible your business is across AI search systems.',
+  },
+  {
+    title: 'Platform breakdown',
+    body: 'Individual results from Claude, Perplexity, and ChatGPT showing exactly where you appear and where you do not.',
+  },
+  {
+    title: 'Competitor comparison',
+    body: 'See which businesses in your sector are appearing instead of you when AI tools are asked for recommendations.',
+  },
+  {
+    title: 'Five recommendations',
+    body: 'Specific, prioritised actions you can take to improve your AI visibility — ranked by impact and effort.',
+  },
+];
+---
+
+<Page
+  title="Free AI Visibility Report | Found Everywhere"
+  description="Find out if your business appears in ChatGPT, Perplexity, and Claude. Free AI visibility report in minutes. No commitment."
+  path="/free-visibility-report/"
+  bleed
+>
+  <Fragment>
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  </Fragment>
+
+  <!-- ============ HERO ============ -->
+  <section class="report-hero" aria-labelledby="report-title">
+    <div class="container">
+      <p class="report-hero__eyebrow">Free in minutes</p>
+      <h1 id="report-title" class="report-hero__title">
+        Find out if AI search can find your business
+      </h1>
+      <p class="report-hero__lead">
+        We test your business across ChatGPT, Perplexity, and Claude and tell you
+        exactly where you appear, where you do not, and what to do about it. Free.
+        No commitment.
+      </p>
+
+      <ul class="report-hero__trust" role="list">
+        <li>
+          <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="8" r="6.5" />
+            <path d="M8 4.5V8l2.5 1.5" />
+          </svg>
+          <span>Takes 2 minutes</span>
+        </li>
+        <li>
+          <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="12" height="10" rx="1.5" />
+            <path d="M2 5.5h12" />
+          </svg>
+          <span>Tests 3 AI systems</span>
+        </li>
+        <li>
+          <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m3 8 3.5 3.5L13 4" />
+          </svg>
+          <span>Free, no commitment</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ FORM ============ -->
+  <section class="report-form-section">
+    <div class="container">
+      <form class="report-card" id="report-form" novalidate>
+        <div class="field">
+          <label class="field__label" for="rf-firstName">First name</label>
+          <input class="field__input" type="text" id="rf-firstName" name="firstName" autocomplete="given-name" required />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="rf-businessName">Business name</label>
+          <input class="field__input" type="text" id="rf-businessName" name="businessName" autocomplete="organization" required />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="rf-websiteUrl">Website URL</label>
+          <input class="field__input" type="url" id="rf-websiteUrl" name="websiteUrl" placeholder="https://yourdomain.co.uk" autocomplete="url" required />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="rf-sector">Business sector</label>
+          <select class="field__input field__select" id="rf-sector" name="sector" required>
+            <option value="" disabled selected>Select your sector</option>
+            {SECTORS.map((s) => <option value={s}>{s}</option>)}
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="rf-location">Location</label>
+          <input class="field__input" type="text" id="rf-location" name="location" placeholder="e.g. Brighton, Sussex" required />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="rf-email">Email address</label>
+          <input class="field__input" type="email" id="rf-email" name="email" autocomplete="email" required />
+        </div>
+
+        {turnstileSiteKey && (
+          <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+        )}
+
+        <button class="report-submit" type="submit" id="report-submit">
+          <span class="report-submit__label">Generate my free report <span aria-hidden="true" class="report-submit__arrow">&#x2197;</span></span>
+          <span class="report-submit__loading" hidden>
+            <span class="report-spinner" aria-hidden="true"></span>
+            Generating your report...
+          </span>
+        </button>
+
+        <p class="report-error" id="report-error" role="alert" hidden></p>
+
+        <p class="report-finewrap">
+          We will email your report within 2 minutes. By submitting you agree to our
+          <a href="/privacy/">privacy policy</a>.
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ WHAT YOU GET ============ -->
+  <section class="report-includes">
+    <div class="container">
+      <p class="report-includes__eyebrow">What you get</p>
+      <h2 class="report-includes__title">A complete picture of your AI visibility</h2>
+      <div class="report-includes__grid">
+        {REPORT_INCLUDES.map((item) => (
+          <div class="includes-card">
+            <h3 class="includes-card__title">{item.title}</h3>
+            <p class="includes-card__body">{item.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTABlock
+    title="Already know you need help?"
+    lead="Skip the report and talk to us directly."
+  />
+</Page>
+
+<script>
+  const form = document.getElementById('report-form') as HTMLFormElement | null;
+  const btn = document.getElementById('report-submit') as HTMLButtonElement | null;
+  const errorEl = document.getElementById('report-error') as HTMLElement | null;
+
+  if (form && btn && errorEl) {
+    const labelEl = btn.querySelector('.report-submit__label') as HTMLElement;
+    const loadingEl = btn.querySelector('.report-submit__loading') as HTMLElement;
+
+    const setLoading = (loading: boolean) => {
+      btn.disabled = loading;
+      labelEl.hidden = loading;
+      loadingEl.hidden = !loading;
+    };
+
+    const showError = (msg: string) => {
+      errorEl.textContent = msg;
+      errorEl.hidden = false;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.hidden = true;
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const data = new FormData(form);
+      const payload = {
+        firstName: (data.get('firstName') || '').toString().trim(),
+        businessName: (data.get('businessName') || '').toString().trim(),
+        websiteUrl: (data.get('websiteUrl') || '').toString().trim(),
+        sector: (data.get('sector') || '').toString().trim(),
+        location: (data.get('location') || '').toString().trim(),
+        email: (data.get('email') || '').toString().trim(),
+      };
+
+      setLoading(true);
+      try {
+        const res = await fetch('/api/generate-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const result = await res.json().catch(() => ({}));
+
+        if (res.ok && result.success) {
+          const params = new URLSearchParams({
+            email: payload.email,
+            business: payload.businessName,
+          });
+          window.location.href = `/report/pending/?${params.toString()}`;
+          return;
+        }
+
+        showError(result.message || 'Something went wrong. Please try again.');
+        setLoading(false);
+      } catch {
+        showError('We could not reach the report service. Please try again in a moment.');
+        setLoading(false);
+      }
+    });
+  }
+</script>
+
+<style>
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .report-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 80px;
+  }
+  .report-hero__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .report-hero__title {
+    margin: 0 auto;
+    max-width: 16ch;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .report-hero__lead {
+    margin: 20px auto 0;
+    max-width: 540px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .report-hero__trust {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    column-gap: 28px;
+    row-gap: 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: #CBD5E1;
+  }
+  .report-hero__trust li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .report-hero__trust li + li { margin-top: 0; }
+  .report-hero__trust svg { color: #0C7B82; flex-shrink: 0; }
+
+  /* ============================================================
+     FORM
+     ============================================================ */
+  .report-form-section {
+    background: #FFFFFF;
+    padding-block: 80px;
+  }
+  .report-card {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 40px;
+    background: #FFFFFF;
+    border: 0.5px solid #E4E8EF;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field__label {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #0D1321;
+  }
+  .field__input {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    color: #0D1321;
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 8px;
+    transition: border-color var(--duration-fast) var(--ease-out),
+                box-shadow var(--duration-fast) var(--ease-out);
+  }
+  .field__input::placeholder { color: #94A3B8; }
+  .field__input:focus,
+  .field__input:focus-visible {
+    outline: none;
+    border-color: #0C7B82;
+    box-shadow: 0 0 0 3px rgba(12, 123, 130, 0.15);
+  }
+  .field__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16' fill='none' stroke='%2364748B' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+  }
+
+  /* ---------- Submit ---------- */
+  .report-submit {
+    width: 100%;
+    margin-top: 4px;
+    padding: 14px 24px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    color: #FFFFFF;
+    background: #0C7B82;
+    border: 1px solid #0C7B82;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-out),
+                border-color var(--duration-fast) var(--ease-out),
+                transform var(--duration-fast) var(--ease-out);
+  }
+  .report-submit:hover { background: #0A6970; border-color: #0A6970; }
+  .report-submit:active { transform: translateY(1px); }
+  .report-submit:disabled { opacity: 0.85; cursor: progress; }
+  .report-submit__label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+  }
+  .report-submit__arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .report-submit:hover .report-submit__arrow { transform: translate(2px, -2px); }
+  .report-submit__loading {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .report-spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #FFFFFF;
+    border-radius: 50%;
+    animation: report-spin 0.7s linear infinite;
+  }
+  @keyframes report-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .report-spinner { animation-duration: 1.4s; }
+  }
+
+  .report-error {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.5;
+    color: #DC2626;
+    text-align: center;
+  }
+
+  .report-finewrap {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 12px;
+    line-height: 1.5;
+    color: #64748B;
+    text-align: center;
+  }
+  .report-finewrap a { color: #64748B; text-decoration: underline; }
+
+  /* ============================================================
+     WHAT YOU GET
+     ============================================================ */
+  .report-includes {
+    background: #F7F9FC;
+    padding-block: 80px;
+  }
+  .report-includes .container {
+    max-width: 860px;
+    margin-inline: auto;
+  }
+  .report-includes__eyebrow {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .report-includes__title {
+    margin: 16px auto 0;
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.6rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .report-includes__grid {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .includes-card {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .includes-card__title {
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.3;
+    color: #0D1321;
+  }
+  .includes-card__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     MOBILE
+     ============================================================ */
+  @media (max-width: 48rem) {
+    .report-hero { padding-block: 64px; }
+    .report-form-section { padding-block: 56px; }
+    .report-card { padding: 28px; }
+    .report-includes { padding-block: 56px; }
+    .report-includes__grid { grid-template-columns: 1fr; }
+    .report-hero__trust { column-gap: 18px; }
+  }
+</style>

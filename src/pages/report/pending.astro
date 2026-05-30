@@ -1,0 +1,94 @@
+---
+export const prerender = false;
+
+/**
+ * report/pending.astro: holding page shown immediately after the form
+ * is submitted while the report generates and the email is sent.
+ *
+ * Dark full-viewport screen with an animated spinner. The business name
+ * is read from the `business` query param on the client.
+ */
+import Page from '../../layouts/Page.astro';
+---
+
+<Page
+  title="Generating your report | Found Everywhere"
+  description="Your AI visibility report is being generated."
+  path="/report/pending/"
+  noindex
+  bleed
+>
+  <section class="pending">
+    <div class="pending__inner">
+      <span class="pending__spinner" aria-hidden="true"></span>
+      <h1 class="pending__title">Generating your report...</h1>
+      <p class="pending__lead" id="pending-lead">
+        We are testing your business across ChatGPT, Perplexity, and Claude right now.
+        This takes about 60 seconds. Check your inbox — we will email you the moment
+        it is ready.
+      </p>
+    </div>
+  </section>
+</Page>
+
+<script is:inline>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var business = (params.get('business') || '').trim();
+    if (business) {
+      var lead = document.getElementById('pending-lead');
+      if (lead) {
+        lead.textContent =
+          'We are testing ' + business + ' across ChatGPT, Perplexity, and Claude right now. ' +
+          'This takes about 60 seconds. Check your inbox — we will email you the moment it is ready.';
+      }
+    }
+  })();
+</script>
+
+<style>
+  .pending {
+    background: #0D1826;
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 32px var(--gutter);
+  }
+  .pending__inner {
+    max-width: 540px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .pending__spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(12, 123, 130, 0.25);
+    border-top-color: #0C7B82;
+    border-radius: 50%;
+    animation: pending-spin 0.8s linear infinite;
+  }
+  @keyframes pending-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .pending__spinner { animation-duration: 1.6s; }
+  }
+  .pending__title {
+    margin: 32px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.6rem + 2vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .pending__lead {
+    margin: 16px 0 0;
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+</style>

@@ -1,4 +1,6 @@
 ---
+export const prerender = true;
+
 /**
  * Home page: composes the full section stack inside Page.
  *
@@ -9,6 +11,7 @@
  */
 import Page from '../layouts/Page.astro';
 import Hero from '../components/Hero.astro';
+import ReportTeaser from '../components/sections/ReportTeaser.astro';
 import StatsRow from '../components/sections/StatsRow.astro';
 import ServicesGrid from '../components/sections/ServicesGrid.astro';
 import HowItWorks from '../components/sections/HowItWorks.astro';
@@ -30,6 +33,7 @@ const schemaExtras = [faqPageSchema(HOME_FAQS)];
   bleed
 >
   <Hero />
+  <ReportTeaser />
   <StatsRow />
   <ServicesGrid />
   <HowItWorks />

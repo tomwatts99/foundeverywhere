@@ -1,0 +1,521 @@
+---
+/**
+ * report/[id].astro: the private AI visibility report.
+ *
+ * Rendered on demand (prerender = false). Fetches the stored report
+ * from the Worker API (GET /api/report/:id) using the request origin,
+ * then renders the score ring, per-platform cards, and recommendations.
+ * Missing reports render a friendly 404 state. noindex / nofollow.
+ */
+export const prerender = false;
+
+import Page from '../../layouts/Page.astro';
+
+const { id } = Astro.params;
+
+type ModelResult = {
+  found: boolean;
+  confidence: 'high' | 'medium' | 'low';
+  mentions: string[];
+  context: string;
+  score: number;
+};
+type Recommendation = {
+  title: string;
+  description: string;
+  priority: 'high' | 'medium' | 'low';
+  effort: 'quick' | 'medium' | 'significant';
+};
+type Report = {
+  id: string;
+  firstName: string;
+  businessName: string;
+  websiteUrl: string;
+  sector: string;
+  location: string;
+  email: string;
+  overallScore: number;
+  claudeResult: ModelResult;
+  perplexityResult: ModelResult;
+  openaiResult: ModelResult;
+  recommendations: Recommendation[];
+  generatedAt: string;
+};
+
+let report: Report | null = null;
+try {
+  const apiUrl = new URL(`/api/report/${id}`, Astro.url.origin);
+  const res = await fetch(apiUrl.toString());
+  if (res.ok) {
+    report = (await res.json()) as Report;
+  }
+} catch (err) {
+  console.error('Failed to fetch report:', err);
+}
+
+/* ---------- presentation helpers ---------- */
+const RING_CIRC = 2 * Math.PI * 35; // 219.9 — matches StatsRow geometry
+
+function scoreColour(score: number): string {
+  if (score < 40) return '#EF4444';
+  if (score <= 70) return '#F59E0B';
+  return '#0C7B82';
+}
+
+function formatDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  } catch {
+    return '';
+  }
+}
+
+const PRIORITY_LABEL = { high: 'High', medium: 'Medium', low: 'Low' } as const;
+const EFFORT_LABEL = { quick: 'Quick win', medium: 'Medium', significant: 'Significant' } as const;
+
+const platforms = report
+  ? [
+      { name: 'Claude', logo: '/images/brands/claude.svg', result: report.claudeResult },
+      { name: 'Perplexity', logo: '/images/brands/perplexity.svg', result: report.perplexityResult },
+      { name: 'ChatGPT', logo: '/images/brands/chatgpt.svg', result: report.openaiResult },
+    ]
+  : [];
+
+const overall = report?.overallScore ?? 0;
+const overallColour = scoreColour(overall);
+const overallPct = Math.max(0, Math.min(1, overall / 100));
+const overallOffset = RING_CIRC * (1 - overallPct);
+---
+
+<Page
+  title="Your AI Visibility Report | Found Everywhere"
+  description="Your private AI visibility report from Found Everywhere."
+  path={`/report/${id}/`}
+  noindex
+  bleed
+>
+  {report === null ? (
+    <section class="report-missing">
+      <div class="container">
+        <h1 class="report-missing__title">Report not found</h1>
+        <p class="report-missing__lead">
+          This report has expired or the link is incorrect. Reports are available
+          for 30 days after they are generated.
+        </p>
+        <a href="/free-visibility-report/" class="report-missing__btn">
+          Request a new report <span aria-hidden="true">&#x2197;</span>
+        </a>
+      </div>
+    </section>
+  ) : (
+    <article class="report">
+      <div class="report__wrap">
+        <!-- Header -->
+        <header class="report__header">
+          <a href="/" class="report__brand" aria-label="Found Everywhere, home">
+            <img src="/images/logo.svg" alt="Found Everywhere" height="40" />
+          </a>
+          <div class="report__heading">
+            <p class="report__kicker">AI Visibility Report</p>
+            <p class="report__date">Generated {formatDate(report.generatedAt)}</p>
+          </div>
+        </header>
+
+        <!-- Score hero -->
+        <section class="report__score" aria-label="Overall AI visibility score">
+          <div class="score-ring" style={`--ring-colour:${overallColour}`}>
+            <svg class="score-ring__svg" viewBox="0 0 80 80" aria-hidden="true">
+              <circle class="score-ring__track" cx="40" cy="40" r="35" />
+              <circle
+                class="score-ring__arc"
+                cx="40"
+                cy="40"
+                r="35"
+                style={`stroke-dasharray:${RING_CIRC.toFixed(1)};stroke-dashoffset:${overallOffset.toFixed(1)}`}
+              />
+            </svg>
+            <span class="score-ring__value">{overall}</span>
+          </div>
+          <p class="report__score-label">AI Visibility Score</p>
+          <p class="report__business">{report.businessName}</p>
+        </section>
+
+        <!-- Platform results -->
+        <section class="report__platforms" aria-label="Results by platform">
+          {platforms.map((p) => {
+            const colour = scoreColour(p.result.score);
+            return (
+              <div class="platform-card">
+                <div class="platform-card__head">
+                  <img class="platform-card__logo" src={p.logo} alt={p.name} height="22" />
+                  <span class="platform-card__name">{p.name}</span>
+                </div>
+                <div class="platform-card__score" style={`color:${colour}`}>
+                  {p.result.score}<span class="platform-card__out">/100</span>
+                </div>
+                <div class="platform-card__badges">
+                  <span class:list={['badge', p.result.found ? 'badge--found' : 'badge--not']}>
+                    {p.result.found ? 'Found' : 'Not found'}
+                  </span>
+                  <span class="badge badge--confidence">{p.result.confidence} confidence</span>
+                </div>
+                {p.result.context && (
+                  <p class="platform-card__context">{p.result.context}</p>
+                )}
+              </div>
+            );
+          })}
+        </section>
+
+        <!-- Recommendations -->
+        <section class="report__recs" aria-labelledby="recs-title">
+          <h2 id="recs-title" class="report__recs-title">Your top 5 recommendations</h2>
+          <div class="report__recs-list">
+            {report.recommendations.map((rec, i) => (
+              <div class="rec-card">
+                <div class="rec-card__top">
+                  <span class="rec-card__num">{String(i + 1).padStart(2, '0')}</span>
+                  <div class="rec-card__badges">
+                    <span class:list={['badge', `badge--prio-${rec.priority}`]}>
+                      {PRIORITY_LABEL[rec.priority]}
+                    </span>
+                    <span class="badge badge--effort">{EFFORT_LABEL[rec.effort]}</span>
+                  </div>
+                </div>
+                <h3 class="rec-card__title">{rec.title}</h3>
+                <p class="rec-card__body">{rec.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="report__cta">
+          <h2 class="report__cta-title">Ready to improve your score?</h2>
+          <p class="report__cta-lead">
+            Found Everywhere can implement every recommendation in this report. Get in
+            touch and we will tell you exactly what is involved.
+          </p>
+          <a href="/contact/" class="report__cta-btn">
+            Book a free consultation <span aria-hidden="true" class="report__cta-arrow">&#x2197;</span>
+          </a>
+        </section>
+      </div>
+    </article>
+  )}
+</Page>
+
+<style>
+  /* ============================================================
+     MISSING / 404 STATE
+     ============================================================ */
+  .report-missing {
+    background: #FFFFFF;
+    text-align: center;
+    padding-block: clamp(64px, 10vw, 120px);
+  }
+  .report-missing__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.6rem + 2vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .report-missing__lead {
+    margin: 16px auto 0;
+    max-width: 36rem;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    color: #64748B;
+  }
+  .report-missing__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 28px;
+    padding: 13px 24px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    color: #FFFFFF;
+    background: #0C7B82;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+  .report-missing__btn:hover { background: #0A6970; }
+
+  /* ============================================================
+     REPORT SHELL
+     ============================================================ */
+  .report { background: #FFFFFF; }
+  .report__wrap {
+    max-width: 960px;
+    margin-inline: auto;
+    padding: 64px var(--gutter);
+  }
+
+  /* ---------- Header ---------- */
+  .report__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E4E8EF;
+  }
+  .report__brand { display: inline-flex; align-items: center; line-height: 0; }
+  .report__brand img { display: block; height: 40px; width: auto; }
+  .report__heading { text-align: right; }
+  .report__kicker {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    color: #0D1321;
+  }
+  .report__date {
+    margin: 4px 0 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #64748B;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- Score hero ---------- */
+  .report__score {
+    text-align: center;
+    margin-block: 48px;
+  }
+  .score-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+  }
+  .score-ring__svg {
+    width: 120px;
+    height: 120px;
+    transform: rotate(-90deg);
+  }
+  .score-ring__track { fill: none; stroke: #EEF2F7; stroke-width: 6; }
+  .score-ring__arc {
+    fill: none;
+    stroke: var(--ring-colour);
+    stroke-width: 6;
+    stroke-linecap: round;
+  }
+  .score-ring__value {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    color: #0D1321;
+    font-variant-numeric: tabular-nums;
+  }
+  .report__score-label {
+    margin: 16px 0 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: #64748B;
+  }
+  .report__business {
+    margin: 4px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    color: #0D1321;
+  }
+
+  /* ---------- Platform cards ---------- */
+  .report__platforms {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .platform-card {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .platform-card__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .platform-card__logo { display: block; height: 22px; width: auto; }
+  .platform-card__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    color: #0D1321;
+  }
+  .platform-card__score {
+    margin-top: 14px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .platform-card__out { font-size: 14px; color: #94A3B8; font-weight: 600; }
+  .platform-card__badges {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .platform-card__context {
+    margin: 14px 0 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.55;
+    color: #64748B;
+    font-style: italic;
+    text-wrap: pretty;
+  }
+
+  /* ---------- Badges ---------- */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.4;
+    border-radius: 999px;
+    text-transform: capitalize;
+  }
+  .badge--found { background: #E0F4F5; color: #0A6970; }
+  .badge--not { background: #FEF2F2; color: #DC2626; }
+  .badge--confidence { background: #F1F5F9; color: #64748B; }
+  .badge--prio-high { background: #E0F4F5; color: #0A6970; }
+  .badge--prio-medium { background: #FEF3E2; color: #B45309; }
+  .badge--prio-low { background: #F1F5F9; color: #64748B; }
+  .badge--effort { background: #F1F5F9; color: #64748B; }
+
+  /* ---------- Recommendations ---------- */
+  .report__recs { margin-top: 64px; }
+  .report__recs-title {
+    margin: 0 0 24px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .report__recs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .rec-card {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .rec-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .rec-card__num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #94A3B8;
+    letter-spacing: 0.04em;
+  }
+  .rec-card__badges { display: flex; flex-wrap: wrap; gap: 6px; }
+  .rec-card__title {
+    margin: 12px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.35;
+    color: #0D1321;
+  }
+  .rec-card__body {
+    margin: 8px 0 0;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ---------- CTA ---------- */
+  .report__cta {
+    margin-top: 64px;
+    background: #0D1826;
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+  }
+  .report__cta-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .report__cta-lead {
+    margin: 12px auto 0;
+    max-width: 40rem;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .report__cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 28px;
+    padding: 13px 24px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    color: #FFFFFF;
+    background: #0C7B82;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-out);
+  }
+  .report__cta-btn:hover { background: #0A6970; }
+  .report__cta-arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .report__cta-btn:hover .report__cta-arrow { transform: translate(2px, -2px); }
+
+  /* ============================================================
+     MOBILE
+     ============================================================ */
+  @media (max-width: 48rem) {
+    .report__wrap { padding-block: 40px; }
+    .report__platforms { grid-template-columns: 1fr; }
+    .report__recs-title { font-size: 24px; }
+    .report__cta { padding: 28px; }
+    .report__cta-title { font-size: 24px; }
+  }
+</style>

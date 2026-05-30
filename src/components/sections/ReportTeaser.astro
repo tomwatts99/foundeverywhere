@@ -1,0 +1,113 @@
+---
+/**
+ * ReportTeaser.astro: teal promo band for the free AI visibility report.
+ *
+ * Full-width teal #0C7B82. Two columns on desktop — copy on the left,
+ * a dark mock score card on the right — stacked on mobile.
+ */
+---
+
+<section class="rt" aria-labelledby="rt-title">
+  <div class="container rt__inner">
+    <div class="rt__copy">
+      <p class="rt__eyebrow">Free in minutes</p>
+      <h2 id="rt-title" class="rt__title">Find out your AI visibility score</h2>
+      <p class="rt__lead">
+        We test your business across ChatGPT, Perplexity, and Claude. Free, instant,
+        no commitment.
+      </p>
+    </div>
+
+    <div class="rt__card">
+      <div class="rt__score" aria-hidden="true">?</div>
+      <p class="rt__card-label">Your AI visibility score</p>
+      <a href="/free-visibility-report/" class="rt__btn">Get your free report</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rt {
+    background: #0C7B82;
+    padding-block: 48px;
+    color: #FFFFFF;
+  }
+  .rt__inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .rt__eyebrow {
+    margin: 0 0 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .rt__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 1.4rem + 1.6vw, 32px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .rt__lead {
+    margin: 14px 0 0;
+    max-width: 34rem;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    text-wrap: pretty;
+  }
+
+  /* Mock score card */
+  .rt__card {
+    background: #0A3040;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .rt__score {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 1;
+    color: #FFFFFF;
+  }
+  .rt__card-label {
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .rt__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 11px 22px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    color: #0C7B82;
+    background: #FFFFFF;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-out);
+  }
+  .rt__btn:hover { background: #E0F4F5; }
+
+  @media (max-width: 48rem) {
+    .rt { padding-block: 40px; }
+    .rt__inner { grid-template-columns: 1fr; gap: 28px; }
+  }
+</style>
