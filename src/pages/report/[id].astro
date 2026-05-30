@@ -43,18 +43,27 @@ type Report = {
 };
 
 let report: Report | null = null;
+
+// The /api/* routes are served by the report Worker bound at the zone
+// apex, NOT by this Pages app. A self-referential subrequest to the
+// Pages host would 404, so we always fetch the absolute production
+// origin. Override with PUBLIC_API_ORIGIN for local/preview testing.
+const API_ORIGIN = import.meta.env.PUBLIC_API_ORIGIN || 'https://foundeverywhere.co.uk';
+
 try {
-  const apiUrl = new URL(`/api/report/${id}`, Astro.url.origin);
-  const res = await fetch(apiUrl.toString());
+  const apiUrl = `${API_ORIGIN}/api/report/${id}`;
+  const res = await fetch(apiUrl);
   if (res.ok) {
     report = (await res.json()) as Report;
+  } else {
+    console.error(`Report fetch failed: ${res.status} ${res.statusText} for ${apiUrl}`);
   }
 } catch (err) {
   console.error('Failed to fetch report:', err);
 }
 
 /* ---------- presentation helpers ---------- */
-const RING_CIRC = 2 * Math.PI * 35; // 219.9 — matches StatsRow geometry
+const RING_CIRC = 2 * Math.PI * 35; // 219.9 - matches StatsRow geometry
 
 function scoreColour(score: number): string {
   if (score < 40) return '#EF4444';

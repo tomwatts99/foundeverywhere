@@ -1,5 +1,5 @@
 /**
- * Found Everywhere — AI Visibility Report Worker
+ * Found Everywhere - AI Visibility Report Worker
  *
  * Routes:
  *   POST /api/generate-report  → runs the multi-model visibility analysis,
@@ -8,15 +8,15 @@
  *                                the SSR report page).
  *
  * Bindings (wrangler.toml):
- *   REPORTS          KV — stores generated reports (key report:{uuid})
- *   REPORT_REQUESTS  KV — rate-limit ledger (key email:{email})
+ *   REPORTS          KV - stores generated reports (key report:{uuid})
+ *   REPORT_REQUESTS  KV - rate-limit ledger (key email:{email})
  *
  * Secrets (Cloudflare dashboard, never in code):
  *   ANTHROPIC_API_KEY, PERPLEXITY_API_KEY, OPENAI_API_KEY,
  *   RESEND_API_KEY, TURNSTILE_SECRET_KEY
  *
  * Vars:
- *   ALLOWED_ORIGIN — e.g. https://foundeverywhere.co.uk
+ *   ALLOWED_ORIGIN - e.g. https://foundeverywhere.co.uk
  */
 
 const ANTHROPIC_MODEL = 'claude-haiku-4-5-20251001';
@@ -111,7 +111,7 @@ function userPrompt({ businessName, websiteUrl, sector, location }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Model calls — each returns a normalised result; never throws.       */
+/* Model calls - each returns a normalised result; never throws.       */
 /* ------------------------------------------------------------------ */
 
 async function queryClaude(env, input) {
@@ -469,7 +469,7 @@ async function handleGenerateReport(request, env) {
     return json({ success: false, message: 'All fields are required.' }, 400, env);
   }
 
-  /* Step 1 — rate limit by email (24h TTL). */
+  /* Step 1 - rate limit by email (24h TTL). */
   const rateKey = `email:${email}`;
   const existing = await env.REPORT_REQUESTS.get(rateKey);
   if (existing) {
@@ -487,20 +487,20 @@ async function handleGenerateReport(request, env) {
 
   const input = { businessName, websiteUrl, sector, location };
 
-  /* Steps 2–4 — query the three systems in parallel. */
+  /* Steps 2–4 - query the three systems in parallel. */
   const [claudeResult, perplexityResult, openaiResult] = await Promise.all([
     queryClaude(env, input),
     queryPerplexity(env, input),
     queryOpenAI(env, input),
   ]);
 
-  /* Step 5 — overall score (average, 1 dp). */
+  /* Step 5 - overall score (average, 1 dp). */
   const overallScore =
     Math.round(
       ((claudeResult.score + perplexityResult.score + openaiResult.score) / 3) * 10,
     ) / 10;
 
-  /* Step 6 — recommendations. */
+  /* Step 6 - recommendations. */
   const recommendations = await generateRecommendations(env, input, {
     claudeScore: claudeResult.score,
     perplexityScore: perplexityResult.score,
@@ -508,7 +508,7 @@ async function handleGenerateReport(request, env) {
     overallScore,
   });
 
-  /* Step 7 — persist (30 day TTL). */
+  /* Step 7 - persist (30 day TTL). */
   const id = crypto.randomUUID();
   const report = {
     id,
@@ -529,11 +529,11 @@ async function handleGenerateReport(request, env) {
     expirationTtl: 60 * 60 * 24 * 30,
   });
 
-  /* Step 8 — email. */
+  /* Step 8 - email. */
   const reportUrl = `https://foundeverywhere.co.uk/report/${id}`;
   await sendEmail(env, { firstName, businessName, email, overallScore, reportUrl });
 
-  /* Step 9 — respond. */
+  /* Step 9 - respond. */
   return json(
     {
       success: true,
@@ -544,6 +544,61 @@ async function handleGenerateReport(request, env) {
     200,
     env,
   );
+}
+
+/* ------------------------------------------------------------------ */
+/* Meta-title fetch (auto-fills the business name on the form)         */
+/* ------------------------------------------------------------------ */
+
+function decodeEntities(s) {
+  return String(s)
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&#x27;/gi, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function extractTitle(html) {
+  if (!html) return null;
+  // Prefer og:title (content can come before or after the property attr).
+  const og =
+    html.match(/<meta[^>]+property=["']og:title["'][^>]*content=["']([^"']+)["']/i) ||
+    html.match(/<meta[^>]+content=["']([^"']+)["'][^>]*property=["']og:title["']/i);
+  if (og && og[1]) return decodeEntities(og[1]) || null;
+  const title = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  if (title && title[1]) return decodeEntities(title[1]) || null;
+  return null;
+}
+
+async function handleFetchMeta(rawUrl, env) {
+  if (!rawUrl) return json({ title: null }, 200, env);
+  try {
+    let target = rawUrl.trim();
+    if (!/^https?:\/\//i.test(target)) target = 'https://' + target;
+    // Only allow http(s) — guards against file:, data:, etc.
+    const parsed = new URL(target);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return json({ title: null }, 200, env);
+    }
+    const res = await fetch(parsed.toString(), {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; FoundEverywhereBot/1.0; +https://foundeverywhere.co.uk)',
+        Accept: 'text/html',
+      },
+      redirect: 'follow',
+    });
+    if (!res.ok) return json({ title: null }, 200, env);
+    const html = await res.text();
+    return json({ title: extractTitle(html) }, 200, env);
+  } catch (err) {
+    console.error('fetch-meta failed:', err);
+    return json({ title: null }, 200, env);
+  }
 }
 
 async function handleGetReport(id, env) {
@@ -586,6 +641,10 @@ export default {
     const reportMatch = url.pathname.match(/^\/api\/report\/([^/]+)\/?$/);
     if (reportMatch && request.method === 'GET') {
       return handleGetReport(decodeURIComponent(reportMatch[1]), env);
+    }
+
+    if (url.pathname === '/api/fetch-meta' && request.method === 'GET') {
+      return handleFetchMeta(url.searchParams.get('url'), env);
     }
 
     return json({ success: false, message: 'Not found.' }, 404, env);

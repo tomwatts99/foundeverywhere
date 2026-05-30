@@ -32,11 +32,11 @@ Common causes of Core Web Vitals failures include unoptimised images, render-blo
 
 Before Google can rank your pages, it needs to be able to find and crawl them. Crawlability problems are surprisingly common and often go unnoticed until rankings drop or pages disappear from search results.
 
-**Robots.txt** is a file at the root of your domain that tells search engine crawlers which pages they are and are not allowed to crawl. A misconfigured robots.txt file can accidentally block your entire site from being crawled — this happens more often than you might expect, particularly after site migrations or CMS updates.
+**Robots.txt** is a file at the root of your domain that tells search engine crawlers which pages they are and are not allowed to crawl. A misconfigured robots.txt file can accidentally block your entire site from being crawled - this happens more often than you might expect, particularly after site migrations or CMS updates.
 
 **XML sitemap** is a file that lists all the pages on your site that you want search engines to index. A well-maintained sitemap helps Google find your content faster and more reliably. Submit your sitemap to Google Search Console and Bing Webmaster Tools.
 
-**Noindex tags** are HTML directives that tell search engines not to index a specific page. Used correctly they are a useful tool — for example, keeping thank you pages or internal search results out of Google's index. Used incorrectly they can remove important pages from search results entirely.
+**Noindex tags** are HTML directives that tell search engines not to index a specific page. Used correctly they are a useful tool - for example, keeping thank you pages or internal search results out of Google's index. Used incorrectly they can remove important pages from search results entirely.
 
 **Crawl errors** are pages that Googlebot attempts to visit but cannot access. Check the Coverage report in Google Search Console regularly for crawl errors and fix them promptly.
 
@@ -46,21 +46,21 @@ Before Google can rank your pages, it needs to be able to find and crawl them. C
 
 The way your website is organised affects how well search engines can understand and index your content. Good site architecture makes it easy for crawlers to find every page on your site and understand how they relate to each other.
 
-A flat site architecture — where every page is reachable within three clicks from the homepage — is generally preferable to a deeply nested structure. Pages buried five or six levels deep are crawled less frequently and seen as less important.
+A flat site architecture - where every page is reachable within three clicks from the homepage - is generally preferable to a deeply nested structure. Pages buried five or six levels deep are crawled less frequently and seen as less important.
 
 URL structure should be clean, descriptive, and consistent. Use hyphens to separate words, keep URLs as short as possible while remaining descriptive, and avoid parameters and dynamic URLs where possible.
 
-Every page on your site should be reachable via internal links. Orphaned pages — pages with no internal links pointing to them — are crawled infrequently and rank poorly.
+Every page on your site should be reachable via internal links. Orphaned pages - pages with no internal links pointing to them - are crawled infrequently and rank poorly.
 
 ## Internal linking
 
 Internal links serve two purposes. They help users navigate your site and they help search engines understand the relationship between your pages and distribute authority across your site.
 
-Pages that receive more internal links are treated as more important by search engines. Your most commercially important pages — service pages, product pages, key landing pages — should receive the most internal links from other pages on your site.
+Pages that receive more internal links are treated as more important by search engines. Your most commercially important pages - service pages, product pages, key landing pages - should receive the most internal links from other pages on your site.
 
 Common internal linking problems include orphaned pages with no inbound links, broken internal links pointing to pages that no longer exist, and over-reliance on navigation menus as the only source of internal links.
 
-A content hub structure — where a central pillar page links to and receives links from a cluster of related articles — is one of the most effective internal linking strategies for building topical authority.
+A content hub structure - where a central pillar page links to and receives links from a cluster of related articles - is one of the most effective internal linking strategies for building topical authority.
 
 ## Page speed optimisation
 
@@ -68,27 +68,27 @@ Page speed affects both rankings and conversions. A one-second delay in mobile p
 
 The most impactful page speed improvements for most sites:
 
-- **Image optimisation** — images are typically the largest contributors to page weight. Serve images in modern formats like WebP, compress them appropriately, set explicit width and height attributes to prevent layout shift, and lazy load images below the fold.
-- **Eliminate render-blocking resources** — JavaScript and CSS files that load in the head of your page delay the browser from rendering content. Defer non-critical JavaScript, inline critical CSS, and load third-party scripts asynchronously where possible.
-- **Implement caching** — browser caching stores static files locally so returning visitors do not have to download them again. Server-side caching reduces the processing time needed to generate pages.
-- **Use a CDN** — a content delivery network serves your site from servers geographically close to your visitors, reducing latency. Cloudflare Pages, which this site runs on, includes global CDN as standard.
-- **Reduce third-party scripts** — analytics tools, chat widgets, advertising scripts, and social media embeds all add weight and latency. Audit every third-party script on your site and remove anything that is not providing clear value.
+- **Image optimisation** - images are typically the largest contributors to page weight. Serve images in modern formats like WebP, compress them appropriately, set explicit width and height attributes to prevent layout shift, and lazy load images below the fold.
+- **Eliminate render-blocking resources** - JavaScript and CSS files that load in the head of your page delay the browser from rendering content. Defer non-critical JavaScript, inline critical CSS, and load third-party scripts asynchronously where possible.
+- **Implement caching** - browser caching stores static files locally so returning visitors do not have to download them again. Server-side caching reduces the processing time needed to generate pages.
+- **Use a CDN** - a content delivery network serves your site from servers geographically close to your visitors, reducing latency. Cloudflare Pages, which this site runs on, includes global CDN as standard.
+- **Reduce third-party scripts** - analytics tools, chat widgets, advertising scripts, and social media embeds all add weight and latency. Audit every third-party script on your site and remove anything that is not providing clear value.
 
 ## Schema markup
 
 Schema markup is structured data that tells search engines and AI systems exactly what your content is about. It is implemented as JSON-LD code in the head of your pages and validated using Google's Rich Results Test.
 
-Beyond the SEO benefits — rich results, enhanced listings in search — schema markup is increasingly important for AI visibility. AI systems use structured data as a primary signal when deciding whether to cite a source and how to describe a business.
+Beyond the SEO benefits - rich results, enhanced listings in search - schema markup is increasingly important for AI visibility. AI systems use structured data as a primary signal when deciding whether to cite a source and how to describe a business.
 
 The schema types most UK businesses need:
 
-- **Organisation** — your business name, URL, logo, description, contact details, and social profiles. Implement on every page.
-- **WebSite** — your site name and URL. Implement on your homepage.
-- **LocalBusiness** — for businesses with a physical location or defined service area. Includes address, opening hours, geographic coordinates, and business type.
-- **Service** — describes a specific service you offer, who provides it, and where it is available.
-- **FAQPage** — for pages with FAQ sections. Provides pre-formatted question and answer pairs that search engines can display as rich results and AI systems can extract directly.
-- **Article** — for blog posts and guides. Includes title, author, publication date, and description.
-- **BreadcrumbList** — shows the hierarchical position of a page within your site structure.
+- **Organisation** - your business name, URL, logo, description, contact details, and social profiles. Implement on every page.
+- **WebSite** - your site name and URL. Implement on your homepage.
+- **LocalBusiness** - for businesses with a physical location or defined service area. Includes address, opening hours, geographic coordinates, and business type.
+- **Service** - describes a specific service you offer, who provides it, and where it is available.
+- **FAQPage** - for pages with FAQ sections. Provides pre-formatted question and answer pairs that search engines can display as rich results and AI systems can extract directly.
+- **Article** - for blog posts and guides. Includes title, author, publication date, and description.
+- **BreadcrumbList** - shows the hierarchical position of a page within your site structure.
 
 ## Mobile optimisation
 
@@ -124,7 +124,7 @@ WordPress is a solid platform for SEO when configured correctly. Common WordPres
 
 ### What is the difference between technical SEO and on-page SEO?
 
-Technical SEO covers the infrastructure of your website — how it is built, how fast it loads, how search engines can access it. On-page SEO covers the content on individual pages — keywords, headings, meta descriptions, and internal links. Both matter and they work together.
+Technical SEO covers the infrastructure of your website - how it is built, how fast it loads, how search engines can access it. On-page SEO covers the content on individual pages - keywords, headings, meta descriptions, and internal links. Both matter and they work together.
 
 ### Does technical SEO affect AI visibility as well as Google rankings?
 
@@ -136,4 +136,4 @@ Quick wins like fixing crawl errors or removing accidental noindex tags can show
 
 ### Can I do technical SEO myself?
 
-Some technical SEO tasks are straightforward for anyone comfortable with their CMS — submitting a sitemap, checking robots.txt, installing an SEO plugin. Others require developer access and technical knowledge — fixing Core Web Vitals, implementing schema markup correctly, resolving crawl errors. A technical SEO audit from a specialist will tell you exactly what needs fixing and how complex each fix is.
+Some technical SEO tasks are straightforward for anyone comfortable with their CMS - submitting a sitemap, checking robots.txt, installing an SEO plugin. Others require developer access and technical knowledge - fixing Core Web Vitals, implementing schema markup correctly, resolving crawl errors. A technical SEO audit from a specialist will tell you exactly what needs fixing and how complex each fix is.

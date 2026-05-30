@@ -20,18 +20,18 @@ Schema markup is structured data embedded in your website's code that tells AI s
 
 The schema types that matter most for AI citation are:
 
-- **Organisation schema** — on every page of your site. Includes your business name, URL, logo, description, contact details, and links to your social profiles. This is how AI systems build a picture of your business as a coherent entity.
-- **WebSite schema** — on your homepage. Tells AI systems the name and URL of your site and can include a sitelinks search box.
-- **Service schema** — on each service page. Describes what the service is, who provides it, and where it is available.
-- **FAQPage schema** — on any page with a FAQ section. This is one of the most direct routes to AI citation because it provides pre-formatted question and answer pairs that AI systems can extract and use directly.
-- **Article schema** — on blog posts and guides. Includes the title, author, publication date, and a description of the content.
-- **LocalBusiness schema** — for businesses with a physical location or service area. Includes address, opening hours, and geographic coordinates.
+- **Organisation schema** - on every page of your site. Includes your business name, URL, logo, description, contact details, and links to your social profiles. This is how AI systems build a picture of your business as a coherent entity.
+- **WebSite schema** - on your homepage. Tells AI systems the name and URL of your site and can include a sitelinks search box.
+- **Service schema** - on each service page. Describes what the service is, who provides it, and where it is available.
+- **FAQPage schema** - on any page with a FAQ section. This is one of the most direct routes to AI citation because it provides pre-formatted question and answer pairs that AI systems can extract and use directly.
+- **Article schema** - on blog posts and guides. Includes the title, author, publication date, and a description of the content.
+- **LocalBusiness schema** - for businesses with a physical location or service area. Includes address, opening hours, and geographic coordinates.
 
 Most websites either have no schema at all or have it implemented partially and incorrectly. Use Google's Rich Results Test to check what schema your site currently has and whether it validates correctly.
 
 ## Step 2: Add an llms.txt file
 
-llms.txt is a plain text file in markdown format placed at the root of your domain — for example, yourdomain.com/llms.txt. It tells AI crawlers what your site is about, who you are, and which pages are most useful to index.
+llms.txt is a plain text file in markdown format placed at the root of your domain - for example, yourdomain.com/llms.txt. It tells AI crawlers what your site is about, who you are, and which pages are most useful to index.
 
 Think of it as a cover letter for AI systems. Where robots.txt tells crawlers what not to index, llms.txt tells AI systems what to pay attention to.
 
@@ -41,11 +41,11 @@ Several major AI systems already check for this file. Having one in place is a c
 
 ## Step 3: Establish your brand as a consistent entity
 
-AI systems think in entities. For your business to be confidently cited, it needs to exist as a coherent, consistent entity across the web — not just on your own website.
+AI systems think in entities. For your business to be confidently cited, it needs to exist as a coherent, consistent entity across the web - not just on your own website.
 
 Entity consistency means your business name, description, address, phone number, and other key details are identical everywhere they appear online. Your website, Google Business Profile, LinkedIn, Companies House, industry directories, and any other platform where your business is mentioned should all show the same information.
 
-Inconsistencies create uncertainty. If your business name appears differently across different platforms — abbreviated in some places, with a limited company suffix in others — AI systems become less confident about recommending you.
+Inconsistencies create uncertainty. If your business name appears differently across different platforms - abbreviated in some places, with a limited company suffix in others - AI systems become less confident about recommending you.
 
 Audit your brand presence across the web and standardise everything. The same business name, the same description, the same contact details, everywhere.
 
@@ -53,26 +53,26 @@ Audit your brand presence across the web and standardise everything. The same bu
 
 AI systems extract from content that answers questions clearly and directly. The format that works best is simple: state the question as a heading, answer it in the first one or two sentences, then expand with supporting detail.
 
-This is not a trick. It is just clear writing. But most web content is not structured this way — it buries the key information in long paragraphs, uses vague headings, and makes the reader work to find the answer.
+This is not a trick. It is just clear writing. But most web content is not structured this way - it buries the key information in long paragraphs, uses vague headings, and makes the reader work to find the answer.
 
 Practical changes to make to your key pages:
 
 - Add a FAQ section to every service page. Use the actual questions your customers ask and answer them directly. Implement FAQPage schema on each one.
 - Rewrite your service descriptions to open with a clear statement of what the service is and who it is for. Do not start with "we are delighted to offer."
 - Use specific, descriptive headings. "What is included in an SEO audit" is better than "Our services." "How long does technical SEO take" is better than "Timelines."
-- Write your About page as a series of factual, declarative statements about your business — what you do, who founded it, where you operate, what you specialise in. AI systems treat well-structured About pages as a primary source of entity information.
+- Write your About page as a series of factual, declarative statements about your business - what you do, who founded it, where you operate, what you specialise in. AI systems treat well-structured About pages as a primary source of entity information.
 
 ## Step 5: Build third-party citations and mentions
 
 Your own website can only do so much. AI systems also look at what the rest of the web says about your business.
 
-Being mentioned in authoritative third-party sources — industry publications, directories, local press, partner websites — increases both your authority signals and your likelihood of appearing in AI training data.
+Being mentioned in authoritative third-party sources - industry publications, directories, local press, partner websites - increases both your authority signals and your likelihood of appearing in AI training data.
 
 Practical citation building for most businesses:
 
 - Get listed on Clutch, Trustpilot, or industry-specific directories relevant to your sector. Make sure your listing is complete and accurate.
 - Seek coverage in local or industry press. Even a brief mention in a relevant publication is a meaningful signal.
-- Guest posts or contributions to industry publications — write something genuinely useful and get it published somewhere with authority.
+- Guest posts or contributions to industry publications - write something genuinely useful and get it published somewhere with authority.
 - Make sure your Google Business Profile is complete, accurate, and regularly updated. GBP is heavily weighted in AI systems that draw on Google's data, particularly Gemini.
 
 ## Step 6: Make your site technically sound
@@ -81,20 +81,20 @@ AI crawlers behave similarly to search engine crawlers. A site that is slow to l
 
 The technical basics that matter for AI visibility:
 
-- **Fast loading times** — aim for a PageSpeed score above 90 on both mobile and desktop. Slow sites get crawled less frequently and less completely.
-- **Clean, semantic HTML** — use proper heading hierarchy, meaningful alt text on images, and structured markup that makes it easy for crawlers to understand your content.
+- **Fast loading times** - aim for a PageSpeed score above 90 on both mobile and desktop. Slow sites get crawled less frequently and less completely.
+- **Clean, semantic HTML** - use proper heading hierarchy, meaningful alt text on images, and structured markup that makes it easy for crawlers to understand your content.
 - **A complete and accurate sitemap** submitted to Google Search Console and Bing Webmaster Tools. AI systems that use these indexes will find your content more reliably.
-- **No crawl errors** — check Google Search Console regularly for pages that cannot be accessed or indexed.
+- **No crawl errors** - check Google Search Console regularly for pages that cannot be accessed or indexed.
 
 ## Step 7: Test your visibility and track it
 
 You cannot manage what you do not measure. Testing your AI visibility is straightforward but requires doing it manually across multiple systems.
 
-Open ChatGPT, Perplexity, Gemini, Copilot, and Claude. Ask questions that your target customers would ask — questions about your services, your location, your sector. Note whether your business appears, whether it is cited as a source, and what is said about it.
+Open ChatGPT, Perplexity, Gemini, Copilot, and Claude. Ask questions that your target customers would ask - questions about your services, your location, your sector. Note whether your business appears, whether it is cited as a source, and what is said about it.
 
 Do this before you implement any changes to establish a baseline. Then repeat the test four to eight weeks after implementation to measure the impact.
 
-Keep a simple log of your results — which systems cite you, for which queries, and what they say. This is your AI visibility audit and it is the starting point for understanding where to focus your efforts.
+Keep a simple log of your results - which systems cite you, for which queries, and what they say. This is your AI visibility audit and it is the starting point for understanding where to focus your efforts.
 
 ## How long does it take
 

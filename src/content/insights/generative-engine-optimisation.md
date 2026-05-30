@@ -14,19 +14,19 @@ The distinction matters because the two channels work differently. Google ranks 
 
 ## Why GEO matters now
 
-AI search is not a future consideration. It is happening now. A growing proportion of searches never reach a traditional search results page at all — the user asks an AI tool, gets an answer with cited sources, and either clicks through to one of those sources or does not need to search further.
+AI search is not a future consideration. It is happening now. A growing proportion of searches never reach a traditional search results page at all - the user asks an AI tool, gets an answer with cited sources, and either clicks through to one of those sources or does not need to search further.
 
 For businesses, this creates a new visibility problem. You can rank well in Google and be completely absent from AI-generated answers. The signals that determine AI citation are different from the signals that determine Google rankings, and most websites have not been optimised for them.
 
-The businesses that appear in AI-generated answers are not necessarily the biggest or the best known. They are the ones whose websites send the right signals — structured data, clear entity information, question-led content, and a consistent brand presence across the web.
+The businesses that appear in AI-generated answers are not necessarily the biggest or the best known. They are the ones whose websites send the right signals - structured data, clear entity information, question-led content, and a consistent brand presence across the web.
 
 ## How AI search systems work
 
 Understanding GEO requires a basic understanding of how AI search systems generate their answers.
 
-Most AI search tools use a combination of two things: a large language model trained on web data, and a retrieval system that searches the live web to find current sources. Perplexity is almost entirely retrieval-based — it searches the web in real time and cites the sources it finds. ChatGPT with browsing enabled uses Bing's index as its primary retrieval source. Gemini draws on Google's index. Claude uses a combination of training data and web search.
+Most AI search tools use a combination of two things: a large language model trained on web data, and a retrieval system that searches the live web to find current sources. Perplexity is almost entirely retrieval-based - it searches the web in real time and cites the sources it finds. ChatGPT with browsing enabled uses Bing's index as its primary retrieval source. Gemini draws on Google's index. Claude uses a combination of training data and web search.
 
-This means there are two ways to influence AI visibility: appearing in the training data, and appearing in the live retrieval results. The live retrieval layer is where most businesses can have the most immediate impact, and it responds to many of the same signals as traditional SEO — authority, relevance, and technical quality — combined with AI-specific signals like schema markup and content structure.
+This means there are two ways to influence AI visibility: appearing in the training data, and appearing in the live retrieval results. The live retrieval layer is where most businesses can have the most immediate impact, and it responds to many of the same signals as traditional SEO - authority, relevance, and technical quality - combined with AI-specific signals like schema markup and content structure.
 
 ## The five signals that determine AI citation
 
@@ -38,15 +38,15 @@ The most important schema types for GEO are Organisation, WebSite, Service, FAQP
 
 ### 2. Entity consistency
 
-AI systems think in entities — coherent, consistent representations of real-world things like businesses, people, and places. For your business to be confidently cited by an AI system, it needs to exist as a consistent entity across the web.
+AI systems think in entities - coherent, consistent representations of real-world things like businesses, people, and places. For your business to be confidently cited by an AI system, it needs to exist as a consistent entity across the web.
 
-This means your business name, description, address, and contact details should be identical everywhere they appear — your website, Google Business Profile, LinkedIn, industry directories, and any other platform where your business is mentioned. Inconsistencies create uncertainty for AI systems and reduce the likelihood of citation.
+This means your business name, description, address, and contact details should be identical everywhere they appear - your website, Google Business Profile, LinkedIn, industry directories, and any other platform where your business is mentioned. Inconsistencies create uncertainty for AI systems and reduce the likelihood of citation.
 
 ### 3. Question-led content structure
 
 AI systems extract from content that answers questions directly and clearly. A page that opens with a direct answer to a specific question, uses clear heading hierarchy, and includes a well-structured FAQ section is significantly more likely to be cited than a page that buries its key information in long, unstructured paragraphs.
 
-This does not mean writing differently for AI systems. It means writing clearly for humans — which is also what AI systems reward.
+This does not mean writing differently for AI systems. It means writing clearly for humans - which is also what AI systems reward.
 
 ### 4. llms.txt
 
@@ -58,7 +58,7 @@ AI systems draw on what the wider web says about your business, not just what yo
 
 ## GEO versus traditional SEO: what is different
 
-Traditional SEO and GEO share common foundations — technical quality, content relevance, and authority signals all matter in both. But there are important differences.
+Traditional SEO and GEO share common foundations - technical quality, content relevance, and authority signals all matter in both. But there are important differences.
 
 Traditional SEO optimises for ranking algorithms that evaluate hundreds of signals to produce an ordered list of results. GEO optimises for AI systems that decide whether to cite a source at all when generating a specific answer.
 
@@ -77,7 +77,7 @@ The practical steps for most UK businesses are:
 3. **Add an llms.txt file** to your domain root. Keep it updated with accurate information about your business and your key pages.
 4. **Restructure your key pages to answer questions directly.** Add FAQ sections to your service pages and make sure each section opens with a clear, direct answer to the question it addresses.
 5. **Build third-party citations.** Get listed in relevant directories, seek coverage in industry publications, and make sure your Google Business Profile is complete and accurate.
-6. **Test your current visibility.** Ask ChatGPT, Perplexity, and Gemini questions that your target customers would ask and see whether your business appears. Document where you do and do not show up — that is your baseline.
+6. **Test your current visibility.** Ask ChatGPT, Perplexity, and Gemini questions that your target customers would ask and see whether your business appears. Document where you do and do not show up - that is your baseline.
 
 ## How long does GEO take to work?
 
@@ -105,4 +105,4 @@ The main systems to focus on are ChatGPT, Perplexity, Gemini, Copilot, and Claud
 
 ### Can I do GEO myself?
 
-Some elements — like adding an llms.txt file or restructuring content — are straightforward to implement. Schema markup requires technical knowledge to implement correctly and comprehensively. A GEO audit from a specialist will give you a clear picture of where you stand and what needs doing.
+Some elements - like adding an llms.txt file or restructuring content - are straightforward to implement. Schema markup requires technical knowledge to implement correctly and comprehensively. A GEO audit from a specialist will give you a clear picture of where you stand and what needs doing.
