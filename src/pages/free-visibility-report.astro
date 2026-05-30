@@ -16,25 +16,6 @@ import CTABlock from '../components/sections/CTABlock.astro';
 
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
-const SECTORS = [
-  'Web design and digital agency',
-  'SEO and marketing agency',
-  'Professional services',
-  'Legal and financial services',
-  'Healthcare and dental',
-  'Restaurant and cafe',
-  'Hotel and hospitality',
-  'Pub and bar',
-  'Car dealer and automotive',
-  'Home services and trades',
-  'Ecommerce and retail',
-  'Property and estate agency',
-  'Education and training',
-  'Fitness and wellness',
-  'Events and entertainment',
-  'Other',
-];
-
 const REPORT_INCLUDES = [
   {
     title: 'Overall visibility score',
@@ -113,29 +94,13 @@ const REPORT_INCLUDES = [
         </div>
 
         <div class="field">
-          <label class="field__label field__label--row" for="rf-businessName">
-            Business name
-            <span class="field__badge" id="rf-business-badge" hidden>Auto-filled</span>
-          </label>
-          <input class="field__input" type="text" id="rf-businessName" name="businessName" autocomplete="organization" required />
-        </div>
-
-        <div class="field">
           <label class="field__label" for="rf-websiteUrl">Website URL</label>
           <input class="field__input" type="url" id="rf-websiteUrl" name="websiteUrl" placeholder="https://yourdomain.co.uk" autocomplete="url" required />
         </div>
 
         <div class="field">
-          <label class="field__label" for="rf-sector">Business sector</label>
-          <select class="field__input field__select" id="rf-sector" name="sector" required>
-            <option value="" disabled selected>Select your sector</option>
-            {SECTORS.map((s) => <option value={s}>{s}</option>)}
-          </select>
-        </div>
-
-        <div class="field">
-          <label class="field__label" for="rf-location">Location</label>
-          <input class="field__input" type="text" id="rf-location" name="location" placeholder="e.g. Brighton, Sussex" required />
+          <label class="field__label" for="rf-location">Location (optional)</label>
+          <input class="field__input" type="text" id="rf-location" name="location" placeholder="e.g. Brighton, Sussex" />
         </div>
 
         <div class="field">
@@ -209,43 +174,6 @@ const REPORT_INCLUDES = [
   const btn = document.getElementById('report-submit') as HTMLButtonElement | null;
   const errorEl = document.getElementById('report-error') as HTMLElement | null;
   const thanksEl = document.getElementById('report-thanks') as HTMLElement | null;
-  const urlEl = document.getElementById('rf-websiteUrl') as HTMLInputElement | null;
-  const businessEl = document.getElementById('rf-businessName') as HTMLInputElement | null;
-  const businessBadge = document.getElementById('rf-business-badge') as HTMLElement | null;
-
-  /* ---- Fix 4: auto-fill business name from the website's title ---- */
-  if (urlEl && businessEl && businessBadge) {
-    let lastFetched = '';
-    urlEl.addEventListener('blur', async () => {
-      const raw = urlEl.value.trim();
-      if (!raw) return;
-      // Don't overwrite a name the user has already typed.
-      if (businessEl.value.trim() && !businessBadge.hidden) {
-        // already auto-filled — allow re-fetch on URL change below
-      } else if (businessEl.value.trim()) {
-        return;
-      }
-      // Normalise to an absolute URL for the meta lookup.
-      let url = raw;
-      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-      if (url === lastFetched) return;
-      lastFetched = url;
-      try {
-        const res = await fetch(`/api/fetch-meta?url=${encodeURIComponent(url)}`);
-        if (!res.ok) return;
-        const data = await res.json().catch(() => ({}));
-        const title = (data && data.title ? String(data.title) : '').trim();
-        if (title) {
-          businessEl.value = title;
-          businessBadge.hidden = false;
-        }
-      } catch {
-        /* silent — the user can still type the name manually */
-      }
-    });
-    // If the user edits the auto-filled name, drop the badge.
-    businessEl.addEventListener('input', () => { businessBadge.hidden = true; });
-  }
 
   /* ---- Submit ---- */
   if (form && btn && errorEl) {
@@ -273,9 +201,7 @@ const REPORT_INCLUDES = [
       const data = new FormData(form);
       const payload = {
         firstName: (data.get('firstName') || '').toString().trim(),
-        businessName: (data.get('businessName') || '').toString().trim(),
         websiteUrl: (data.get('websiteUrl') || '').toString().trim(),
-        sector: (data.get('sector') || '').toString().trim(),
         location: (data.get('location') || '').toString().trim(),
         email: (data.get('email') || '').toString().trim(),
       };
@@ -395,27 +321,9 @@ const REPORT_INCLUDES = [
     line-height: 1.4;
     color: #0D1321;
   }
-  .field__label--row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .field__badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 8px;
-    font-family: var(--font-body);
-    font-weight: 500;
-    font-size: 11px;
-    line-height: 1.4;
-    color: #0A6970;
-    background: #E0F4F5;
-    border-radius: 999px;
-  }
 
   /* The `hidden` attribute must win over the explicit `display` values
      below (UA [hidden] would otherwise be overridden by author rules). */
-  .field__badge[hidden],
   .report-card[hidden],
   .report-thanks[hidden] {
     display: none;
@@ -439,13 +347,6 @@ const REPORT_INCLUDES = [
     outline: none;
     border-color: #0C7B82;
     box-shadow: 0 0 0 3px rgba(12, 123, 130, 0.15);
-  }
-  .field__select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16' fill='none' stroke='%2364748B' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 38px;
   }
 
   /* ---------- Submit ---------- */

@@ -24,7 +24,7 @@ const PERPLEXITY_MODEL = 'sonar';
 const OPENAI_MODEL = 'gpt-4o-mini';
 
 const SYSTEM_PROMPT =
-  'You are an AI visibility analyst. You will be given a business name, website, sector, and location. Your job is to determine whether this business would appear in AI-generated search results. Respond only with valid JSON matching the schema provided.';
+  'You are an AI visibility analyst. You will be given a business name, website, location, and a short description of what the business does (taken from its own website). Your job is to determine whether this business would appear in AI-generated search results. Respond only with valid JSON matching the schema provided.';
 
 /* ------------------------------------------------------------------ */
 /* CORS                                                                */
@@ -101,11 +101,20 @@ function clampScore(v) {
   return Math.max(0, Math.min(100, Math.round(n)));
 }
 
-function userPrompt({ businessName, websiteUrl, sector, location }) {
+function locationClause(location) {
+  return location ? ` in ${location}` : '';
+}
+
+function userPrompt({ businessName, websiteUrl, businessContext, location }) {
+  const ctx = businessContext
+    ? `About the business (taken from its own website): ${businessContext}. `
+    : '';
   return (
     `Analyse the AI search visibility for this business: ` +
-    `Business name: ${businessName}, Website: ${websiteUrl}, Sector: ${sector}, Location: ${location}. ` +
-    `Based on your training data, would this business appear when someone asks an AI assistant to recommend a ${sector} business in ${location}? ` +
+    `Business name: ${businessName}, Website: ${websiteUrl}, Location: ${location || 'not specified'}. ` +
+    ctx +
+    `Based on your training data, would this business appear when someone asks an AI assistant ` +
+    `to recommend this kind of business${locationClause(location)}? ` +
     `Return JSON with this exact schema: { found: boolean, confidence: 'high'|'medium'|'low', mentions: string[], context: string, score: number between 0 and 100 }`
   );
 }
@@ -141,7 +150,7 @@ async function queryClaude(env, input) {
 }
 
 async function queryPerplexity(env, input) {
-  const { businessName, websiteUrl, sector, location } = input;
+  const { businessName, websiteUrl, businessContext, location } = input;
   try {
     const res = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
@@ -155,7 +164,8 @@ async function queryPerplexity(env, input) {
           {
             role: 'user',
             content:
-              `Is ${businessName} (${websiteUrl}) a well-known or recommended ${sector} business in ${location}? ` +
+              `Is ${businessName} (${websiteUrl}) a well-known or recommended business${locationClause(location)}? ` +
+              (businessContext ? `Context about what they do, from their website: ${businessContext}. ` : '') +
               `Do they appear in search results or online recommendations? Give a brief factual answer.`,
           },
         ],
@@ -459,14 +469,19 @@ async function handleGenerateReport(request, env) {
   }
 
   const firstName = (payload.firstName || '').toString().trim();
-  const businessName = (payload.businessName || '').toString().trim();
   const websiteUrl = (payload.websiteUrl || '').toString().trim();
-  const sector = (payload.sector || '').toString().trim();
   const location = (payload.location || '').toString().trim();
   const email = (payload.email || '').toString().trim().toLowerCase();
 
-  if (!firstName || !businessName || !websiteUrl || !sector || !location || !email) {
-    return json({ success: false, message: 'All fields are required.' }, 400, env);
+  // Business name and sector are no longer collected from the form — they
+  // are inferred from the website's own page content (see below). Location
+  // is optional.
+  if (!firstName || !websiteUrl || !email) {
+    return json(
+      { success: false, message: 'First name, website URL, and email are required.' },
+      400,
+      env,
+    );
   }
 
   /* Step 1 - rate limit by email (24h TTL). */
@@ -485,7 +500,18 @@ async function handleGenerateReport(request, env) {
   }
   await env.REPORT_REQUESTS.put(rateKey, '1', { expirationTtl: 60 * 60 * 24 });
 
-  const input = { businessName, websiteUrl, sector, location };
+  /* Step 1.5 - infer the business from the site's own page content.
+     The meta title becomes the business name; the meta description (plus
+     title) becomes the context handed to every AI prompt in place of a
+     sector dropdown. Falls back to the hostname if the fetch fails. */
+  const meta = await fetchSiteMeta(websiteUrl);
+  const businessName = meta.title || hostnameFromUrl(websiteUrl) || 'this business';
+  const businessContext = [meta.title, meta.description]
+    .filter(Boolean)
+    .join(' — ')
+    .slice(0, 600);
+
+  const input = { businessName, websiteUrl, businessContext, location };
 
   /* Steps 2–4 - query the three systems in parallel. */
   const [claudeResult, perplexityResult, openaiResult] = await Promise.all([
@@ -515,8 +541,8 @@ async function handleGenerateReport(request, env) {
     firstName,
     businessName,
     websiteUrl,
-    sector,
     location,
+    businessContext,
     email,
     overallScore,
     claudeResult,
@@ -575,16 +601,42 @@ function extractTitle(html) {
   return null;
 }
 
-async function handleFetchMeta(rawUrl, env) {
-  if (!rawUrl) return json({ title: null }, 200, env);
+function extractDescription(html) {
+  if (!html) return null;
+  // Prefer og:description, then the standard meta description.
+  const og =
+    html.match(/<meta[^>]+property=["']og:description["'][^>]*content=["']([^"']*)["']/i) ||
+    html.match(/<meta[^>]+content=["']([^"']*)["'][^>]*property=["']og:description["']/i);
+  if (og && og[1]) return decodeEntities(og[1]) || null;
+  const desc =
+    html.match(/<meta[^>]+name=["']description["'][^>]*content=["']([^"']*)["']/i) ||
+    html.match(/<meta[^>]+content=["']([^"']*)["'][^>]*name=["']description["']/i);
+  if (desc && desc[1]) return decodeEntities(desc[1]) || null;
+  return null;
+}
+
+function hostnameFromUrl(rawUrl) {
+  try {
+    let target = String(rawUrl).trim();
+    if (!/^https?:\/\//i.test(target)) target = 'https://' + target;
+    return new URL(target).hostname.replace(/^www\./i, '');
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Fetch a URL and pull its title + description. Returns
+ * { title, description } with null fields on any failure — never throws.
+ */
+async function fetchSiteMeta(rawUrl) {
+  const empty = { title: null, description: null };
+  if (!rawUrl) return empty;
   try {
     let target = rawUrl.trim();
     if (!/^https?:\/\//i.test(target)) target = 'https://' + target;
-    // Only allow http(s) — guards against file:, data:, etc.
     const parsed = new URL(target);
-    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-      return json({ title: null }, 200, env);
-    }
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return empty;
     const res = await fetch(parsed.toString(), {
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; FoundEverywhereBot/1.0; +https://foundeverywhere.co.uk)',
@@ -592,13 +644,18 @@ async function handleFetchMeta(rawUrl, env) {
       },
       redirect: 'follow',
     });
-    if (!res.ok) return json({ title: null }, 200, env);
+    if (!res.ok) return empty;
     const html = await res.text();
-    return json({ title: extractTitle(html) }, 200, env);
+    return { title: extractTitle(html), description: extractDescription(html) };
   } catch (err) {
-    console.error('fetch-meta failed:', err);
-    return json({ title: null }, 200, env);
+    console.error('fetchSiteMeta failed:', err);
+    return empty;
   }
+}
+
+async function handleFetchMeta(rawUrl, env) {
+  const { title } = await fetchSiteMeta(rawUrl);
+  return json({ title }, 200, env);
 }
 
 async function handleGetReport(id, env) {
