@@ -1,0 +1,145 @@
+---
+/**
+ * terms.astro: terms of use (noindex legal page).
+ *
+ * Shares the `.legal` layout with privacy.astro: white surface, narrow
+ * measure, mono eyebrow + Outfit H1, Inter prose, Outfit H2 sections.
+ */
+import Page from '../layouts/Page.astro';
+---
+
+<Page
+  title="Terms of Use | Found Everywhere"
+  description="The terms governing your use of the Found Everywhere website."
+  path="/terms/"
+  noindex
+>
+  <article class="legal">
+    <div class="container legal__inner">
+      <p class="legal__eyebrow">Legal</p>
+      <h1 class="legal__title">Terms of use</h1>
+      <p class="legal__updated">Last updated: 29 May 2026</p>
+
+      <h2 class="legal__h2">About this website</h2>
+      <p class="legal__p">
+        This website is operated by Tom Watts trading as Digital Heroes
+        Studio, East Sussex. By using this website you agree to these
+        terms. If you do not agree, please do not use the site.
+      </p>
+
+      <h2 class="legal__h2">Services</h2>
+      <p class="legal__p">
+        The information on this website describes the services offered by
+        Found Everywhere. Nothing on this website constitutes a contract or
+        guarantee of service. All engagements are subject to a separate
+        statement of work agreed between us and the client.
+      </p>
+
+      <h2 class="legal__h2">Accuracy of information</h2>
+      <p class="legal__p">
+        We make every effort to keep the information on this website
+        accurate and up to date. We cannot guarantee that all information
+        is complete or current at all times. Results and case studies shown
+        on this website represent real client outcomes but individual
+        results will vary.
+      </p>
+
+      <h2 class="legal__h2">Intellectual property</h2>
+      <p class="legal__p">
+        All content on this website including text, graphics, and code is
+        the property of Tom Watts trading as Digital Heroes Studio unless
+        otherwise stated. You may not reproduce or distribute any content
+        without written permission.
+      </p>
+
+      <h2 class="legal__h2">Third party links</h2>
+      <p class="legal__p">
+        This website may contain links to third party websites. We are not
+        responsible for the content or privacy practices of those sites.
+      </p>
+
+      <h2 class="legal__h2">Limitation of liability</h2>
+      <p class="legal__p">
+        To the fullest extent permitted by law, Found Everywhere and Tom
+        Watts trading as Digital Heroes Studio accept no liability for any
+        loss or damage arising from use of this website or reliance on
+        information contained within it.
+      </p>
+
+      <h2 class="legal__h2">Governing law</h2>
+      <p class="legal__p">
+        These terms are governed by the laws of England and Wales. Any
+        disputes will be subject to the exclusive jurisdiction of the
+        courts of England and Wales.
+      </p>
+
+      <h2 class="legal__h2">Changes to these terms</h2>
+      <p class="legal__p">
+        We may update these terms from time to time. The date at the top of
+        this page shows when they were last updated.
+      </p>
+
+      <h2 class="legal__h2">Contact</h2>
+      <p class="legal__p">
+        For any questions about these terms contact us at
+        hello@foundeverywhere.co.uk.
+      </p>
+    </div>
+  </article>
+</Page>
+
+<style>
+  .legal { background: #FFFFFF; padding-block: 96px; }
+  .legal__inner { max-width: 720px; }
+
+  .legal__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .legal__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 42px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .legal__updated {
+    margin: 8px 0 48px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.4;
+    color: #64748B;
+    letter-spacing: 0.04em;
+  }
+  .legal__h2 {
+    margin: 48px 0 16px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .legal__p {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 48rem) {
+    .legal { padding-block: 72px; }
+    .legal__title { font-size: 34px; }
+  }
+</style>

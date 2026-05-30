@@ -1,0 +1,333 @@
+---
+/**
+ * insights/[...slug].astro: the article template for the `insights`
+ * content collection.
+ *
+ * getStaticPaths enumerates every non-draft entry; each page pulls its
+ * entry via getEntry and renders the Markdown body through <Content />.
+ *
+ * Schema flow: BreadcrumbList (Home > Insights > Article) + an Article
+ * node (name, description, author, datePublished, dateModified) flow
+ * through schemaExtras into the single <head> @graph emitted by Base.
+ */
+import { getCollection, getEntry, render } from 'astro:content';
+import Page from '../../layouts/Page.astro';
+import Badge from '../../components/ui/Badge.astro';
+import CTABlock from '../../components/sections/CTABlock.astro';
+import { breadcrumbSchema } from '../../lib/schema';
+import { SITE } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const articles = (await getCollection('insights')).filter((a) => !a.data.draft);
+  return articles.map((entry) => ({
+    params: { slug: entry.id },
+    props: { id: entry.id },
+  }));
+}
+
+const { id } = Astro.props;
+const entry = await getEntry('insights', id);
+if (!entry) {
+  return Astro.redirect('/insights/');
+}
+const { Content } = await render(entry);
+const { title, description, cluster, pubDate, updatedDate } = entry.data;
+
+const published = pubDate;
+const modified = updatedDate ?? pubDate;
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const iso = (d: Date) => d.toISOString().split('T')[0];
+
+// Up to three other published articles, newest first, for the "Keep reading" rail.
+const related = (await getCollection('insights'))
+  .filter((a) => !a.data.draft && a.id !== entry.id)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const pageUrl = `${SITE.url}/insights/${entry.id}/`;
+
+const crumbs = [
+  { name: 'Home',     item: `${SITE.url}/` },
+  { name: 'Insights', item: `${SITE.url}/insights/` },
+  { name: title,      item: pageUrl },
+];
+
+const articleSchema = {
+  '@type': 'Article',
+  '@id': `${pageUrl}#article`,
+  headline: title,
+  name: title,
+  description,
+  inLanguage: SITE.language,
+  url: pageUrl,
+  datePublished: iso(published),
+  dateModified: iso(modified),
+  author: { '@id': `${SITE.url}/#organization` },
+  publisher: { '@id': `${SITE.url}/#organization` },
+  isPartOf: { '@id': `${SITE.url}/#website` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+};
+
+const schemaExtras = [
+  breadcrumbSchema(crumbs, pageUrl),
+  articleSchema,
+];
+---
+
+<Page
+  title={`${title} | Found Everywhere`}
+  description={description}
+  path={`/insights/${entry.id}/`}
+  datePublished={iso(published)}
+  dateModified={iso(modified)}
+  schemaExtras={schemaExtras}
+  breadcrumb={crumbs}
+  bleed
+>
+
+  <!-- ============ HERO ============ -->
+  <article>
+    <header class="art-hero">
+      <div class="container art-hero__inner">
+        <Badge text={cluster} variant="teal" />
+        <h1 class="art-hero__title">{title}</h1>
+        <p class="art-hero__desc">{description}</p>
+        <p class="art-hero__date">
+          <time datetime={iso(published)}>Published {fmtDate(published)}</time>
+        </p>
+      </div>
+    </header>
+
+    <!-- ============ BODY ============ -->
+    <div class="art-body">
+      <div class="container art-body__inner">
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ============ KEEP READING ============ -->
+  {related.length > 0 && (
+    <section class="art-related" aria-labelledby="art-related-title">
+      <div class="container">
+        <p class="art-related__eyebrow">Keep reading</p>
+        <h2 id="art-related-title" class="art-related__title">More insights</h2>
+        <div class="art-related__grid">
+          {related.map((a) => (
+            <a class="art-related__card" href={`/insights/${a.id}/`}>
+              <Badge text={a.data.cluster} variant="teal" />
+              <h3 class="art-related__card-title">{a.data.title}</h3>
+              <p class="art-related__card-desc">{a.data.description}</p>
+              <span class="art-related__card-link">Read the guide <span aria-hidden="true">&rarr;</span></span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ============ CTA ============ -->
+  <CTABlock
+    title="Want to know where you stand in AI search?"
+    lead="Start with a free conversation. We will tell you honestly where your business shows up in AI-generated answers and what the opportunity looks like."
+  />
+
+</Page>
+
+<style>
+  /* ============ HERO ============ */
+  .art-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 80px;
+  }
+  .art-hero__inner { max-width: 840px; }
+  .art-hero__title {
+    margin: 20px 0 0;
+    max-width: 800px;
+    margin-inline: auto;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(32px, 1.6rem + 3vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .art-hero__desc {
+    margin: 16px auto 0;
+    max-width: 640px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .art-hero__date {
+    margin: 24px 0 0;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    color: #64748B;
+    text-transform: uppercase;
+  }
+
+  /* ============ BODY / PROSE ============ */
+  .art-body { background: #FFFFFF; padding-block: 80px; }
+  .art-body__inner { max-width: 720px; margin-inline: auto; }
+
+  .prose :global(h2) {
+    margin: 48px 0 16px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .prose :global(h2:first-child) { margin-top: 0; }
+  .prose :global(h3) {
+    margin: 32px 0 12px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .prose :global(p) {
+    margin: 0 0 24px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.8;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 24px;
+    padding-left: 24px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #64748B;
+  }
+  .prose :global(li) { margin-bottom: 8px; }
+  .prose :global(li::marker) { color: #94A3B8; }
+  .prose :global(strong) { color: #0D1321; font-weight: 600; }
+  .prose :global(a) {
+    color: #0C7B82;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  .prose :global(a:hover) { color: #0A6970; }
+  .prose :global(blockquote) {
+    margin: 32px 0;
+    padding-left: 20px;
+    border-left: 3px solid #0C7B82;
+    font-style: italic;
+    color: #64748B;
+  }
+  .prose :global(blockquote p:last-child) { margin-bottom: 0; }
+
+  /* ============ KEEP READING ============ */
+  .art-related { background: #F7F9FC; padding-block: 80px; }
+  .art-related .container { max-width: 960px; }
+  .art-related__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .art-related__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 1.4rem + 1.4vw, 32px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .art-related__grid {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .art-related__card {
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+    border: 0.5px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
+  }
+  .art-related__card:hover {
+    transform: translateY(-2px);
+    border-color: #0C7B82;
+    box-shadow: 0 12px 24px rgba(12, 123, 130, 0.08);
+  }
+  .art-related__card-title {
+    margin: 12px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .art-related__card-desc {
+    margin: 8px 0 16px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .art-related__card-link {
+    margin-top: auto;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    color: #0C7B82;
+  }
+  .art-related__card-link span {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .art-related__card:hover .art-related__card-link span { transform: translateX(3px); }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 48rem) {
+    .art-hero    { padding-block: 64px; }
+    .art-body    { padding-block: 56px; }
+    .art-related { padding-block: 64px; }
+    .prose :global(h2) { font-size: 24px; }
+    .prose :global(h3) { font-size: 18px; }
+  }
+</style>

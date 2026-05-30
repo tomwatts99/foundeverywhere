@@ -1,0 +1,742 @@
+---
+/**
+ * industries/professional-services.astro: industry landing page for
+ * professional services firms (solicitors, accountants, consultants,
+ * agencies, healthcare and dental practices).
+ *
+ * Schema flow: FAQPage + BreadcrumbList (Home > Industries > Professional
+ * Services) + a ProfessionalService node, all folded into the <head>
+ * @graph via schemaExtras.
+ */
+import Page from '../../layouts/Page.astro';
+import FAQItem from '../../components/ui/FAQItem.astro';
+import CTABlock from '../../components/sections/CTABlock.astro';
+import { faqPageSchema, breadcrumbSchema } from '../../lib/schema';
+import { SITE } from '../../lib/site';
+
+const PROBLEM_CARDS = [
+  {
+    title: 'Referral dependency',
+    body: 'When referrals slow down there is no independent channel to compensate. Growth becomes unpredictable.',
+  },
+  {
+    title: 'Invisible to active searchers',
+    body: 'Clients searching online for professional services find whoever ranks. If that is not you, it is a competitor.',
+  },
+  {
+    title: 'Not appearing in AI recommendations',
+    body: 'AI tools are increasingly the first port of call for professional recommendations. Most firms are absent entirely.',
+  },
+] as const;
+
+const STATS = [
+  { value: '70%', label: 'of people research professional services online before making contact' },
+  { value: '3x',  label: 'higher conversion rate from organic search versus paid for professional services' },
+  { value: 'AI',  label: 'tools are now the first stop for professional recommendations for a growing number of buyers' },
+] as const;
+
+const FEATURES = [
+  {
+    num: '01',
+    title: 'Local SEO',
+    body: 'We optimise your website and local presence so you appear when someone in your area searches for the services you offer. The right keywords, the right structure, and the right technical foundations to capture high-intent local searches.',
+  },
+  {
+    num: '02',
+    title: 'Google Business Profile',
+    body: 'Your GBP is often the first thing a potential client sees. We optimise every element - categories, services, photos, posts, and attributes - and manage it on an ongoing basis so it stays current and competitive.',
+  },
+  {
+    num: '03',
+    title: 'AI and LLM visibility',
+    body: 'When someone asks ChatGPT or Perplexity to recommend a solicitor, accountant, or consultant in their area, we make sure your firm appears. Schema markup, entity signals, and structured content that gives AI systems what they need to cite you confidently.',
+  },
+  {
+    num: '04',
+    title: 'Review generation and management',
+    body: 'Reviews build trust and drive rankings. We implement a review generation process that reaches clients at the right moment, monitors incoming reviews, and helps you respond effectively to build a strong public reputation.',
+  },
+  {
+    num: '05',
+    title: 'Expert content',
+    body: 'Content that demonstrates your expertise and experience - not generic articles but pieces that only your firm could write. The kind of content Google rewards and AI systems cite because it provides genuine insight that goes beyond the obvious.',
+  },
+  {
+    num: '06',
+    title: 'Technical SEO and performance',
+    body: 'A slow or poorly structured website undermines everything else. We audit and fix your technical foundations - PageSpeed, Core Web Vitals, schema, and on-page SEO - so your site supports your visibility rather than holding it back.',
+  },
+] as const;
+
+const AUDIENCE = [
+  {
+    title: 'Solicitors and law firms',
+    body: 'From sole practitioners to mid-sized firms looking to generate direct enquiries and reduce reliance on referral networks and directories.',
+  },
+  {
+    title: 'Accountants and financial advisers',
+    body: 'Practices looking to appear when local businesses and individuals search for financial expertise - and when they ask AI tools for recommendations.',
+  },
+  {
+    title: 'Consultants and agencies',
+    body: 'Independent consultants and boutique agencies that need to build credibility and visibility beyond their existing network.',
+  },
+  {
+    title: 'Healthcare and dental',
+    body: 'Practices where local search and reviews are make or break - and where AI visibility is a growing source of new patient enquiries.',
+  },
+] as const;
+
+const PS_FAQS = [
+  {
+    question: 'We get most of our work through referrals. Do we really need SEO?',
+    answer:
+      'Referrals are valuable but they are not predictable or scalable. SEO and AI visibility build a channel that generates enquiries independently of your referral network - so when referrals are quiet, the phone still rings.',
+  },
+  {
+    question: 'How long does it take to see results?',
+    answer:
+      'Technical fixes and GBP improvements can show within weeks. Local organic rankings typically improve over two to three months. AI visibility improvements can show within weeks as systems re-crawl and update.',
+  },
+  {
+    question: 'Do you understand the compliance constraints around marketing professional services?',
+    answer:
+      'Yes. We understand that solicitors, financial advisers, and regulated professionals have constraints on claims and testimonials. We work within those constraints and flag anything that needs compliance review before it goes live.',
+  },
+  {
+    question: 'Can you help us appear in AI tools like ChatGPT?',
+    answer:
+      'Yes. AI visibility is a core part of everything we do. We implement the schema, entity signals, and content structure that give AI systems what they need to recommend your firm when someone asks for professional services in your area.',
+  },
+  {
+    question: 'We already have a website and it ranks reasonably well. Is there still value in working with you?',
+    answer:
+      'Almost certainly yes. Most sites that rank reasonably well in Google are still invisible in AI search. Schema is often incomplete, AI visibility has never been tested, and there are usually technical improvements that would push rankings further. Get in touch and we will tell you honestly what the opportunity looks like.',
+  },
+  {
+    question: 'Do you work with regulated professions like solicitors and financial advisers?',
+    answer:
+      'Yes. We are familiar with the marketing constraints that apply to regulated professions and we work within them. All content and claims are agreed with you before anything goes live.',
+  },
+];
+
+const pageUrl = `${SITE.url}/industries/professional-services/`;
+const localBusiness = {
+  '@type': 'ProfessionalService',
+  '@id': `${pageUrl}#service`,
+  name: 'Found Everywhere - Professional Services SEO & LLM Visibility',
+  url: pageUrl,
+  parentOrganization: { '@id': `${SITE.url}/#organization` },
+  areaServed: 'United Kingdom',
+  serviceType: 'Local SEO and AI search visibility for professional services firms',
+  audience: {
+    '@type': 'BusinessAudience',
+    name: 'Solicitors, accountants, consultants, and professional services firms',
+  },
+};
+const schemaExtras = [
+  faqPageSchema(PS_FAQS, pageUrl),
+  breadcrumbSchema(
+    [
+      { name: 'Home',                  item: `${SITE.url}/` },
+      { name: 'Industries',            item: `${SITE.url}/industries/` },
+      { name: 'Professional Services', item: pageUrl },
+    ],
+    pageUrl,
+  ),
+  localBusiness,
+];
+---
+
+<Page
+  title="SEO and LLM Visibility for Professional Services | Found Everywhere"
+  description="Local SEO, Google Business Profile management, and AI search visibility for solicitors, accountants, consultants, and professional services firms. Get found by clients who are ready to hire."
+  path="/industries/professional-services/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="ps-hero" aria-labelledby="ps-hero-title">
+    <div class="container">
+      <p class="ps-hero__eyebrow">Professional services</p>
+      <h1 id="ps-hero-title" class="ps-hero__title">Your next client is searching for you right now</h1>
+      <p class="ps-hero__lead">
+        Most professional services firms rely on referrals. Referrals are
+        valuable but they are not scalable and they are not predictable. We
+        build the search and AI visibility that means clients find you
+        directly - before they ask a friend or a platform.
+      </p>
+      <div class="ps-hero__cta">
+        <a href="/contact/" class="ps-btn ps-btn--primary">
+          Talk to us <span aria-hidden="true" class="ps-btn__arrow">&#x2197;</span>
+        </a>
+        <a href="/how-it-works/" class="ps-btn ps-btn--ghost">How it works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. THE PROBLEM ============ -->
+  <section class="ps-problem" aria-labelledby="ps-problem-title">
+    <div class="container">
+      <div class="ps-problem__grid">
+        <div class="ps-problem__copy">
+          <p class="ps-eyebrow">The problem</p>
+          <h2 id="ps-problem-title" class="ps-h2">Referrals are great. Until they are not enough.</h2>
+          <p class="ps-problem__body">
+            Referrals are the lifeblood of most professional services firms.
+            They come with trust built in and they convert well. But they are
+            unpredictable, they do not scale, and they dry up when you need
+            them most.
+          </p>
+          <p class="ps-problem__body">
+            The firms growing consistently are the ones that show up when a
+            potential client searches for help. Not just on Google - on
+            ChatGPT, Perplexity, and Gemini too. When someone asks an AI tool
+            to recommend a solicitor, accountant, or consultant in their area,
+            the firms that appear are the ones that have built the right
+            signals. Most have not.
+          </p>
+        </div>
+        <div class="ps-problem__cards">
+          {PROBLEM_CARDS.map((c) => (
+            <div class="ps-pcard">
+              <h3 class="ps-pcard__title">{c.title}</h3>
+              <p class="ps-pcard__body">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. THE OPPORTUNITY ============ -->
+  <section class="ps-opp" aria-labelledby="ps-opp-title">
+    <div class="container">
+      <p class="ps-eyebrow ps-eyebrow--center">The opportunity</p>
+      <h2 id="ps-opp-title" class="ps-h2 ps-h2--center">High intent. High value. High conversion.</h2>
+      <p class="ps-opp__body">
+        Someone searching for a solicitor, accountant, or consultant is not
+        browsing. They have a problem and they need help. That intent makes
+        professional services one of the highest-converting categories in
+        local search. The firm that appears first - in Google, in Google Maps,
+        in AI-generated answers - captures that enquiry. The ones that do not
+        appear miss it entirely.
+      </p>
+      <div class="ps-stats">
+        {STATS.map((s) => (
+          <div class="ps-stat">
+            <div class="ps-stat__value">{s.value}</div>
+            <div class="ps-stat__label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. WHAT WE DO ============ -->
+  <section class="ps-do" aria-labelledby="ps-do-title">
+    <div class="container">
+      <p class="ps-eyebrow">What we do</p>
+      <h2 id="ps-do-title" class="ps-h2">Everything a professional services firm needs to be found</h2>
+      <ul class="ps-features" role="list">
+        {FEATURES.map((f) => (
+          <li class="ps-feature">
+            <span class="ps-feature__num">{f.num}</span>
+            <h3 class="ps-feature__title">{f.title}</h3>
+            <p class="ps-feature__body">{f.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 5. WHO THIS IS FOR (dark) ============ -->
+  <section class="ps-who" aria-labelledby="ps-who-title">
+    <div class="container">
+      <p class="ps-eyebrow ps-eyebrow--center">Who this is for</p>
+      <h2 id="ps-who-title" class="ps-h2 ps-h2--center ps-h2--light">Built for professional services firms ready to grow beyond referrals</h2>
+      <div class="ps-who__grid">
+        {AUDIENCE.map((a) => (
+          <article class="ps-who-card">
+            <h3 class="ps-who-card__title">{a.title}</h3>
+            <p class="ps-who-card__body">{a.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. PRICING ============ -->
+  <section class="ps-pricing" aria-labelledby="ps-pricing-title">
+    <div class="container">
+      <p class="ps-eyebrow ps-eyebrow--center">Investment</p>
+      <h2 id="ps-pricing-title" class="ps-h2 ps-h2--center ps-h2--pricing">Straightforward pricing, no surprises</h2>
+      <p class="ps-pricing__body">
+        Professional services visibility work is scoped as part of our audit
+        and retainer services. We start with a full SEO and AI visibility
+        audit so you know exactly where you stand, then move into monthly
+        management if it makes sense.
+      </p>
+
+      <div class="ps-plans">
+        <article class="ps-plan">
+          <p class="ps-plan__eyebrow">Start here</p>
+          <h3 class="ps-plan__title">SEO and visibility audit</h3>
+          <p class="ps-plan__price">From £497</p>
+          <p class="ps-plan__desc">Full technical SEO audit, GBP review, AI visibility test across 8 platforms, and prioritised fix list. Delivered within two weeks.</p>
+          <ul class="ps-plan__checks" role="list">
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Local rank tracking included</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>GBP audit and recommendations</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>AI visibility across 8 platforms</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Plain English report</span></li>
+          </ul>
+          <a href="/contact/" class="ps-plan__cta">Book your audit <span aria-hidden="true">&#x2197;</span></a>
+        </article>
+
+        <article class="ps-plan ps-plan--featured">
+          <p class="ps-plan__eyebrow">Ongoing</p>
+          <h3 class="ps-plan__title">Monthly visibility management</h3>
+          <p class="ps-plan__price">From £697/mo</p>
+          <p class="ps-plan__desc">Full monthly management of local SEO, GBP, review generation, expert content, and AI visibility tracking. Clear monthly reporting.</p>
+          <ul class="ps-plan__checks" role="list">
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>GBP management included</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Review generation and monitoring</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Expert content included</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Monthly performance report</span></li>
+          </ul>
+          <a href="/contact/" class="ps-plan__cta">Talk to us <span aria-hidden="true">&#x2197;</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. FAQ ============ -->
+  <section class="ps-faq" aria-labelledby="ps-faq-title">
+    <div class="container">
+      <p class="ps-eyebrow">Common questions</p>
+      <h2 id="ps-faq-title" class="ps-h2">What professional services firms ask us</h2>
+      <div class="ps-faq__list">
+        {PS_FAQS.map((faq) => (
+          <FAQItem question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. CTA ============ -->
+  <CTABlock
+    title="Ready to grow beyond referrals?"
+    lead="Start with a free conversation about where your firm stands in search and AI visibility."
+  />
+
+</Page>
+
+<style>
+  /* Shared section atoms */
+  .ps-eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ps-eyebrow--center { text-align: center; }
+  .ps-h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .ps-h2--center { text-align: center; }
+  .ps-h2--light { color: #FFFFFF; line-height: 1.2; }
+  /* Pricing heading is a touch smaller per spec (32px). */
+  .ps-h2--pricing { font-size: clamp(26px, 1.4rem + 1.4vw, 32px); }
+
+  /* ============ 1. HERO ============ */
+  .ps-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .ps-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ps-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .ps-hero__lead {
+    margin: 20px auto 0;
+    max-width: 580px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .ps-hero__cta {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .ps-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 13px 22px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+  .ps-btn--primary { color: #FFFFFF; background: #0C7B82; border: 1px solid #0C7B82; }
+  .ps-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
+  .ps-btn--ghost {
+    color: #FFFFFF;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .ps-btn--ghost:hover { border-color: rgba(255, 255, 255, 0.55); }
+  .ps-btn__arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .ps-btn--primary:hover .ps-btn__arrow { transform: translate(2px, -2px); }
+
+  /* ============ 2. THE PROBLEM ============ */
+  .ps-problem { background: #FFFFFF; padding-block: 96px; }
+  .ps-problem .container { max-width: 960px; }
+  .ps-problem__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .ps-problem__body {
+    margin: 16px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .ps-problem__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .ps-pcard {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-left: 3px solid #EF4444;
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .ps-pcard__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .ps-pcard__body {
+    margin: 6px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 3. THE OPPORTUNITY ============ */
+  .ps-opp { background: #F7F9FC; padding-block: 96px; }
+  .ps-opp .container { max-width: 960px; }
+  .ps-opp__body {
+    margin: 24px auto 0;
+    max-width: 680px;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .ps-stats {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .ps-stat {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .ps-stat__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .ps-stat__label {
+    margin-top: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 4. WHAT WE DO ============ */
+  .ps-do { background: #FFFFFF; padding-block: 96px; }
+  .ps-do .container { max-width: 960px; }
+  .ps-features {
+    list-style: none;
+    padding: 0;
+    margin: 48px 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .ps-feature__num {
+    display: block;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    letter-spacing: 0.08em;
+  }
+  .ps-feature__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .ps-feature__body {
+    margin: 8px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 5. WHO THIS IS FOR (dark) ============ */
+  .ps-who { background: #0D1826; padding-block: 96px; }
+  .ps-who .container { max-width: 960px; }
+  .ps-who__grid {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .ps-who-card {
+    background: #0A1520;
+    border: 0.5px solid #1E3A4A;
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .ps-who-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+  }
+  .ps-who-card__body {
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============ 6. PRICING ============ */
+  .ps-pricing { background: #F7F9FC; padding-block: 96px; }
+  .ps-pricing .container { max-width: 800px; }
+  .ps-pricing__body {
+    margin: 24px auto 0;
+    max-width: 580px;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .ps-plans {
+    margin: 48px auto 0;
+    max-width: 720px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .ps-plan {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: left;
+  }
+  .ps-plan--featured { border: 1.5px solid #0C7B82; }
+  .ps-plan__eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .ps-plan__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .ps-plan__price {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .ps-plan__desc {
+    margin: 12px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .ps-plan__checks {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ps-plan__checks li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #64748B;
+  }
+  .ps-plan__checks svg { color: #0C7B82; flex-shrink: 0; }
+  .ps-plan__cta {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 24px;
+    padding: 12px 16px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    color: #FFFFFF;
+    background: #0C7B82;
+    border: 1px solid #0C7B82;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+  .ps-plan__cta:hover { background: #0A6970; border-color: #0A6970; }
+  .ps-plan__cta span {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .ps-plan__cta:hover span { transform: translate(2px, -2px); }
+
+  /* ============ 7. FAQ ============ */
+  .ps-faq { background: #FFFFFF; padding-block: 96px; }
+  .ps-faq .container { max-width: 800px; }
+  .ps-faq__list {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 56rem) {
+    .ps-problem__grid { grid-template-columns: 1fr; gap: 40px; }
+    .ps-stats { grid-template-columns: 1fr; }
+    .ps-features { grid-template-columns: 1fr; gap: 28px; }
+    .ps-who__grid { grid-template-columns: repeat(2, 1fr); }
+    .ps-plans { grid-template-columns: 1fr; max-width: 28rem; }
+  }
+  @media (max-width: 48rem) {
+    .ps-hero    { padding-block: 72px; }
+    .ps-problem { padding-block: 72px; }
+    .ps-opp     { padding-block: 72px; }
+    .ps-do      { padding-block: 72px; }
+    .ps-who     { padding-block: 72px; }
+    .ps-pricing { padding-block: 72px; }
+    .ps-faq     { padding-block: 72px; }
+  }
+</style>

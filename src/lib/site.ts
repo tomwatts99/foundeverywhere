@@ -53,7 +53,9 @@ export const NAV: ReadonlyArray<NavItem> = [
     href: '/industries/automotive/',
     label: 'Industries',
     children: [
-      { href: '/industries/automotive/', label: 'Automotive' },
+      { href: '/industries/automotive/',            label: 'Automotive' },
+      { href: '/industries/hospitality/',           label: 'Hospitality' },
+      { href: '/industries/professional-services/', label: 'Professional services' },
     ],
   },
   { href: '/insights/',     label: 'Insights' },
@@ -88,7 +90,9 @@ export const FOOTER_NAV: ReadonlyArray<{
   {
     title: 'Industries',
     items: [
-      { href: '/industries/automotive/', label: 'Automotive' },
+      { href: '/industries/automotive/',            label: 'Automotive' },
+      { href: '/industries/hospitality/',           label: 'Hospitality' },
+      { href: '/industries/professional-services/', label: 'Professional services' },
     ],
   },
   {

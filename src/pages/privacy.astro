@@ -1,0 +1,144 @@
+---
+/**
+ * privacy.astro: privacy policy (noindex legal page).
+ *
+ * Shares the `.legal` layout with terms.astro: white surface, narrow
+ * measure, mono eyebrow + Outfit H1, Inter prose, Outfit H2 sections.
+ */
+import Page from '../layouts/Page.astro';
+---
+
+<Page
+  title="Privacy Policy | Found Everywhere"
+  description="How Found Everywhere collects, uses, and protects your personal data."
+  path="/privacy/"
+  noindex
+>
+  <article class="legal">
+    <div class="container legal__inner">
+      <p class="legal__eyebrow">Legal</p>
+      <h1 class="legal__title">Privacy policy</h1>
+      <p class="legal__updated">Last updated: 29 May 2026</p>
+
+      <h2 class="legal__h2">Who we are</h2>
+      <p class="legal__p">
+        Found Everywhere is operated by Tom Watts, trading as Digital
+        Heroes Studio, East Sussex. You can contact us at
+        hello@foundeverywhere.co.uk.
+      </p>
+
+      <h2 class="legal__h2">What information we collect</h2>
+      <p class="legal__p">
+        We collect information you provide when you contact us through the
+        contact form on this website. This includes your name, email
+        address, website URL, and the message you send. We do not collect
+        any other personal data through this website.
+      </p>
+
+      <h2 class="legal__h2">How we use your information</h2>
+      <p class="legal__p">
+        We use the information you provide solely to respond to your
+        enquiry. We do not add you to any mailing list, share your data
+        with third parties, or use it for any purpose other than responding
+        to your message.
+      </p>
+
+      <h2 class="legal__h2">Analytics</h2>
+      <p class="legal__p">
+        This website uses Cloudflare Web Analytics to understand how
+        visitors use the site. Cloudflare Analytics does not use cookies,
+        does not track you across other websites, and does not collect
+        personally identifiable information. No cookie consent banner is
+        required. You can read Cloudflare's privacy policy at
+        cloudflare.com/privacypolicy.
+      </p>
+
+      <h2 class="legal__h2">Cookies</h2>
+      <p class="legal__p">
+        This website does not use cookies for tracking or analytics
+        purposes. Cloudflare may set technical cookies necessary for the
+        delivery of the website. These are strictly necessary cookies and
+        do not require your consent.
+      </p>
+
+      <h2 class="legal__h2">Data retention</h2>
+      <p class="legal__p">
+        Enquiries sent via the contact form are received directly into our
+        email inbox. We retain email correspondence for up to two years.
+        You can request deletion of your data at any time by emailing
+        hello@foundeverywhere.co.uk.
+      </p>
+
+      <h2 class="legal__h2">Your rights</h2>
+      <p class="legal__p">
+        Under UK GDPR you have the right to access the personal data we
+        hold about you, request correction or deletion, and object to
+        processing. To exercise any of these rights contact us at
+        hello@foundeverywhere.co.uk. You also have the right to lodge a
+        complaint with the Information Commissioner's Office at ico.org.uk.
+      </p>
+
+      <h2 class="legal__h2">Contact</h2>
+      <p class="legal__p">
+        For any privacy-related questions contact us at
+        hello@foundeverywhere.co.uk.
+      </p>
+    </div>
+  </article>
+</Page>
+
+<style>
+  .legal { background: #FFFFFF; padding-block: 96px; }
+  .legal__inner { max-width: 720px; }
+
+  .legal__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .legal__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 42px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .legal__updated {
+    margin: 8px 0 48px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.4;
+    color: #64748B;
+    letter-spacing: 0.04em;
+  }
+  .legal__h2 {
+    margin: 48px 0 16px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .legal__p {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 48rem) {
+    .legal { padding-block: 72px; }
+    .legal__title { font-size: 34px; }
+  }
+</style>

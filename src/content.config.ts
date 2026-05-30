@@ -15,6 +15,8 @@ const insights = defineCollection({
     description: z.string(),
     cluster: z.string(),          // e.g. "GEO", "LLM SEO", "Technical SEO"
     pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    pillar: z.boolean().optional().default(false),  // cornerstone / hub article
     draft: z.boolean().optional().default(false),
   }),
 });

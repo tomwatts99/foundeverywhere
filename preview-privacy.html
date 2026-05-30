@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Book a free audit | Found Everywhere</title>
-  <meta name="description" content="Book your free SEO and LLM visibility audit. No commitment. Just clarity on where your site stands and what needs fixing." />
+  <title>Privacy Policy | Found Everywhere</title>
+  <meta name="description" content="How Found Everywhere collects, uses, and protects your personal data." />
   <meta name="theme-color" content="#0C7B82" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet" href="src/styles/global.css" />
+
+  <!-- FAQPage + BreadcrumbList JSON-LD: preview only. Astro emits these via
+       schemaExtras inside Base.astro's single @graph. -->
+  <meta name="robots" content="noindex, nofollow" />
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
@@ -64,50 +68,29 @@
   </header>
 
   <main id="main">
-    <!-- ============ HERO ============ -->
-    <section class="contact-hero" aria-labelledby="contact-title">
-      <div class="container">
-        <p class="contact-hero__eyebrow">Get in touch</p>
-        <h1 id="contact-title" class="contact-hero__title">Book your free audit</h1>
-        <p class="contact-hero__lead">
-          No commitment. Just clarity on where you stand and what needs fixing.
-        </p>
+    <article class="legal">
+      <div class="container legal__inner">
+        <p class="legal__eyebrow">Legal</p>
+        <h1 class="legal__title">Privacy policy</h1>
+        <p class="legal__updated">Last updated: 29 May 2026</p>
+      <h2 class="legal__h2">Who we are</h2>
+      <p class="legal__p">Found Everywhere is operated by Tom Watts, trading as Digital Heroes Studio, East Sussex. You can contact us at hello@foundeverywhere.co.uk.</p>
+      <h2 class="legal__h2">What information we collect</h2>
+      <p class="legal__p">We collect information you provide when you contact us through the contact form on this website. This includes your name, email address, website URL, and the message you send. We do not collect any other personal data through this website.</p>
+      <h2 class="legal__h2">How we use your information</h2>
+      <p class="legal__p">We use the information you provide solely to respond to your enquiry. We do not add you to any mailing list, share your data with third parties, or use it for any purpose other than responding to your message.</p>
+      <h2 class="legal__h2">Analytics</h2>
+      <p class="legal__p">This website uses Cloudflare Web Analytics to understand how visitors use the site. Cloudflare Analytics does not use cookies, does not track you across other websites, and does not collect personally identifiable information. No cookie consent banner is required. You can read Cloudflare's privacy policy at cloudflare.com/privacypolicy.</p>
+      <h2 class="legal__h2">Cookies</h2>
+      <p class="legal__p">This website does not use cookies for tracking or analytics purposes. Cloudflare may set technical cookies necessary for the delivery of the website. These are strictly necessary cookies and do not require your consent.</p>
+      <h2 class="legal__h2">Data retention</h2>
+      <p class="legal__p">Enquiries sent via the contact form are received directly into our email inbox. We retain email correspondence for up to two years. You can request deletion of your data at any time by emailing hello@foundeverywhere.co.uk.</p>
+      <h2 class="legal__h2">Your rights</h2>
+      <p class="legal__p">Under UK GDPR you have the right to access the personal data we hold about you, request correction or deletion, and object to processing. To exercise any of these rights contact us at hello@foundeverywhere.co.uk. You also have the right to lodge a complaint with the Information Commissioner's Office at ico.org.uk.</p>
+      <h2 class="legal__h2">Contact</h2>
+      <p class="legal__p">For any privacy-related questions contact us at hello@foundeverywhere.co.uk.</p>
       </div>
-    </section>
-
-    <!-- ============ FORM ============ -->
-    <section class="contact-form-section">
-      <div class="container">
-        <form class="contact-card" action="mailto:hello@foundeverywhere.co.uk" method="POST" enctype="text/plain" aria-label="Audit request form">
-          <div class="field">
-            <label class="field__label" for="contact-name">Name</label>
-            <input class="field__input" type="text" id="contact-name" name="Name" autocomplete="name" required />
-          </div>
-          <div class="field">
-            <label class="field__label" for="contact-email">Email</label>
-            <input class="field__input" type="email" id="contact-email" name="Email" autocomplete="email" required />
-          </div>
-          <div class="field">
-            <label class="field__label" for="contact-url">Website URL</label>
-            <input class="field__input" type="url" id="contact-url" name="Website" placeholder="https://" autocomplete="url" required />
-          </div>
-          <div class="field">
-            <label class="field__label" for="contact-message">Tell us about your site</label>
-            <textarea class="field__input field__textarea" id="contact-message" name="Message" rows="4"></textarea>
-          </div>
-          <button class="contact-submit" type="submit">
-            Send my audit request
-            <span aria-hidden="true" class="contact-submit__arrow">&#x2197;</span>
-          </button>
-        </form>
-
-        <ul class="contact-trust" role="list">
-          <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Free audit</span></li>
-          <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>No commitment</span></li>
-          <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Response within 24 hours</span></li>
-        </ul>
-      </div>
-    </section>
+    </article>
   </main>
 
   <!-- ============ FOOTER ============ -->
@@ -120,7 +103,6 @@
         <p class="footer__tagline">SEO and LLM visibility, built for the search era after search.</p>
         <p class="footer__contact"><a href="mailto:hello@foundeverywhere.co.uk">hello@foundeverywhere.co.uk</a></p>
       </div>
-
       <nav class="footer__nav" aria-label="Footer">
         <div class="footer__col">
           <h2 class="footer__col-title">Services</h2>
@@ -158,7 +140,6 @@
         </div>
       </nav>
     </div>
-
     <div class="container footer__legal">
       <p class="footer__copy">Found Everywhere is operated by Tom Watts, East Sussex. hello@foundeverywhere.co.uk</p>
       <ul class="footer__meta" role="list">
@@ -170,7 +151,7 @@
   </footer>
 
   <style>
-    /* ---------- NAV ---------- */
+    /* ---------- NAV chrome (shared) ---------- */
     .nav {
       position: sticky; top: 0; z-index: var(--z-nav);
       background: #FFFFFF;
@@ -203,7 +184,56 @@
     .nav__links li + li { margin-top: 0; }
     .nav__link { position: relative; display: inline-block; padding: var(--space-2) 0; font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text); }
     .nav__link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1.5px; background: var(--color-accent); transform: scaleX(0); transform-origin: left; transition: transform var(--duration-base) var(--ease-out); }
-    .nav__link:hover::after { transform: scaleX(1); }
+    .nav__link:hover::after, .nav__link[aria-current="page"]::after { transform: scaleX(1); }
+    .nav__link[aria-current="page"] { color: var(--color-accent); }
+
+    /* ---------- Services dropdown (mirrors Nav.astro) ---------- */
+    .nav__item { position: relative; display: inline-flex; align-items: center; gap: 2px; }
+    .nav__chevron-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.25rem; height: 1.25rem;
+      padding: 0; background: transparent; border: 0; border-radius: 4px;
+      color: var(--color-muted); cursor: pointer;
+      transition: color var(--duration-fast) var(--ease-out);
+    }
+    .nav__chevron-btn:hover { color: var(--color-text); }
+    .nav__chevron { display: block; transition: transform var(--duration-base) var(--ease-out); }
+
+    .nav__dropdown { list-style: none; margin: 0; padding: 0; }
+    .nav__dropdown li + li { margin-top: 0; }
+    .nav__dropdown-link {
+      display: block;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 14px; line-height: 1.4; text-decoration: none;
+      transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+    }
+    @media (min-width: 48.0625rem) {
+      .nav__dropdown {
+        position: absolute; top: calc(100% + 6px); left: -10px;
+        min-width: 280px; padding: 8px;
+        background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(13, 19, 33, 0.08), 0 2px 4px rgba(13, 19, 33, 0.04);
+        opacity: 0; visibility: hidden; transform: translateY(-4px);
+        transition: opacity var(--duration-base) var(--ease-out),
+                    transform var(--duration-base) var(--ease-out),
+                    visibility var(--duration-base) var(--ease-out);
+        z-index: calc(var(--z-nav) + 1);
+      }
+      .nav__item--has-dropdown:hover .nav__dropdown,
+      .nav__item--has-dropdown:focus-within .nav__dropdown,
+      .nav__item--has-dropdown .nav__chevron-btn[aria-expanded="true"] ~ .nav__dropdown {
+        opacity: 1; visibility: visible; transform: translateY(0);
+      }
+      .nav__item--has-dropdown:hover .nav__chevron,
+      .nav__item--has-dropdown:focus-within .nav__chevron,
+      .nav__chevron-btn[aria-expanded="true"] .nav__chevron {
+        transform: rotate(180deg);
+      }
+      .nav__dropdown-link { padding: 10px 16px; border-radius: 8px; color: #0D1321; }
+      .nav__dropdown-link:hover,
+      .nav__dropdown-link:focus-visible { background: #F7F9FC; color: #0C7B82; }
+      .nav__dropdown-link[aria-current="page"] { color: #0C7B82; background: #F7F9FC; }
+    }
     @media (max-width: 48rem) {
       .nav__toggle { display: inline-flex; }
       .nav__panel { position: fixed; top: 4.5rem; left: 0; right: 0; max-height: calc(100dvh - 4.5rem); overflow-y: auto; flex-direction: column; align-items: stretch; gap: var(--space-5); padding: var(--space-6) var(--gutter); background: var(--color-bg); border-bottom: 1px solid var(--color-line); box-shadow: var(--shadow-lg); transform: translateY(-8px); opacity: 0; pointer-events: none; }
@@ -230,62 +260,78 @@
       .nav__cta .btn { width: 100%; }
     }
 
-    /* ---------- CONTACT HERO ---------- */
-    .contact-hero { background: #0D1826; color: #FFFFFF; text-align: center; padding-block: 80px; }
-    .contact-hero__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
-    .contact-hero__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(32px, 1.6rem + 3vw, 48px); line-height: 1.1; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance; }
-    .contact-hero__lead { margin: 16px auto 0; max-width: 36rem; font-family: var(--font-body); font-weight: 400; font-size: 16px; line-height: 1.6; color: #94A3B8; text-wrap: pretty; }
-
-    /* ---------- FORM ---------- */
-    .contact-form-section { background: #FFFFFF; padding-block: 80px; }
-    .contact-card { max-width: 600px; margin: 0 auto; padding: 40px; background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 16px; display: flex; flex-direction: column; gap: 20px; }
-    .field { display: flex; flex-direction: column; gap: 6px; }
-    .field__label { font-family: var(--font-body); font-weight: 500; font-size: 13px; line-height: 1.4; color: #0D1321; }
-    .field__input {
-      width: 100%; padding: 10px 14px;
-      font-family: var(--font-body); font-size: 14px; line-height: 1.5; color: #0D1321;
-      background: #FFFFFF; border: 1px solid #E4E8EF; border-radius: 8px;
-      transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+    /* ---------- FAQItem (mirrors src/components/ui/FAQItem.astro) ---------- */
+    .ui-faq { border-bottom: 1px solid #E4E8EF; }
+    .ui-faq:first-of-type { border-top: 1px solid #E4E8EF; }
+    .ui-faq > summary { list-style: none; cursor: pointer; }
+    .ui-faq > summary::-webkit-details-marker { display: none; }
+    .ui-faq > summary::marker { content: ''; }
+    .ui-faq__summary {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 20px 0;
+      font-family: var(--font-display); font-weight: 500;
+      font-size: 15px; line-height: 1.4; color: #0D1321;
     }
-    .field__input::placeholder { color: #94A3B8; }
-    .field__input:focus, .field__input:focus-visible {
-      outline: none; border-color: #0C7B82;
-      box-shadow: 0 0 0 3px rgba(12, 123, 130, 0.15);
+    .ui-faq__summary:hover { color: #0C7B82; }
+    .ui-faq__q { flex: 1; text-wrap: balance; }
+    .ui-faq__chevron {
+      flex-shrink: 0; width: 9px; height: 9px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: translateY(-2px) rotate(45deg);
+      transform-origin: center;
+      transition: transform var(--duration-base) var(--ease-out);
+      color: #64748B;
     }
-    .field__textarea { resize: vertical; min-height: calc(4 * 1.5em + 20px); font-family: var(--font-body); }
-
-    .contact-submit {
-      width: 100%; margin-top: 8px; padding: 14px 24px;
-      font-family: var(--font-display); font-weight: 600; font-size: 15px; line-height: 1;
-      color: #FFFFFF; background: #0C7B82; border: 1px solid #0C7B82; border-radius: 8px;
-      cursor: pointer;
-      display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
-      transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+    .ui-faq[open] .ui-faq__chevron {
+      transform: translateY(2px) rotate(225deg); color: #0C7B82;
     }
-    .contact-submit:hover { background: #0A6970; border-color: #0A6970; }
-    .contact-submit:active { transform: translateY(1px); }
-    .contact-submit__arrow { display: inline-block; transition: transform var(--duration-base) var(--ease-out); }
-    .contact-submit:hover .contact-submit__arrow { transform: translate(2px, -2px); }
-
-    /* ---------- TRUST ---------- */
-    .contact-trust {
-      list-style: none; margin: 32px 0 0; padding: 0;
-      display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
-      column-gap: 32px; row-gap: 12px;
-      font-family: var(--font-body); font-size: 13px; color: #64748B;
-    }
-    .contact-trust li { display: inline-flex; align-items: center; gap: 8px; }
-    .contact-trust li + li { margin-top: 0; }
-    .contact-trust svg { color: #0C7B82; flex-shrink: 0; }
-
-    @media (max-width: 48rem) {
-      .contact-hero { padding-block: 64px; }
-      .contact-form-section { padding-block: 56px; }
-      .contact-card { padding: 28px; }
-      .contact-trust { column-gap: 20px; }
+    .ui-faq__answer { padding: 0 0 24px; max-width: 60ch; }
+    .ui-faq__answer p {
+      margin: 0;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 14px; line-height: 1.65; color: #64748B;
     }
 
-    /* ---------- FOOTER ---------- */
+    /* ---------- LEGAL ---------- */
+    .legal { background: #FFFFFF; padding-block: 96px; }
+    .legal__inner { max-width: 720px; }
+    .legal__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .legal__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 42px; line-height: 1.1; letter-spacing: -0.02em; color: #0D1321; text-wrap: balance; }
+    .legal__updated { margin: 8px 0 48px; font-family: var(--font-mono); font-size: 11px; line-height: 1.4; color: #64748B; letter-spacing: 0.04em; }
+    .legal__h2 { margin: 48px 0 16px; font-family: var(--font-display); font-weight: 600; font-size: 22px; line-height: 1.25; letter-spacing: -0.01em; color: #0D1321; }
+    .legal__p { margin: 0; font-family: var(--font-body); font-weight: 400; font-size: 16px; line-height: 1.8; color: #64748B; text-wrap: pretty; }
+    @media (max-width: 48rem) { .legal { padding-block: 72px; } .legal__title { font-size: 34px; } }
+
+    /* ---------- CTA (mirrors src/components/sections/CTABlock.astro) ---------- */
+    .cta { background: #0C7B82; padding-block: 96px; text-align: center; color: #FFFFFF; }
+    .cta__title {
+      margin: 0;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(28px, 1.6rem + 1.6vw, 36px);
+      line-height: 1.15; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance;
+    }
+    .cta__lead {
+      margin: 12px auto 0; max-width: 36rem;
+      font-family: var(--font-body); font-weight: 400;
+      font-size: 16px; line-height: 1.6;
+      color: rgba(255, 255, 255, 0.8); text-wrap: pretty;
+    }
+    .cta__btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      margin-top: 32px; padding: 11px 24px;
+      font-family: var(--font-display); font-weight: 600; font-size: 14px; line-height: 1;
+      color: #0C7B82; background: #FFFFFF;
+      border: 1px solid #FFFFFF; border-radius: 8px;
+      text-decoration: none;
+      transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+    }
+    .cta__btn:hover { background: #E0F4F5; border-color: #E0F4F5; }
+    .cta__btn-arrow { display: inline-block; transition: transform var(--duration-base) var(--ease-out); }
+    .cta__btn:hover .cta__btn-arrow { transform: translate(2px, -2px); }
+    @media (max-width: 48rem) { .cta { padding-block: 64px; } }
+
+    /* ---------- FOOTER chrome (shared) ---------- */
     .footer { background: var(--color-dark); color: var(--color-dark-text); padding-block: var(--space-10) var(--space-6); border-top: 1px solid var(--color-dark-line); }
     .footer__inner { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr); gap: var(--space-9); align-items: start; padding-bottom: var(--space-9); border-bottom: 1px solid var(--color-dark-line); }
     .footer__brand-link { display: inline-flex; align-items: center; line-height: 0; }
