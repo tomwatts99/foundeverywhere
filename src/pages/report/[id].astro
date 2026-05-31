@@ -2,10 +2,10 @@
 /**
  * report/[id].astro: the private AI visibility report.
  *
- * Rendered on demand (prerender = false). Fetches the stored report
- * from the Worker API (GET /api/report/:id) using the request origin,
- * then renders the score ring, per-platform cards, and recommendations.
- * Missing reports render a friendly 404 state. noindex / nofollow.
+ * Rendered on demand (prerender = false). Reads the stored report
+ * directly from the REPORTS KV binding on the Pages runtime, falling
+ * back to an HTTP fetch of the Worker API in local dev. Missing reports
+ * render a friendly 404 state. noindex / nofollow.
  */
 export const prerender = false;
 
@@ -44,22 +44,48 @@ type Report = {
 
 let report: Report | null = null;
 
-// The /api/* routes are served by the report Worker bound at the zone
-// apex, NOT by this Pages app. A self-referential subrequest to the
-// Pages host would 404, so we always fetch the absolute production
-// origin. Override with PUBLIC_API_ORIGIN for local/preview testing.
-const API_ORIGIN = import.meta.env.PUBLIC_API_ORIGIN || 'https://foundeverywhere.co.uk';
+// PRIMARY PATH — read straight from the KV binding.
+//
+// This page is itself a Cloudflare Pages Function, so it binds the SAME
+// `REPORTS` namespace the Worker writes to and reads it in-process. No
+// HTTP round-trip, which avoids the classic same-zone subrequest failure
+// (a Pages Function fetching its own hostname loops back into Pages, which
+// has no /api/report route, and returns a 404 → "Report not found").
+//
+// Requires the REPORTS KV binding to be added to the PAGES project too
+// (Pages → Settings → Functions → KV namespace bindings), using the same
+// namespace id as in wrangler.toml.
+const runtimeEnv = (Astro.locals as any)?.runtime?.env;
 
-try {
-  const apiUrl = `${API_ORIGIN}/api/report/${id}`;
-  const res = await fetch(apiUrl);
-  if (res.ok) {
-    report = (await res.json()) as Report;
-  } else {
-    console.error(`Report fetch failed: ${res.status} ${res.statusText} for ${apiUrl}`);
+if (id && runtimeEnv?.REPORTS) {
+  try {
+    const raw = await runtimeEnv.REPORTS.get(`report:${id}`);
+    if (raw) {
+      report = JSON.parse(raw) as Report;
+    } else {
+      console.error(`[report] KV miss for key report:${id}`);
+    }
+  } catch (err) {
+    console.error('[report] KV read failed:', err);
   }
-} catch (err) {
-  console.error('Failed to fetch report:', err);
+}
+
+// FALLBACK PATH — HTTP fetch to the Worker. Used in local dev (where the
+// KV binding may be absent) or if the binding is not configured. Always
+// absolute; override the origin with PUBLIC_API_ORIGIN for testing.
+if (!report && id) {
+  const API_ORIGIN = import.meta.env.PUBLIC_API_ORIGIN || 'https://foundeverywhere.co.uk';
+  const apiUrl = `${API_ORIGIN}/api/report/${id}`;
+  try {
+    const res = await fetch(apiUrl);
+    if (res.ok) {
+      report = (await res.json()) as Report;
+    } else {
+      console.error(`[report] fetch ${apiUrl} → ${res.status} ${res.statusText}`);
+    }
+  } catch (err) {
+    console.error(`[report] fetch ${apiUrl} failed:`, err);
+  }
 }
 
 /* ---------- presentation helpers ---------- */

@@ -658,9 +658,12 @@ async function handleFetchMeta(rawUrl, env) {
   return json({ title }, 200, env);
 }
 
-async function handleGetReport(id, env) {
+async function handleGetReport(id, env, requestUrl) {
+  console.log(`[api/report] request=${requestUrl || '(unknown)'} extractedId=${id}`);
   if (!id) return json({ success: false, message: 'Missing report id.' }, 400, env);
-  const raw = await env.REPORTS.get(`report:${id}`);
+  const key = `report:${id}`;
+  const raw = await env.REPORTS.get(key);
+  console.log(`[api/report] lookup key=${key} found=${!!raw}`);
   if (!raw) {
     return json({ success: false, message: 'Report not found.' }, 404, env);
   }
@@ -697,7 +700,7 @@ export default {
 
     const reportMatch = url.pathname.match(/^\/api\/report\/([^/]+)\/?$/);
     if (reportMatch && request.method === 'GET') {
-      return handleGetReport(decodeURIComponent(reportMatch[1]), env);
+      return handleGetReport(decodeURIComponent(reportMatch[1]), env, request.url);
     }
 
     if (url.pathname === '/api/fetch-meta' && request.method === 'GET') {
