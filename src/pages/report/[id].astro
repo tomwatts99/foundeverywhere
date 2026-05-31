@@ -92,9 +92,16 @@ if (!report && id) {
 const RING_CIRC = 2 * Math.PI * 35; // 219.9 - matches StatsRow geometry
 
 function scoreColour(score: number): string {
-  if (score < 40) return '#EF4444';
-  if (score <= 70) return '#F59E0B';
-  return '#0C7B82';
+  if (score < 40) return '#EF4444'; // 0-39 red
+  if (score < 65) return '#F59E0B'; // 40-64 amber
+  return '#0C7B82'; // 65-100 teal
+}
+
+/** Shorten a context string for card display; full text stays in KV. */
+function truncate(text: string, max = 180): string {
+  const t = (text || '').trim();
+  if (t.length <= max) return t;
+  return t.slice(0, max).trimEnd() + '...';
 }
 
 function formatDate(iso: string): string {
@@ -155,7 +162,26 @@ const overallOffset = RING_CIRC * (1 - overallPct);
             <img src="/images/logo.svg" alt="Found Everywhere" height="40" />
           </a>
           <div class="report__heading">
-            <p class="report__kicker">AI Visibility Report</p>
+            <div class="report__heading-top">
+              <p class="report__kicker">AI Visibility Report</p>
+              <div class="report__actions">
+                <button type="button" class="report__action" id="report-print">
+                  <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6V2.5h8V6" />
+                    <path d="M4 12H2.5V6.5h11V12H12" />
+                    <rect x="4.5" y="10" width="7" height="3.5" />
+                  </svg>
+                  Download PDF
+                </button>
+                <button type="button" class="report__action" id="report-copy" data-default="Copy report link">
+                  <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6.5 9.5a2.5 2.5 0 0 0 3.6.1l2-2a2.5 2.5 0 1 0-3.5-3.6l-1 1" />
+                    <path d="M9.5 6.5a2.5 2.5 0 0 0-3.6-.1l-2 2a2.5 2.5 0 1 0 3.5 3.6l1-1" />
+                  </svg>
+                  <span class="report__action-label">Copy report link</span>
+                </button>
+              </div>
+            </div>
             <p class="report__date">Generated {formatDate(report.generatedAt)}</p>
           </div>
         </header>
@@ -177,6 +203,10 @@ const overallOffset = RING_CIRC * (1 - overallPct);
           </div>
           <p class="report__score-label">AI Visibility Score</p>
           <p class="report__business">{report.businessName}</p>
+          <p class="report__score-note">
+            Scores are generated live from AI systems and may vary slightly between
+            reports as AI responses evolve.
+          </p>
         </section>
 
         <!-- Platform results -->
@@ -184,7 +214,7 @@ const overallOffset = RING_CIRC * (1 - overallPct);
           {platforms.map((p) => {
             const colour = scoreColour(p.result.score);
             return (
-              <div class="platform-card">
+              <div class="platform-card" style={`border-color:${colour}`}>
                 <div class="platform-card__head">
                   <img class="platform-card__logo" src={p.logo} alt={p.name} height="22" />
                   <span class="platform-card__name">{p.name}</span>
@@ -199,7 +229,7 @@ const overallOffset = RING_CIRC * (1 - overallPct);
                   <span class="badge badge--confidence">{p.result.confidence} confidence</span>
                 </div>
                 {p.result.context && (
-                  <p class="platform-card__context">{p.result.context}</p>
+                  <p class="platform-card__context">{truncate(p.result.context, 180)}</p>
                 )}
               </div>
             );
@@ -243,6 +273,47 @@ const overallOffset = RING_CIRC * (1 - overallPct);
     </article>
   )}
 </Page>
+
+<script>
+  // Download PDF — uses the browser print dialog + @media print stylesheet.
+  const printBtn = document.getElementById('report-print');
+  if (printBtn) {
+    printBtn.addEventListener('click', () => window.print());
+  }
+
+  // Copy report link — writes the current URL to the clipboard and shows
+  // transient confirmation feedback.
+  const copyBtn = document.getElementById('report-copy');
+  if (copyBtn) {
+    const label = copyBtn.querySelector('.report__action-label') as HTMLElement | null;
+    const original = label ? label.textContent : '';
+    let timer: number | undefined;
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+      } catch {
+        // Fallback for older browsers / insecure contexts.
+        const ta = document.createElement('textarea');
+        ta.value = window.location.href;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch {}
+        document.body.removeChild(ta);
+      }
+      if (label) {
+        label.textContent = 'Link copied!';
+        copyBtn.classList.add('is-copied');
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          label.textContent = original;
+          copyBtn.classList.remove('is-copied');
+        }, 2000);
+      }
+    });
+  }
+</script>
 
 <style>
   /* ============================================================
@@ -308,6 +379,12 @@ const overallOffset = RING_CIRC * (1 - overallPct);
   .report__brand { display: inline-flex; align-items: center; line-height: 0; }
   .report__brand img { display: block; height: 40px; width: auto; }
   .report__heading { text-align: right; }
+  .report__heading-top {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+  }
   .report__kicker {
     margin: 0;
     font-family: var(--font-display);
@@ -315,8 +392,38 @@ const overallOffset = RING_CIRC * (1 - overallPct);
     font-size: 15px;
     color: #0D1321;
   }
+  .report__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .report__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 1;
+    color: #0D1321;
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 8px;
+    cursor: pointer;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+  .report__action svg { flex-shrink: 0; }
+  .report__action:hover { border-color: #CBD5E1; background: #F7F9FC; }
+  .report__action.is-copied {
+    color: #0C7B82;
+    border-color: #0C7B82;
+  }
   .report__date {
-    margin: 4px 0 0;
+    margin: 8px 0 0;
     font-family: var(--font-mono);
     font-size: 11px;
     color: #64748B;
@@ -370,6 +477,16 @@ const overallOffset = RING_CIRC * (1 - overallPct);
     font-weight: 600;
     font-size: 18px;
     color: #0D1321;
+  }
+  .report__score-note {
+    margin: 14px auto 0;
+    max-width: 30rem;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-style: italic;
+    line-height: 1.5;
+    color: #64748B;
+    text-wrap: pretty;
   }
 
   /* ---------- Platform cards ---------- */
@@ -548,9 +665,74 @@ const overallOffset = RING_CIRC * (1 - overallPct);
      ============================================================ */
   @media (max-width: 48rem) {
     .report__wrap { padding-block: 40px; }
+    .report__header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .report__heading { text-align: left; width: 100%; }
+    .report__heading-top { justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .report__actions { flex-wrap: wrap; }
     .report__platforms { grid-template-columns: 1fr; }
     .report__recs-title { font-size: 24px; }
     .report__cta { padding: 28px; }
     .report__cta-title { font-size: 24px; }
+  }
+
+  /* ============================================================
+     PRINT — clean PDF output via the browser print dialog
+     ============================================================ */
+  @media print {
+    /* Hide site chrome and on-screen-only controls. */
+    :global(header.nav),
+    :global(.nav),
+    :global(footer),
+    :global(.footer),
+    .report__actions,
+    .report__cta {
+      display: none !important;
+    }
+
+    :global(html),
+    :global(body),
+    .report {
+      background: #FFFFFF !important;
+      color: #0D1321 !important;
+    }
+
+    .report__wrap {
+      max-width: 100%;
+      padding: 0 !important;
+      margin: 0 auto;
+    }
+
+    /* Keep the brand + report label + date at the top of the printed page. */
+    .report__header {
+      border-bottom: 1px solid #000 !important;
+      padding-bottom: 12px;
+    }
+    .report__heading-top { justify-content: flex-end; }
+
+    /* Flatten cards: no shadows, hairline borders, no page-break splits. */
+    .platform-card,
+    .rec-card {
+      border: 1px solid #C9D2DE !important;
+      box-shadow: none !important;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .report__score { margin-block: 28px; break-inside: avoid; }
+    .report__platforms {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .report__recs { margin-top: 32px; }
+    .report__recs-title { font-size: 20px; }
+    .rec-card { padding: 16px; }
+
+    /* Tighten type for print. */
+    .report__business { font-size: 15px; }
+    .rec-card__title { font-size: 14px; }
+    .rec-card__body { font-size: 12px; }
+    .platform-card__context { font-size: 12px; }
+
+    /* Avoid awkward link URL expansion. */
+    a { text-decoration: none !important; color: inherit !important; }
   }
 </style>

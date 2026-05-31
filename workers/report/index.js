@@ -90,7 +90,7 @@ function normaliseResult(parsed) {
       ? parsed.confidence
       : 'low',
     mentions: Array.isArray(parsed?.mentions) ? parsed.mentions.slice(0, 8) : [],
-    context: typeof parsed?.context === 'string' ? parsed.context : '',
+    context: typeof parsed?.context === 'string' ? stripMarkdown(parsed.context) : '',
     score,
   };
 }
@@ -99,6 +99,30 @@ function clampScore(v) {
   const n = Number(v);
   if (!Number.isFinite(n)) return 0;
   return Math.max(0, Math.min(100, Math.round(n)));
+}
+
+/**
+ * Strip markdown/citation noise out of AI prose before it is stored, so
+ * the report renders clean text rather than raw **bold**, ## headings,
+ * [1][2] citation markers, etc.
+ */
+function stripMarkdown(text) {
+  if (!text) return '';
+  return String(text)
+    // bold / italic markers (**x**, __x__, *x*, _x_)
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/__([^_]+)__/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/_([^_]+)_/g, '$1')
+    // bracketed citation markers like [1] [2][3]
+    .replace(/\[\d+\]/g, '')
+    // markdown headings (## , ### at line starts or inline)
+    .replace(/#{1,6}\s*/g, '')
+    // stray leftover heading hashes
+    .replace(/`+/g, '')
+    // collapse whitespace
+    .replace(/\s{2,}/g, ' ')
+    .trim();
 }
 
 function locationClause(location) {
@@ -238,8 +262,9 @@ function interpretPerplexity(text, businessName) {
     confidence = isNegative ? 'high' : 'low';
   }
 
-  // First two sentences as context.
-  const sentences = text.replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+/);
+  // First two sentences as context (markdown/citations stripped).
+  const cleaned = stripMarkdown(text);
+  const sentences = cleaned.replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+/);
   const context = sentences.slice(0, 2).join(' ');
 
   return {
@@ -505,7 +530,8 @@ async function handleGenerateReport(request, env) {
      title) becomes the context handed to every AI prompt in place of a
      sector dropdown. Falls back to the hostname if the fetch fails. */
   const meta = await fetchSiteMeta(websiteUrl);
-  const businessName = meta.title || hostnameFromUrl(websiteUrl) || 'this business';
+  const businessName =
+    cleanBusinessName(meta.title) || hostnameFromUrl(websiteUrl) || 'this business';
   const businessContext = [meta.title, meta.description]
     .filter(Boolean)
     .join(' — ')
@@ -615,6 +641,20 @@ function extractDescription(html) {
   return null;
 }
 
+/**
+ * Turn a raw page <title> into a clean business name: drop everything
+ * after the first separator (| - – — :) and cap at 50 chars.
+ */
+function cleanBusinessName(rawTitle) {
+  if (!rawTitle) return null;
+  let name = String(rawTitle).trim();
+  // Cut at the first common title separator.
+  name = name.split(/\s*[|\-–—:]\s*/)[0].trim();
+  if (!name) return null;
+  if (name.length > 50) name = name.slice(0, 50).trim();
+  return name || null;
+}
+
 function hostnameFromUrl(rawUrl) {
   try {
     let target = String(rawUrl).trim();
@@ -623,9 +663,7 @@ function hostnameFromUrl(rawUrl) {
   } catch {
     return null;
   }
-}
-
-/**
+}/**
  * Fetch a URL and pull its title + description. Returns
  * { title, description } with null fields on any failure — never throws.
  */
