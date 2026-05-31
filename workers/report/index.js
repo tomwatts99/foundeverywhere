@@ -948,6 +948,192 @@ async function handleGetReport(id, env, requestUrl) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Contact form                                                        */
+/* ------------------------------------------------------------------ */
+
+/** Escape user-supplied text before interpolating into email HTML. */
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/** Internal notification email — plain, scannable detail table. */
+function buildContactNotificationHtml(d) {
+  const rows = [
+    ['Name', `${d.firstName} ${d.lastName}`.trim()],
+    ['Email', d.email],
+    ['Website', d.websiteUrl || '—'],
+    ['How can we help', d.helpWith || '—'],
+    ['Message', d.message],
+  ]
+    .map(
+      ([label, value]) => `
+            <tr>
+              <td style="padding:12px 16px;border-bottom:1px solid #EEF2F7;vertical-align:top;width:150px;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#64748B;">${escapeHtml(label)}</td>
+              <td style="padding:12px 16px;border-bottom:1px solid #EEF2F7;vertical-align:top;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.55;color:#0D1321;white-space:pre-wrap;">${escapeHtml(value)}</td>
+            </tr>`,
+    )
+    .join('');
+
+  return `<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#FFFFFF;font-family:Helvetica,Arial,sans-serif;color:#0D1321;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+            <tr>
+              <td style="padding:8px 16px 16px;">
+                <h1 style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;color:#0D1321;">New enquiry from ${escapeHtml(`${d.firstName} ${d.lastName}`.trim())}</h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 16px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #EEF2F7;border-radius:10px;border-collapse:separate;overflow:hidden;">${rows}</table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:20px 16px;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#94A3B8;">
+                Sent from foundeverywhere.co.uk contact form.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
+/** Confirmation email to the submitter — branded, matches the report email. */
+function buildContactConfirmationHtml(d) {
+  const summary = [
+    ['Name', `${d.firstName} ${d.lastName}`.trim()],
+    ['Email', d.email],
+    ['Website', d.websiteUrl || '—'],
+    ['How can we help', d.helpWith || '—'],
+    ['Message', d.message],
+  ]
+    .map(
+      ([label, value]) => `
+                  <tr>
+                    <td style="padding:10px 0;border-bottom:1px solid #EEF2F7;vertical-align:top;width:140px;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#64748B;">${escapeHtml(label)}</td>
+                    <td style="padding:10px 0;border-bottom:1px solid #EEF2F7;vertical-align:top;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.55;color:#0D1321;white-space:pre-wrap;">${escapeHtml(value)}</td>
+                  </tr>`,
+    )
+    .join('');
+
+  return `<!doctype html>
+<html>
+  <body style="margin:0;padding:0;background:#F7F9FC;font-family:Helvetica,Arial,sans-serif;color:#0D1321;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F7F9FC;padding:32px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFFFF;border:1px solid #E4E8EF;border-radius:16px;overflow:hidden;">
+            <tr>
+              <td style="padding:32px 40px 8px;">
+                <img src="https://foundeverywhere.co.uk/images/email-logo.png" alt="Found Everywhere" width="180" height="50" style="display:block;width:180px;height:auto;border:0;outline:none;text-decoration:none;" />
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:8px 40px 0;font-size:16px;line-height:1.6;color:#0D1321;">
+                <p style="margin:16px 0 0;">Hi ${escapeHtml(d.firstName)},</p>
+                <p style="margin:16px 0 0;">Thanks for getting in touch. We have received your message and will come back to you shortly.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:24px 40px 0;">
+                <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#64748B;font-family:Helvetica,Arial,sans-serif;margin-bottom:4px;">What you sent us</div>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${summary}</table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:28px 40px 32px;border-top:1px solid #E4E8EF;font-size:12px;line-height:1.6;color:#94A3B8;text-align:center;">
+                Found Everywhere &mdash; <a href="https://foundeverywhere.co.uk" style="color:#94A3B8;">foundeverywhere.co.uk</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
+/** Fire one Resend email; never throws — returns true/false. */
+async function sendResendEmail(env, payload) {
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`Resend ${res.status}: ${body}`);
+    }
+    return true;
+  } catch (err) {
+    console.error('Contact email send failed:', err);
+    return false;
+  }
+}
+
+async function handleContact(request, env) {
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ error: 'Please fill in all required fields.' }, 400, env);
+  }
+
+  const firstName = (payload.firstName || '').toString().trim();
+  const lastName = (payload.lastName || '').toString().trim();
+  const email = (payload.email || '').toString().trim();
+  const websiteUrl = (payload.websiteUrl || '').toString().trim();
+  const helpWith = (payload.helpWith || '').toString().trim();
+  const message = (payload.message || '').toString().trim();
+
+  // Required: first name, email, message.
+  if (!firstName || !email || !message) {
+    return json({ error: 'Please fill in all required fields.' }, 400, env);
+  }
+
+  const details = { firstName, lastName, email, websiteUrl, helpWith, message };
+  const fullName = `${firstName} ${lastName}`.trim();
+
+  // Both emails are best-effort. A failure here must NOT surface to the user.
+  await Promise.all([
+    sendResendEmail(env, {
+      from: 'Found Everywhere Website <hello@foundeverywhere.co.uk>',
+      to: 'hello@foundeverywhere.co.uk',
+      reply_to: email,
+      subject: `New enquiry from ${fullName}`,
+      html: buildContactNotificationHtml(details),
+    }),
+    sendResendEmail(env, {
+      from: 'Found Everywhere <hello@foundeverywhere.co.uk>',
+      to: email,
+      subject: `Thanks for getting in touch, ${firstName}`,
+      html: buildContactConfirmationHtml(details),
+    }),
+  ]);
+
+  return json(
+    { success: true, message: 'Thanks for getting in touch. We will be back in touch shortly.' },
+    200,
+    env,
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* Entry                                                               */
 /* ------------------------------------------------------------------ */
 
@@ -975,6 +1161,21 @@ export default {
     const reportMatch = url.pathname.match(/^\/api\/report\/([^/]+)\/?$/);
     if (reportMatch && request.method === 'GET') {
       return handleGetReport(decodeURIComponent(reportMatch[1]), env, request.url);
+    }
+
+    if (url.pathname === '/api/contact' && request.method === 'POST') {
+      try {
+        return await handleContact(request, env);
+      } catch (err) {
+        console.error('contact fatal:', err);
+        // Even on an unexpected error, do not surface a backend failure;
+        // the user's message may still have reached us.
+        return json(
+          { success: true, message: 'Thanks for getting in touch. We will be back in touch shortly.' },
+          200,
+          env,
+        );
+      }
     }
 
     if (url.pathname === '/api/fetch-meta' && request.method === 'GET') {
