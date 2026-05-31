@@ -24,53 +24,111 @@ const PLATFORMS = [
   { src: '/images/brands/claude.svg',     name: 'Claude' },
   { src: '/images/brands/gemini.svg',     name: 'Gemini' },
 ] as const;
+
+/* Background grid coordinates (viewBox 1440 × 800, 80px step). */
+const GRID_V = Array.from({ length: 1440 / 80 + 1 }, (_, i) => i * 80); // 0…1440
+const GRID_H = Array.from({ length: 800 / 80 + 1 }, (_, i) => i * 80); // 0…800
+
+/* Pulsing dots: position + per-dot animation timing. */
+const HERO_DOTS = [
+  { cx: 120, cy: 80, dur: '4s', delay: '0s' },
+  { cx: 1320, cy: 120, dur: '5s', delay: '0.8s' },
+  { cx: 200, cy: 400, dur: '3.4s', delay: '1.6s' },
+  { cx: 1240, cy: 350, dur: '4.6s', delay: '0.4s' },
+  { cx: 680, cy: 100, dur: '3s', delay: '1.2s' },
+] as const;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="container hero__inner">
+  {/* Decorative background layer — sits behind all content (z-index 0). */}
+  <svg
+    class="hero__bg"
+    viewBox="0 0 1440 800"
+    preserveAspectRatio="xMidYMid slice"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <defs>
+      <radialGradient id="hero-glow-1" cx="50%" cy="40%" r="50%">
+        <stop offset="0%" stop-color="#0C7B82" stop-opacity="0.18" />
+        <stop offset="100%" stop-color="#0C7B82" stop-opacity="0" />
+      </radialGradient>
+      <radialGradient id="hero-glow-2" cx="15%" cy="85%" r="30%">
+        <stop offset="0%" stop-color="#0C7B82" stop-opacity="0.08" />
+        <stop offset="100%" stop-color="#0C7B82" stop-opacity="0" />
+      </radialGradient>
+    </defs>
 
-    <p class="hero__eyebrow">SEO + LLM visibility</p>
+    <rect x="0" y="0" width="1440" height="800" fill="url(#hero-glow-1)" />
+    <rect x="0" y="0" width="1440" height="800" fill="url(#hero-glow-2)" />
 
-    <h1 id="hero-title" class="hero__title">Be found on</h1>
+    <g class="hero__grid" stroke="#0C7B82" stroke-width="0.5" opacity="0.1">
+      {GRID_H.map((y) => (
+        <line x1="0" y1={y} x2="1440" y2={y} />
+      ))}
+      {GRID_V.map((x) => (
+        <line x1={x} y1="0" x2={x} y2="800" />
+      ))}
+    </g>
 
-    {/* Rotating platform logo, directly under the headline. */}
-    <div class="hero__platforms">
-      <div class="hero__platforms-cycle" id="hero-platforms-cycle">
-        <img
-          class="hero__platforms-logo"
-          src={PLATFORMS[0].src}
-          alt={PLATFORMS[0].name}
-          width="160"
-          height="40"
-        />
+    {HERO_DOTS.map((d, i) => (
+      <circle
+        class={`hero__dot hero__dot--${i + 1}`}
+        cx={d.cx}
+        cy={d.cy}
+        r="3"
+        fill="#0C7B82"
+        style={`--dot-dur:${d.dur};--dot-delay:${d.delay}`}
+      />
+    ))}
+  </svg>
+
+  <div class="hero__layer">
+    <div class="container hero__inner">
+
+      <p class="hero__eyebrow">SEO + LLM visibility</p>
+
+      <h1 id="hero-title" class="hero__title">Be found on</h1>
+
+      {/* Rotating platform logo, directly under the headline. */}
+      <div class="hero__platforms">
+        <div class="hero__platforms-cycle" id="hero-platforms-cycle">
+          <img
+            class="hero__platforms-logo"
+            src={PLATFORMS[0].src}
+            alt={PLATFORMS[0].name}
+            width="160"
+            height="40"
+          />
+        </div>
+
+        {/* Reduced-motion fallback: static row of all six logos. */}
+        <ul class="hero__platforms-static" role="list" aria-label="Platforms we optimise for">
+          {PLATFORMS.map((p) => (
+            <li>
+              <img src={p.src} alt={p.name} height="40" />
+            </li>
+          ))}
+        </ul>
       </div>
 
-      {/* Reduced-motion fallback: static row of all six logos. */}
-      <ul class="hero__platforms-static" role="list" aria-label="Platforms we optimise for">
-        {PLATFORMS.map((p) => (
-          <li>
-            <img src={p.src} alt={p.name} height="40" />
-          </li>
-        ))}
-      </ul>
+      <p class="hero__lead">
+        We audit and optimise your website so it ranks in Google and gets
+        cited by ChatGPT, Claude, Perplexity, and Gemini. Wherever
+        your customers are searching.
+      </p>
+
+      <div class="hero__cta">
+        <a href="/free-visibility-report/" class="hero__btn hero__btn--primary">
+          Get your free report <span aria-hidden="true" class="hero__btn-arrow">&#x2197;</span>
+        </a>
+        <a href="/how-it-works/" class="hero__btn hero__btn--ghost">How it works</a>
+      </div>
+
+      <p class="hero__platforms-strip" aria-label="Platforms we optimise for">
+        ChatGPT · Google · Copilot · Perplexity · Claude · Gemini
+      </p>
     </div>
-
-    <p class="hero__lead">
-      We audit and optimise your website so it ranks in Google and gets
-      cited by ChatGPT, Claude, Perplexity, and Gemini. Wherever
-      your customers are searching.
-    </p>
-
-    <div class="hero__cta">
-      <a href="/free-visibility-report/" class="hero__btn hero__btn--primary">
-        Get your free report <span aria-hidden="true" class="hero__btn-arrow">&#x2197;</span>
-      </a>
-      <a href="/how-it-works/" class="hero__btn hero__btn--ghost">How it works</a>
-    </div>
-
-    <p class="hero__platforms-strip" aria-label="Platforms we optimise for">
-      ChatGPT · Google · Copilot · Perplexity · Claude · Gemini
-    </p>
   </div>
 </section>
 
@@ -112,11 +170,38 @@ const PLATFORMS = [
      SHELL
      ============================================================ */
   .hero {
+    position: relative;
     background: #0D1826;
     color: #FFFFFF;
     padding-block: clamp(5rem, 4rem + 6vw, 9rem);
     text-align: center;
     overflow: hidden;
+  }
+
+  /* ---------- Decorative background layer ---------- */
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero__dot { opacity: 0.15; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__dot {
+      animation: hero-dot-pulse var(--dot-dur, 4s) ease-in-out var(--dot-delay, 0s) infinite;
+    }
+  }
+  @keyframes hero-dot-pulse {
+    0%, 100% { opacity: 0.15; }
+    50%      { opacity: 0.4; }
+  }
+
+  .hero__layer {
+    position: relative;
+    z-index: 1;
   }
 
   .hero__inner {

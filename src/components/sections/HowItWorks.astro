@@ -150,15 +150,19 @@ const STEPS = [
     .how__step:not(:last-child)::after { display: none; }
 
     /* Each step becomes a full-width card lifted off the surface,
-       with a teal accent rail on the left. */
+       with a left accent rail that tints teal on hover. */
     .how__step {
       background: #FFFFFF;
       border: 1px solid #D4DCE8;
-      border-left: 3px solid #0C7B82;
+      border-left: 3px solid #E4E8EF;
       border-radius: 10px;
       padding: 20px 20px 20px 24px;
       box-shadow: 0 2px 8px rgba(13, 19, 33, 0.06);
       gap: 8px;
+      transition: border-left-color 220ms ease;
+    }
+    .how__step:hover {
+      border-left-color: #0C7B82;
     }
     .how__step-title { font-size: 18px; }
     .how__step-desc  { font-size: 15px; }

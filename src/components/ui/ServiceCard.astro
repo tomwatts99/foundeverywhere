@@ -22,6 +22,7 @@ const { number, title, description, href } = Astro.props;
 ---
 
 <a href={href} class="ui-card" aria-label={title}>
+  <span class="ui-card__accent" aria-hidden="true"></span>
   {Astro.slots.has('icon') && (
     <span class="ui-card__icon" aria-hidden="true"><slot name="icon" /></span>
   )}
@@ -41,6 +42,8 @@ const { number, title, description, href } = Astro.props;
 <style>
   .ui-card {
     --card-border: #E4E8EF;
+    position: relative;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -60,6 +63,21 @@ const { number, title, description, href } = Astro.props;
     transform: translateY(-3px);
     --card-border: #0C7B82;
     box-shadow: 0 12px 24px rgba(12, 123, 130, 0.08);
+  }
+
+  /* Teal left-accent border: neutral grey by default, tints teal on hover. */
+  .ui-card__accent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #E4E8EF;
+    border-radius: 3px 0 0 3px;
+    transition: background 220ms ease;
+  }
+  .ui-card:hover .ui-card__accent {
+    background: #0C7B82;
   }
   .ui-card:focus-visible {
     --card-border: #0C7B82;
