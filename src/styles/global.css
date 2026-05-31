@@ -6,6 +6,24 @@
 @import './tokens.css';
 
 /* ============================================================
+   0. FONTS: critical heading weight (CDN, preloaded)
+   Outfit 700 is the LCP heading weight, so Base.astro preloads it from
+   the Google Fonts CDN and this @font-face points at the exact same
+   gstatic woff2 URL so the preload is consumed (no double download).
+   font-display:swap shows the fallback immediately and swaps in Outfit
+   when ready, so there is no invisible-text (FOIT) delay. The remaining
+   weights (Outfit 500/600, Inter, JetBrains Mono) load via the Google
+   stylesheet, which also ships a 700 face as a fallback.
+   ============================================================ */
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/outfit/v11/QGYyz_MVcBeNP4NjuGObqx1XmO1I4TC0C4G-EiAou6Y.woff2') format('woff2');
+}
+
+/* ============================================================
    1. RESET: modern, minimal
    ============================================================ */
 

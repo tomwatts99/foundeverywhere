@@ -2,123 +2,228 @@
 export const prerender = true;
 
 /**
- * contact.astro: book-an-audit page.
+ * contact.astro: get-in-touch page.
  *
- * Dark hero band + white card holding a vanilla HTML form. The form
- * posts to a mailto: address with `text/plain` so it works without
- * a backend; replace with a real endpoint when one is wired up.
- * No JavaScript: native `required` validation only.
+ * Dark hero band → two-column body (vanilla HTML form + contact details
+ * and trust signals) → FAQ. The form posts to a mailto: address with
+ * `text/plain` so it works without a backend; replace with a real
+ * endpoint when one is wired up. Native `required` validation only.
+ *
+ * Schema flow: a BreadcrumbList (Home > Contact) and a FAQPage flow
+ * through schemaExtras into the single <head> @graph.
  */
 import Page from '../layouts/Page.astro';
+import FAQItem from '../components/ui/FAQItem.astro';
+import { breadcrumbSchema, faqPageSchema } from '../lib/schema';
+import { SITE } from '../lib/site';
+
+const HELP_OPTIONS = [
+  'Free visibility report',
+  'SEO audit',
+  'LLM visibility',
+  'Technical SEO',
+  'Visibility that compounds',
+  'Local SEO',
+  'Expert content',
+  'Automotive SEO',
+  'Hospitality SEO',
+  'Professional services SEO',
+  'General enquiry',
+];
+
+const CONTACT_FAQS = [
+  {
+    question: 'Is the initial consultation free?',
+    answer:
+      'Yes. We have a conversation, understand what you need, and give you an honest view of whether we can help and what it would involve. No charge, no obligation.',
+  },
+  {
+    question: 'What should I have ready before getting in touch?',
+    answer:
+      'Just your website URL and a rough idea of what you are trying to achieve. We will take it from there.',
+  },
+  {
+    question: 'Do you work with businesses outside the UK?',
+    answer:
+      'Yes. Our focus is UK businesses but we work with clients internationally. Get in touch and we will let you know if we are a good fit.',
+  },
+  {
+    question: 'What if I just want a quick question answered?',
+    answer:
+      'Go ahead and ask. We are happy to help without any expectation of it going further.',
+  },
+];
+
+const pageUrl = `${SITE.url}/contact/`;
+const schemaExtras = [
+  breadcrumbSchema(
+    [
+      { name: 'Home', item: `${SITE.url}/` },
+      { name: 'Contact', item: pageUrl },
+    ],
+    pageUrl,
+  ),
+  faqPageSchema(
+    CONTACT_FAQS.map((f) => ({ question: f.question, answer: f.answer })),
+    pageUrl,
+  ),
+];
 ---
 
 <Page
-  title="Book a free audit | Found Everywhere"
-  description="Book your free SEO and LLM visibility audit. No commitment. Just clarity on where your site stands and what needs fixing."
+  title="Get in touch | Found Everywhere"
+  description="Tell us about your business and let's talk about growing your search visibility, rankings, and AI presence."
   path="/contact/"
+  schemaExtras={schemaExtras}
   bleed
 >
-  <!-- ============ HERO ============ -->
+  <!-- ============ 1. HERO ============ -->
   <section class="contact-hero" aria-labelledby="contact-title">
     <div class="container">
       <p class="contact-hero__eyebrow">Get in touch</p>
-      <h1 id="contact-title" class="contact-hero__title">Book your free audit</h1>
+      <h1 id="contact-title" class="contact-hero__title">Let's grow your visibility</h1>
       <p class="contact-hero__lead">
-        No commitment. Just clarity on where you stand and what needs fixing.
+        Tell us about your business and what you are trying to achieve. Better rankings,
+        more AI citations, stronger local presence &mdash; let's talk about what is possible.
       </p>
     </div>
   </section>
 
-  <!-- ============ FORM ============ -->
-  <section class="contact-form-section">
-    <div class="container">
+  <!-- ============ 2. FORM + DETAILS ============ -->
+  <section class="contact-body">
+    <div class="container contact-body__grid">
+      <!-- Left: form card -->
       <form
         class="contact-card"
         action="mailto:hello@foundeverywhere.co.uk"
         method="POST"
         enctype="text/plain"
-        aria-label="Audit request form"
+        aria-label="Contact form"
       >
-        <div class="field">
-          <label class="field__label" for="contact-name">Name</label>
-          <input
-            class="field__input"
-            type="text"
-            id="contact-name"
-            name="Name"
-            autocomplete="name"
-            required
-          />
+        <h2 class="contact-card__heading">Send us a message</h2>
+
+        <div class="contact-card__row">
+          <div class="field">
+            <label class="field__label" for="contact-first">First name</label>
+            <input class="field__input" type="text" id="contact-first" name="First name" autocomplete="given-name" required />
+          </div>
+          <div class="field">
+            <label class="field__label" for="contact-last">Last name</label>
+            <input class="field__input" type="text" id="contact-last" name="Last name" autocomplete="family-name" required />
+          </div>
         </div>
 
         <div class="field">
-          <label class="field__label" for="contact-email">Email</label>
-          <input
-            class="field__input"
-            type="email"
-            id="contact-email"
-            name="Email"
-            autocomplete="email"
-            required
-          />
+          <label class="field__label" for="contact-email">Email address</label>
+          <input class="field__input" type="email" id="contact-email" name="Email" autocomplete="email" required />
         </div>
 
         <div class="field">
           <label class="field__label" for="contact-url">Website URL</label>
-          <input
-            class="field__input"
-            type="url"
-            id="contact-url"
-            name="Website"
-            placeholder="https://"
-            autocomplete="url"
-            required
-          />
+          <input class="field__input" type="url" id="contact-url" name="Website" placeholder="https://yourdomain.co.uk" autocomplete="url" />
         </div>
 
         <div class="field">
-          <label class="field__label" for="contact-message">Tell us about your site</label>
+          <label class="field__label" for="contact-help">How can we help?</label>
+          <div class="field__select-wrap">
+            <select class="field__input field__select" id="contact-help" name="How can we help">
+              {HELP_OPTIONS.map((opt) => <option value={opt}>{opt}</option>)}
+            </select>
+            <span class="field__select-chevron" aria-hidden="true"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="contact-message">Message</label>
           <textarea
             class="field__input field__textarea"
             id="contact-message"
             name="Message"
-            rows="4"
+            rows="5"
+            placeholder="Tell us about your business and the site you want us to look at."
           ></textarea>
         </div>
 
         <button class="contact-submit" type="submit">
-          Send my audit request
+          Send message
           <span aria-hidden="true" class="contact-submit__arrow">&#x2197;</span>
         </button>
+
+        <p class="contact-card__privacy">Your details are never shared with third parties.</p>
       </form>
 
-      <ul class="contact-trust" role="list">
-        <li>
-          <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m3 8 3.5 3.5L13 4" />
-          </svg>
-          <span>Free audit</span>
-        </li>
-        <li>
-          <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m3 8 3.5 3.5L13 4" />
-          </svg>
-          <span>No commitment</span>
-        </li>
-        <li>
-          <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m3 8 3.5 3.5L13 4" />
-          </svg>
-          <span>Response within 24 hours</span>
-        </li>
-      </ul>
+      <!-- Right: details + trust -->
+      <aside class="contact-aside" aria-label="Contact details">
+        <div class="contact-info">
+          <div class="info-block">
+            <p class="info-block__eyebrow">Email</p>
+            <a class="info-block__primary info-block__link" href="mailto:hello@foundeverywhere.co.uk">hello@foundeverywhere.co.uk</a>
+          </div>
+          <div class="info-block">
+            <p class="info-block__eyebrow">What happens next</p>
+            <p class="info-block__primary">A proper conversation</p>
+            <p class="info-block__sub">We read every message and come back with an honest view of what is possible for your business.</p>
+          </div>
+          <div class="info-block">
+            <p class="info-block__eyebrow">Based in</p>
+            <p class="info-block__primary">Brighton, UK</p>
+            <p class="info-block__sub">Working with businesses across the UK and beyond.</p>
+          </div>
+        </div>
+
+        <hr class="contact-aside__divider" />
+
+        <ul class="contact-trust" role="list">
+          <li>
+            <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 8 3.5 3.5L13 4" />
+            </svg>
+            <span>Free initial consultation</span>
+          </li>
+          <li>
+            <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 8 3.5 3.5L13 4" />
+            </svg>
+            <span>No pushy sales process</span>
+          </li>
+          <li>
+            <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 8 3.5 3.5L13 4" />
+            </svg>
+            <span>Honest advice even if that means we are not the right fit</span>
+          </li>
+        </ul>
+
+        <div class="contact-promo">
+          <p class="contact-promo__text">
+            Not ready to get in touch yet? Get your free AI visibility report and see exactly
+            where you stand.
+          </p>
+          <a class="contact-promo__link" href="/free-visibility-report/">
+            Get your free report <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 3. FAQ ============ -->
+  <section class="contact-faq" aria-labelledby="contact-faq-title">
+    <div class="container">
+      <p class="contact-faq__eyebrow">Before you get in touch</p>
+      <h2 id="contact-faq-title" class="contact-faq__title">Quick answers</h2>
+      <div class="contact-faq__list">
+        {CONTACT_FAQS.map((faq) => (
+          <FAQItem question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
     </div>
   </section>
 </Page>
 
 <style>
   /* ============================================================
-     HERO
+     1. HERO
      ============================================================ */
   .contact-hero {
     background: #0D1826;
@@ -147,33 +252,52 @@ import Page from '../layouts/Page.astro';
   }
   .contact-hero__lead {
     margin: 16px auto 0;
-    max-width: 36rem;
+    max-width: 520px;
     font-family: var(--font-body);
     font-weight: 400;
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.65;
     color: #94A3B8;
     text-wrap: pretty;
   }
 
   /* ============================================================
-     FORM SECTION
+     2. BODY: FORM + DETAILS
      ============================================================ */
-  .contact-form-section {
+  .contact-body {
     background: #FFFFFF;
     padding-block: 80px;
   }
+  .contact-body__grid {
+    max-width: 960px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 64px;
+    align-items: start;
+  }
 
+  /* ---------- Form card ---------- */
   .contact-card {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 40px;
     background: #FFFFFF;
     border: 0.5px solid #E4E8EF;
     border-radius: 16px;
+    padding: 40px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+  }
+  .contact-card__heading {
+    margin: 0 0 4px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.2;
+    color: #0D1321;
+  }
+  .contact-card__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
   }
 
   /* ---------- Field ---------- */
@@ -211,8 +335,29 @@ import Page from '../layouts/Page.astro';
   }
   .field__textarea {
     resize: vertical;
-    min-height: calc(4 * 1.5em + 20px);
+    min-height: calc(5 * 1.5em + 20px);
     font-family: var(--font-body);
+  }
+
+  /* ---------- Select ---------- */
+  .field__select-wrap { position: relative; }
+  .field__select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 38px;
+    cursor: pointer;
+  }
+  .field__select-chevron {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 1.5px solid #64748B;
+    border-bottom: 1.5px solid #64748B;
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
   }
 
   /* ---------- Submit ---------- */
@@ -237,51 +382,175 @@ import Page from '../layouts/Page.astro';
                 border-color var(--duration-fast) var(--ease-out),
                 transform var(--duration-fast) var(--ease-out);
   }
-  .contact-submit:hover {
-    background: #0A6970;
-    border-color: #0A6970;
-  }
+  .contact-submit:hover { background: #0A6970; border-color: #0A6970; }
   .contact-submit:active { transform: translateY(1px); }
   .contact-submit__arrow {
     display: inline-block;
     transition: transform var(--duration-base) var(--ease-out);
   }
-  .contact-submit:hover .contact-submit__arrow {
-    transform: translate(2px, -2px);
+  .contact-submit:hover .contact-submit__arrow { transform: translate(2px, -2px); }
+
+  .contact-card__privacy {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 12px;
+    line-height: 1.5;
+    color: #64748B;
   }
 
-  /* ============================================================
-     TRUST ROW
-     ============================================================ */
+  /* ---------- Aside: info blocks ---------- */
+  .contact-aside {
+    display: flex;
+    flex-direction: column;
+  }
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .info-block__eyebrow {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .info-block__primary {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.35;
+    color: #0D1321;
+  }
+  .info-block__link {
+    color: #0D1321;
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  .info-block__link:hover { color: #0C7B82; }
+  .info-block__sub {
+    margin: 6px 0 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  .contact-aside__divider {
+    border: 0;
+    border-top: 1px solid #E4E8EF;
+    margin: 32px 0;
+  }
+
+  /* ---------- Trust signals ---------- */
   .contact-trust {
     list-style: none;
-    margin: 32px 0 0;
+    margin: 0;
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    column-gap: 32px;
-    row-gap: 12px;
+    flex-direction: column;
+    gap: 12px;
     font-family: var(--font-body);
-    font-size: 13px;
+    font-size: 14px;
+    line-height: 1.5;
     color: #64748B;
   }
   .contact-trust li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    text-wrap: pretty;
+  }
+  .contact-trust svg {
+    color: #0C7B82;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  /* ---------- Promo card ---------- */
+  .contact-promo {
+    margin-top: 32px;
+    background: #E0F4F5;
+    border: 1px solid #0C7B82;
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .contact-promo__text {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    color: #085D63;
+    text-wrap: pretty;
+  }
+  .contact-promo__link {
     display: inline-flex;
     align-items: center;
+    gap: 0.35rem;
+    margin-top: 12px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    color: #0C7B82;
+    text-decoration: none;
+  }
+  .contact-promo__link span {
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .contact-promo__link:hover span { transform: translateX(3px); }
+
+  /* ============================================================
+     3. FAQ
+     ============================================================ */
+  .contact-faq {
+    background: #F7F9FC;
+    padding-block: 80px;
+  }
+  .contact-faq .container { max-width: 720px; }
+  .contact-faq__eyebrow {
+    margin: 0 0 16px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .contact-faq__title {
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 1.4rem + 2vw, 32px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .contact-faq__list {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
     gap: 8px;
   }
-  .contact-trust li + li { margin-top: 0; }
-  .contact-trust svg { color: #0C7B82; flex-shrink: 0; }
 
   /* ============================================================
      MOBILE
      ============================================================ */
   @media (max-width: 48rem) {
     .contact-hero { padding-block: 64px; }
-    .contact-form-section { padding-block: 56px; }
+    .contact-body { padding-block: 56px; }
+    .contact-body__grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
     .contact-card { padding: 28px; }
-    .contact-trust { column-gap: 20px; }
+    .contact-card__row { grid-template-columns: 1fr; }
+    .contact-faq { padding-block: 56px; }
   }
 </style>

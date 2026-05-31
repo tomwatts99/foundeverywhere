@@ -9,7 +9,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" /></noscript>
 
   <link rel="stylesheet" href="src/styles/global.css" />
 
@@ -40,7 +41,7 @@
   <header class="nav" role="banner">
     <div class="container nav__inner">
       <a href="/" class="nav__brand" aria-label="Found Everywhere, home">
-        <img class="nav__logo" src="public/images/logo.svg" alt="Found Everywhere" height="61" />
+        <img class="nav__logo" src="public/images/logo.svg" alt="Found Everywhere" width="180" height="48" />
       </a>
 
       <details class="nav__menu" id="nav-menu" open>
@@ -150,17 +151,17 @@
         <!-- Rotating platform logo, directly under the headline. -->
         <div class="hero__platforms">
           <div class="hero__platforms-cycle" id="hero-platforms-cycle">
-            <img class="hero__platforms-logo" src="public/images/brands/chatgpt.svg" alt="ChatGPT" width="160" height="40" />
+            <img class="hero__platforms-logo" src="public/images/brands/chatgpt.svg" alt="ChatGPT" width="120" height="32" />
           </div>
 
           <!-- Reduced-motion fallback: static row of all six logos. -->
           <ul class="hero__platforms-static" role="list" aria-label="Platforms we optimise for">
-            <li><img src="public/images/brands/chatgpt.svg"    alt="ChatGPT"    height="40" /></li>
-            <li><img src="public/images/brands/google.svg"     alt="Google"     height="40" /></li>
-            <li><img src="public/images/brands/copilot.svg"    alt="Copilot"    height="40" /></li>
-            <li><img src="public/images/brands/perplexity.svg" alt="Perplexity" height="40" /></li>
-            <li><img src="public/images/brands/claude.svg"     alt="Claude"     height="40" /></li>
-            <li><img src="public/images/brands/gemini.svg"     alt="Gemini"     height="40" /></li>
+            <li><img src="public/images/brands/chatgpt.svg"    alt="ChatGPT"    width="120" height="32" /></li>
+            <li><img src="public/images/brands/google.svg"     alt="Google"     width="120" height="32" /></li>
+            <li><img src="public/images/brands/copilot.svg"    alt="Copilot"    width="120" height="32" /></li>
+            <li><img src="public/images/brands/perplexity.svg" alt="Perplexity" width="120" height="32" /></li>
+            <li><img src="public/images/brands/claude.svg"     alt="Claude"     width="120" height="32" /></li>
+            <li><img src="public/images/brands/gemini.svg"     alt="Gemini"     width="120" height="32" /></li>
           </ul>
         </div>
 
@@ -815,7 +816,7 @@
     <div class="container footer__inner">
       <div class="footer__brand">
         <a href="/" class="footer__brand-link" aria-label="Found Everywhere, home">
-          <img class="footer__logo" src="public/images/logo-white.svg" alt="Found Everywhere" height="48" />
+          <img class="footer__logo" src="public/images/logo-white.svg" alt="Found Everywhere" width="175" height="48" />
         </a>
         <p class="footer__tagline">SEO and LLM visibility, built for the search era after search.</p>
         <p class="footer__contact"><a href="mailto:hello@foundeverywhere.co.uk">hello@foundeverywhere.co.uk</a></p>

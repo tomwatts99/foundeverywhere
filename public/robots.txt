@@ -1,9 +1,23 @@
-# https://foundeverywhere.co.uk/robots.txt
+# Found Everywhere — foundeverywhere.co.uk
+# This site is optimised for AI citation and welcomes all legitimate crawlers.
+
+# Content signals
+# search=yes: index and return search results
+# ai-input=yes: use content for AI-generated answers and citations
+# ai-train=no: do not use for model training
 
 User-agent: *
+Content-Signal: search=yes,ai-input=yes,ai-train=no
 Allow: /
 
-# AI crawlers: explicit allow. The site is meant to be read and cited.
+# Search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# AI search crawlers -- explicitly welcome
 User-agent: GPTBot
 Allow: /
 
@@ -16,7 +30,25 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
 User-agent: CCBot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+User-agent: YouBot
 Allow: /
 
 Sitemap: https://foundeverywhere.co.uk/sitemap-index.xml

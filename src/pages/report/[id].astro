@@ -19,6 +19,7 @@ type ModelResult = {
   mentions: string[];
   context: string;
   score: number;
+  queriesChecked?: string[];
 };
 type Recommendation = {
   title: string;
@@ -33,6 +34,8 @@ type Report = {
   websiteUrl: string;
   location: string;
   businessContext?: string;
+  serviceKeywords?: string[];
+  queries?: string[];
   email: string;
   overallScore: number;
   claudeResult: ModelResult;
@@ -159,7 +162,7 @@ const overallOffset = RING_CIRC * (1 - overallPct);
         <!-- Header -->
         <header class="report__header">
           <a href="/" class="report__brand" aria-label="Found Everywhere, home">
-            <img src="/images/logo.svg" alt="Found Everywhere" height="40" />
+            <img src="/images/logo.svg" alt="Found Everywhere" width="146" height="40" />
           </a>
           <div class="report__heading">
             <div class="report__heading-top">
@@ -216,7 +219,7 @@ const overallOffset = RING_CIRC * (1 - overallPct);
             return (
               <div class="platform-card" style={`border-color:${colour}`}>
                 <div class="platform-card__head">
-                  <img class="platform-card__logo" src={p.logo} alt={p.name} height="22" />
+                  <img class="platform-card__logo" src={p.logo} alt={p.name} width="80" height="22" />
                   <span class="platform-card__name">{p.name}</span>
                 </div>
                 <div class="platform-card__score" style={`color:${colour}`}>
@@ -230,6 +233,16 @@ const overallOffset = RING_CIRC * (1 - overallPct);
                 </div>
                 {p.result.context && (
                   <p class="platform-card__context">{truncate(p.result.context, 180)}</p>
+                )}
+                {p.result.queriesChecked && p.result.queriesChecked.length > 0 && (
+                  <div class="platform-card__queries">
+                    <p class="platform-card__queries-label">Searches tested</p>
+                    <ul class="platform-card__queries-list">
+                      {p.result.queriesChecked.map((q) => (
+                        <li class="platform-card__query">{q}</li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
               </div>
             );
@@ -538,6 +551,45 @@ const overallOffset = RING_CIRC * (1 - overallPct);
     font-style: italic;
     text-wrap: pretty;
   }
+  .platform-card__queries {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #EEF2F7;
+  }
+  .platform-card__queries-label {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94A3B8;
+  }
+  .platform-card__queries-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .platform-card__query {
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.45;
+    color: #475569;
+    padding-left: 14px;
+    position: relative;
+    text-wrap: pretty;
+  }
+  .platform-card__query::before {
+    content: '\201C';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #CBD5E1;
+    font-family: var(--font-display);
+  }
+  .platform-card__query::after { content: '\201D'; color: #CBD5E1; }
 
   /* ---------- Badges ---------- */
   .badge {

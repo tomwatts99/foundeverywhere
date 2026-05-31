@@ -24,7 +24,7 @@ const PERPLEXITY_MODEL = 'sonar';
 const OPENAI_MODEL = 'gpt-4o-mini';
 
 const SYSTEM_PROMPT =
-  'You are an AI visibility analyst. You will be given a business name, website, location, and a short description of what the business does (taken from its own website). Your job is to determine whether this business would appear in AI-generated search results. Respond only with valid JSON matching the schema provided.';
+  'You are an AI visibility analyst. You will be given a business name, website, location, a list of the specific services the business offers, and a set of real search queries a customer might ask an AI assistant. Your job is to determine whether this business would appear as a recommended result for those specific queries. Respond only with valid JSON matching the schema provided.';
 
 /* ------------------------------------------------------------------ */
 /* CORS                                                                */
@@ -92,6 +92,12 @@ function normaliseResult(parsed) {
     mentions: Array.isArray(parsed?.mentions) ? parsed.mentions.slice(0, 8) : [],
     context: typeof parsed?.context === 'string' ? stripMarkdown(parsed.context) : '',
     score,
+    // The specific queries the model evaluated. Populated from the
+    // deterministic query set after the call (see handleGenerateReport),
+    // but we keep any the model echoed back as a sensible default.
+    queriesChecked: Array.isArray(parsed?.queriesChecked)
+      ? parsed.queriesChecked.filter((q) => typeof q === 'string').slice(0, 6)
+      : [],
   };
 }
 
@@ -129,17 +135,68 @@ function locationClause(location) {
   return location ? ` in ${location}` : '';
 }
 
-function userPrompt({ businessName, websiteUrl, businessContext, location }) {
-  const ctx = businessContext
-    ? `About the business (taken from its own website): ${businessContext}. `
-    : '';
+/**
+ * Build the concrete search queries we test each AI system against,
+ * derived from the business's actual service keywords plus location.
+ * Deterministic, so every model is judged against (and the report shows)
+ * the exact same list. Returns [] when no keywords are available.
+ */
+function buildSearchQueries(serviceKeywords, location) {
+  const kw = (serviceKeywords || [])
+    .map((k) => (typeof k === 'string' ? k.trim() : ''))
+    .filter(Boolean);
+  if (kw.length === 0) return [];
+
+  const loc = location ? ` in ${location}` : '';
+  const near = location ? ` near ${location}` : '';
+  const queries = [];
+
+  queries.push(`best ${kw[0]}${loc}`);
+  if (kw[1]) queries.push(`${kw[1]}${near}`);
+  queries.push(`recommend a ${kw[0]}`);
+  if (kw[2]) queries.push(`top ${kw[2]}${loc}`);
+  if (kw[3]) queries.push(`who offers ${kw[3]}${loc}`);
+
+  // De-duplicate and cap at 5.
+  return [...new Set(queries)].slice(0, 5);
+}
+
+/**
+ * The shared user prompt for the JSON-returning models (Claude, OpenAI).
+ * When service keywords are available it asks the model to judge the
+ * business against the specific queries; otherwise it falls back to a
+ * generic visibility check so the report still produces a result.
+ */
+function userPrompt({ businessName, websiteUrl, location, serviceKeywords, queries }) {
+  const loc = location || 'not specified';
+  const services = (serviceKeywords || []).filter(Boolean);
+  const queryList = queries || [];
+
+  if (services.length === 0 || queryList.length === 0) {
+    // Fallback: no keywords were extracted — generic visibility check.
+    return (
+      `Analyse the AI search visibility for this business. ` +
+      `Business: ${businessName}. Website: ${websiteUrl}. Location: ${loc}. ` +
+      `Based on your training data, would this business appear when someone asks an AI ` +
+      `assistant to recommend this kind of business${locationClause(location)}? ` +
+      `Return JSON with this exact schema: { found: boolean, confidence: 'high'|'medium'|'low', ` +
+      `mentions: string[], context: string, score: number between 0 and 100, queriesChecked: string[] }`
+    );
+  }
+
+  const queryLines = queryList.map((q) => `'${q}'`).join('\n');
   return (
-    `Analyse the AI search visibility for this business: ` +
-    `Business name: ${businessName}, Website: ${websiteUrl}, Location: ${location || 'not specified'}. ` +
-    ctx +
-    `Based on your training data, would this business appear when someone asks an AI assistant ` +
-    `to recommend this kind of business${locationClause(location)}? ` +
-    `Return JSON with this exact schema: { found: boolean, confidence: 'high'|'medium'|'low', mentions: string[], context: string, score: number between 0 and 100 }`
+    `You are checking whether a specific business appears in AI search results for relevant queries. ` +
+    `Business: ${businessName}. Website: ${websiteUrl}. Location: ${loc}. ` +
+    `This business offers: ${services.join(', ')}.\n\n` +
+    `For each of these search queries, determine if ${businessName} would likely appear as a recommended result:\n` +
+    queryLines +
+    `\n\n` +
+    `Score the business from 0 to 100 based on how likely it is to appear in AI-generated answers for these ` +
+    `specific queries. Consider: does this business have sufficient online presence, reviews, and authority to ` +
+    `appear when someone asks an AI for recommendations in this specific service category and location?\n\n` +
+    `Return JSON: { found: boolean, confidence: 'high'|'medium'|'low', mentions: string[], context: string, ` +
+    `score: number, queriesChecked: string[] }`
   );
 }
 
@@ -174,8 +231,21 @@ async function queryClaude(env, input) {
 }
 
 async function queryPerplexity(env, input) {
-  const { businessName, websiteUrl, businessContext, location } = input;
+  const { businessName, websiteUrl, location, serviceKeywords, queries } = input;
+  const services = (serviceKeywords || []).filter(Boolean);
+  const queryList = queries || [];
   try {
+    const content =
+      services.length > 0 && queryList.length > 0
+        ? `I want to know whether ${businessName} (${websiteUrl}) would appear as a recommended result ` +
+          `when someone asks an AI assistant or searches online for: ` +
+          queryList.map((q) => `"${q}"`).join(', ') +
+          `. This business offers: ${services.join(', ')}${locationClause(location)}. ` +
+          `Do they appear in search results, directories, or online recommendations for these kinds of ` +
+          `queries? Give a brief factual answer.`
+        : `Is ${businessName} (${websiteUrl}) a well-known or recommended business${locationClause(location)}? ` +
+          `Do they appear in search results or online recommendations? Give a brief factual answer.`;
+
     const res = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
@@ -184,15 +254,7 @@ async function queryPerplexity(env, input) {
       },
       body: JSON.stringify({
         model: PERPLEXITY_MODEL,
-        messages: [
-          {
-            role: 'user',
-            content:
-              `Is ${businessName} (${websiteUrl}) a well-known or recommended business${locationClause(location)}? ` +
-              (businessContext ? `Context about what they do, from their website: ${businessContext}. ` : '') +
-              `Do they appear in search results or online recommendations? Give a brief factual answer.`,
-          },
-        ],
+        messages: [{ role: 'user', content }],
       }),
     });
     if (!res.ok) throw new Error(`Perplexity ${res.status}`);
@@ -201,7 +263,7 @@ async function queryPerplexity(env, input) {
     return interpretPerplexity(text, businessName);
   } catch (err) {
     console.error('Perplexity query failed:', err);
-    return { found: false, confidence: 'low', mentions: [], context: '', score: 0 };
+    return { found: false, confidence: 'low', mentions: [], context: '', score: 0, queriesChecked: [] };
   }
 }
 
@@ -273,6 +335,7 @@ function interpretPerplexity(text, businessName) {
     mentions: nameAppears ? [businessName] : [],
     context,
     score: clampScore(score),
+    queriesChecked: [],
   };
 }
 
@@ -303,16 +366,71 @@ async function queryOpenAI(env, input) {
   }
 }
 
+/**
+ * Extract 3–5 specific service keywords describing what the business does,
+ * using a fast Claude Haiku call against the page metadata. These drive the
+ * service-specific search queries every model is then tested against.
+ * Returns [] on any failure — callers fall back to a generic check.
+ */
+async function extractServiceKeywords(env, { businessName, pageTitle, metaDescription, headingText, location }) {
+  try {
+    const prompt =
+      `Based on this website information, extract 3 to 5 specific service keywords or phrases that describe ` +
+      `what this business does. Return as a JSON array of strings. Only return the JSON array, nothing else.\n` +
+      `Business name: ${businessName || 'unknown'}\n` +
+      `Page title: ${pageTitle || 'unknown'}\n` +
+      `Meta description: ${metaDescription || 'unknown'}\n` +
+      `Page heading: ${headingText || 'unknown'}\n` +
+      `Location: ${location || 'not specified'}\n` +
+      `Example output: ["web design agency", "branding studio", "digital marketing", "WordPress development"]`;
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: ANTHROPIC_MODEL,
+        max_tokens: 256,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+    if (!res.ok) throw new Error(`Anthropic keywords ${res.status}`);
+    const data = await res.json();
+    const text = data?.content?.map((b) => b.text).join('') || '';
+    const arr = extractJsonArray(text);
+    if (!Array.isArray(arr)) return [];
+    return arr
+      .map((k) => (typeof k === 'string' ? k.trim() : ''))
+      .filter(Boolean)
+      .slice(0, 5);
+  } catch (err) {
+    console.error('Keyword extraction failed:', err);
+    return [];
+  }
+}
+
 async function generateRecommendations(env, input, scores) {
-  const { businessName } = input;
+  const { businessName, location, serviceKeywords } = input;
   const { claudeScore, perplexityScore, openaiScore, overallScore } = scores;
+  const services = (serviceKeywords || []).filter(Boolean);
   const fallback = defaultRecommendations();
   try {
+    const serviceClause =
+      services.length > 0
+        ? `This business offers: ${services.join(', ')}${locationClause(location)}. ` +
+          `Make every recommendation specific to this type of business and these services — ` +
+          `not generic SEO advice. `
+        : '';
     const prompt =
       `Based on this AI visibility data for ${businessName}: ` +
       `Claude score ${claudeScore}/100, Perplexity score ${perplexityScore}/100, ` +
       `OpenAI score ${openaiScore}/100, overall ${overallScore}/100. ` +
-      `Generate exactly 5 specific, actionable recommendations to improve their AI visibility. ` +
+      serviceClause +
+      `Generate exactly 5 specific, actionable recommendations to improve their AI visibility ` +
+      `for the specific services and location above. ` +
       `Return as JSON array of objects with fields: title (string), description (string), ` +
       `priority ('high'|'medium'|'low'), effort ('quick'|'medium'|'significant').`;
 
@@ -396,9 +514,63 @@ function scoreColour(score) {
   return '#0C7B82';
 }
 
-function buildEmailHtml({ firstName, businessName, overallScore, reportUrl }) {
+function buildEmailHtml({ firstName, businessName, overallScore, reportUrl, platforms }) {
   const colour = scoreColour(overallScore);
   const barPct = Math.max(2, Math.min(100, overallScore));
+
+  // Per-platform breakdown, each listing the exact queries we tested.
+  const list = Array.isArray(platforms) ? platforms : [];
+  const queriesSet =
+    list.find((p) => Array.isArray(p?.result?.queriesChecked) && p.result.queriesChecked.length)
+      ?.result.queriesChecked || [];
+
+  const platformRows = list
+    .map((p) => {
+      const r = p.result || {};
+      const pColour = scoreColour(r.score || 0);
+      const foundLabel = r.found ? 'Found' : 'Not found';
+      const foundColour = r.found ? '#0A6970' : '#DC2626';
+      return `
+        <tr>
+          <td style="padding:12px 0;border-bottom:1px solid #EEF2F7;">
+            <span style="font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:600;color:#0D1321;">${p.name}</span>
+          </td>
+          <td style="padding:12px 0;border-bottom:1px solid #EEF2F7;text-align:right;">
+            <span style="font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;color:${pColour};">${r.score || 0}<span style="color:#94A3B8;font-weight:600;">/100</span></span>
+            <span style="font-family:Helvetica,Arial,sans-serif;font-size:12px;color:${foundColour};margin-left:8px;">${foundLabel}</span>
+          </td>
+        </tr>`;
+    })
+    .join('');
+
+  const queriesItems = queriesSet
+    .map(
+      (q) =>
+        `<li style="font-family:Helvetica,Arial,sans-serif;font-size:13px;line-height:1.6;color:#475569;">&ldquo;${q}&rdquo;</li>`,
+    )
+    .join('');
+
+  const breakdownBlock =
+    list.length === 0
+      ? ''
+      : `
+            <tr>
+              <td style="padding:28px 40px 0;">
+                <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#64748B;font-family:Helvetica,Arial,sans-serif;margin-bottom:4px;">Score by platform</div>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${platformRows}</table>
+              </td>
+            </tr>${
+              queriesItems
+                ? `
+            <tr>
+              <td style="padding:24px 40px 0;">
+                <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#64748B;font-family:Helvetica,Arial,sans-serif;margin-bottom:6px;">Searches we tested</div>
+                <ul style="margin:0;padding-left:18px;">${queriesItems}</ul>
+              </td>
+            </tr>`
+                : ''
+            }`;
+
   return `<!doctype html>
 <html>
   <body style="margin:0;padding:0;background:#F7F9FC;font-family:Helvetica,Arial,sans-serif;color:#0D1321;">
@@ -408,7 +580,7 @@ function buildEmailHtml({ firstName, businessName, overallScore, reportUrl }) {
           <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFFFF;border:1px solid #E4E8EF;border-radius:16px;overflow:hidden;">
             <tr>
               <td style="padding:32px 40px 8px;">
-                <span style="font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;color:#0D1321;">Found</span><span style="font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:700;color:#0C7B82;">&nbsp;Everywhere</span>
+                <img src="https://foundeverywhere.co.uk/images/email-logo.png" alt="Found Everywhere" width="180" height="50" style="display:block;width:180px;height:auto;border:0;outline:none;text-decoration:none;" />
               </td>
             </tr>
             <tr>
@@ -431,10 +603,10 @@ function buildEmailHtml({ firstName, businessName, overallScore, reportUrl }) {
                   </tr>
                 </table>
               </td>
-            </tr>
+            </tr>${breakdownBlock}
             <tr>
               <td style="padding:24px 40px 0;font-size:15px;line-height:1.65;color:#475569;">
-                <p style="margin:0;">We analysed ${businessName} across Claude, Perplexity, and ChatGPT to measure your presence in AI search results. Your report includes visibility scores, a breakdown by platform, and five specific recommendations to improve.</p>
+                <p style="margin:0;">We analysed ${businessName} across Claude, Perplexity, and ChatGPT to measure your presence in AI search results for the specific services you offer. Your report includes visibility scores, a breakdown by platform, the exact searches we tested, and five specific recommendations to improve.</p>
               </td>
             </tr>
             <tr>
@@ -455,7 +627,7 @@ function buildEmailHtml({ firstName, businessName, overallScore, reportUrl }) {
 </html>`;
 }
 
-async function sendEmail(env, { firstName, businessName, email, overallScore, reportUrl }) {
+async function sendEmail(env, { firstName, businessName, email, overallScore, reportUrl, platforms }) {
   try {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -467,7 +639,7 @@ async function sendEmail(env, { firstName, businessName, email, overallScore, re
         from: 'Found Everywhere <hello@foundeverywhere.co.uk>',
         to: email,
         subject: `Your AI Visibility Report for ${businessName} is Ready`,
-        html: buildEmailHtml({ firstName, businessName, overallScore, reportUrl }),
+        html: buildEmailHtml({ firstName, businessName, overallScore, reportUrl, platforms }),
       }),
     });
     if (!res.ok) {
@@ -526,25 +698,55 @@ async function handleGenerateReport(request, env) {
   await env.REPORT_REQUESTS.put(rateKey, '1', { expirationTtl: 60 * 60 * 24 });
 
   /* Step 1.5 - infer the business from the site's own page content.
-     The meta title becomes the business name; the meta description (plus
-     title) becomes the context handed to every AI prompt in place of a
-     sector dropdown. Falls back to the hostname if the fetch fails. */
+     The meta title becomes the business name; the meta description, the
+     og:description fallback, and the first H1 give us the raw material for
+     service-keyword extraction. Falls back to the hostname if the fetch
+     fails. */
   const meta = await fetchSiteMeta(websiteUrl);
+  const pageTitle = meta.title || '';
+  const metaDescription = meta.description || '';
+  const headingText = meta.heading || '';
   const businessName =
     cleanBusinessName(meta.title) || hostnameFromUrl(websiteUrl) || 'this business';
-  const businessContext = [meta.title, meta.description]
+  const businessContext = [pageTitle, metaDescription, headingText]
     .filter(Boolean)
     .join(' — ')
     .slice(0, 600);
 
-  const input = { businessName, websiteUrl, businessContext, location };
+  /* Step 1.6 - extract the specific services this business offers, then
+     build the concrete search queries every model is tested against. */
+  const serviceKeywords = await extractServiceKeywords(env, {
+    businessName,
+    pageTitle,
+    metaDescription,
+    headingText,
+    location,
+  });
+  const queries = buildSearchQueries(serviceKeywords, location);
 
-  /* Steps 2–4 - query the three systems in parallel. */
+  const input = {
+    businessName,
+    websiteUrl,
+    businessContext,
+    location,
+    serviceKeywords,
+    queries,
+  };
+
+  /* Steps 2–4 - query the three systems in parallel against the specific
+     service queries. */
   const [claudeResult, perplexityResult, openaiResult] = await Promise.all([
     queryClaude(env, input),
     queryPerplexity(env, input),
     queryOpenAI(env, input),
   ]);
+
+  /* Stamp the canonical (deterministic) query list onto every result so
+     the report and email show exactly what was checked, regardless of
+     what each model echoed back. */
+  for (const r of [claudeResult, perplexityResult, openaiResult]) {
+    r.queriesChecked = queries;
+  }
 
   /* Step 5 - overall score (average, 1 dp). */
   const overallScore =
@@ -569,6 +771,8 @@ async function handleGenerateReport(request, env) {
     websiteUrl,
     location,
     businessContext,
+    serviceKeywords,
+    queries,
     email,
     overallScore,
     claudeResult,
@@ -583,7 +787,19 @@ async function handleGenerateReport(request, env) {
 
   /* Step 8 - email. */
   const reportUrl = `https://foundeverywhere.co.uk/report/${id}`;
-  await sendEmail(env, { firstName, businessName, email, overallScore, reportUrl });
+  const emailPlatforms = [
+    { name: 'Claude', result: claudeResult },
+    { name: 'Perplexity', result: perplexityResult },
+    { name: 'ChatGPT', result: openaiResult },
+  ];
+  await sendEmail(env, {
+    firstName,
+    businessName,
+    email,
+    overallScore,
+    reportUrl,
+    platforms: emailPlatforms,
+  });
 
   /* Step 9 - respond. */
   return json(
@@ -629,16 +845,31 @@ function extractTitle(html) {
 
 function extractDescription(html) {
   if (!html) return null;
-  // Prefer og:description, then the standard meta description.
+  // Prefer the standard meta description, then fall back to og:description.
+  const desc =
+    html.match(/<meta[^>]+name=["']description["'][^>]*content=["']([^"']*)["']/i) ||
+    html.match(/<meta[^>]+content=["']([^"']*)["'][^>]*name=["']description["']/i);
+  if (desc && desc[1]) {
+    const d = decodeEntities(desc[1]);
+    if (d) return d;
+  }
   const og =
     html.match(/<meta[^>]+property=["']og:description["'][^>]*content=["']([^"']*)["']/i) ||
     html.match(/<meta[^>]+content=["']([^"']*)["'][^>]*property=["']og:description["']/i);
   if (og && og[1]) return decodeEntities(og[1]) || null;
-  const desc =
-    html.match(/<meta[^>]+name=["']description["'][^>]*content=["']([^"']*)["']/i) ||
-    html.match(/<meta[^>]+content=["']([^"']*)["'][^>]*name=["']description["']/i);
-  if (desc && desc[1]) return decodeEntities(desc[1]) || null;
   return null;
+}
+
+/** Pull the text of the first <h1> on the page, tags stripped. */
+function extractHeading(html) {
+  if (!html) return null;
+  const m = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+  if (!m || !m[1]) return null;
+  // Strip any nested tags, then decode entities / collapse whitespace.
+  const text = m[1].replace(/<[^>]+>/g, ' ');
+  const cleaned = decodeEntities(text);
+  if (!cleaned) return null;
+  return cleaned.length > 200 ? cleaned.slice(0, 200).trim() : cleaned;
 }
 
 /**
@@ -664,11 +895,12 @@ function hostnameFromUrl(rawUrl) {
     return null;
   }
 }/**
- * Fetch a URL and pull its title + description. Returns
- * { title, description } with null fields on any failure — never throws.
+ * Fetch a URL and pull its title, description and first H1. Returns
+ * { title, description, heading } with null fields on any failure —
+ * never throws.
  */
 async function fetchSiteMeta(rawUrl) {
-  const empty = { title: null, description: null };
+  const empty = { title: null, description: null, heading: null };
   if (!rawUrl) return empty;
   try {
     let target = rawUrl.trim();
@@ -684,7 +916,11 @@ async function fetchSiteMeta(rawUrl) {
     });
     if (!res.ok) return empty;
     const html = await res.text();
-    return { title: extractTitle(html), description: extractDescription(html) };
+    return {
+      title: extractTitle(html),
+      description: extractDescription(html),
+      heading: extractHeading(html),
+    };
   } catch (err) {
     console.error('fetchSiteMeta failed:', err);
     return empty;
