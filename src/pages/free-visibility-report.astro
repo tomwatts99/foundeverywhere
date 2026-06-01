@@ -139,6 +139,10 @@ const REPORT_INCLUDES = [
           Check your inbox in the next couple of minutes. We have tested your business
           across ChatGPT, Perplexity, and Claude and your results are ready.
         </p>
+        <p class="report-thanks__reassure">
+          You can safely close this page. Your report will arrive in your inbox shortly &mdash;
+          the analysis runs in the background.
+        </p>
         <p class="report-thanks__note">
           Cannot find it? Check your spam folder or contact
           <a href="mailto:hello@foundeverywhere.co.uk">hello@foundeverywhere.co.uk</a>
@@ -463,6 +467,16 @@ const REPORT_INCLUDES = [
     font-size: 16px;
     line-height: 1.65;
     color: #64748B;
+    text-wrap: pretty;
+  }
+  .report-thanks__reassure {
+    margin: 12px auto 0;
+    max-width: 38rem;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.5;
+    color: #64748B;
+    text-align: center;
     text-wrap: pretty;
   }
   .report-thanks__note {

@@ -223,6 +223,14 @@ function unbrandedPrompt({ businessName, websiteUrl, location, serviceKeywords, 
   const loc = location || 'not specified';
   const services = (serviceKeywords || []).filter(Boolean);
   const queryLines = (unbrandedQueries || []).map((q) => `"${q}"`).join('\n');
+  // When we know the location, constrain competitor extraction to businesses
+  // that actually serve it — national/global names only count if they have a
+  // genuine local presence there.
+  const locationConstraint = location
+    ? `Only include competitors that are based in or explicitly serve ${location}. Do not include national or ` +
+      `global businesses unless they have a specific local presence in ${location}. If no location-specific ` +
+      `competitors are found return an empty array. `
+    : '';
   return (
     `You are judging whether a specific business appears in AI assistant answers for UNBRANDED discovery ` +
     `searches — the kind a customer types when they do NOT yet know this business exists. ` +
@@ -240,7 +248,9 @@ function unbrandedPrompt({ businessName, websiteUrl, location, serviceKeywords, 
     `- The primary / first recommendation: 70-100.\n\n` +
     `Also list the real business names that WOULD be recommended for these queries (the competitors appearing ` +
     `instead of ${businessName}). Only include genuine, specific businesses you are confident actually exist — ` +
-    `NEVER invent names. If you are unsure, return an empty array.\n\n` +
+    `NEVER invent names. ` +
+    locationConstraint +
+    `If you are unsure, return an empty array.\n\n` +
     `Return JSON: { found: boolean, confidence: 'high'|'medium'|'low', mentions: string[], ` +
     `competitors: string[], context: string, score: number }`
   );
@@ -361,13 +371,19 @@ async function queryPerplexity(env, input) {
   const loc = locationClause(location);
 
   try {
+    const competitorConstraint = location
+      ? ` Only list businesses that are based in or explicitly serve ${location}; do not list national or global ` +
+        `businesses unless they have a specific local presence in ${location}. If there are no location-specific ` +
+        `businesses, write "COMPETITORS:" with nothing after it.`
+      : '';
     const unbrandedContent =
       `A customer who does not know any specific provider is searching for these things: ` +
       (unbrandedQueries || []).map((q) => `"${q}"`).join(', ') +
       `. They are looking for ${services.join(', ') || 'this kind of business'}${loc}. ` +
       `Which specific businesses would you actually recommend, and is ${businessName} among them? ` +
       `Give a brief factual answer. Then, on a final separate line, list the businesses you would recommend ` +
-      `in exactly this format: COMPETITORS: Name One; Name Two; Name Three`;
+      `in exactly this format: COMPETITORS: Name One; Name Two; Name Three.` +
+      competitorConstraint;
 
     const brandedContent =
       `What can you tell me about ${businessName} (${websiteUrl})${loc}? ` +

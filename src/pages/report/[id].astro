@@ -110,11 +110,20 @@ function scoreColour(score: number): string {
   return '#0C7B82'; // 65-100 teal
 }
 
-/** Shorten a context string for card display; full text stays in KV. */
-function truncate(text: string, max = 180): string {
+/**
+ * Shorten a context string for card display; full text stays in KV.
+ * Cuts at the last complete sentence within `max` characters so the text
+ * always ends at a natural boundary; falls back to a hard cut with an
+ * ellipsis when no sentence boundary is found.
+ */
+function truncate(text: string, max = 320): string {
   const t = (text || '').trim();
   if (t.length <= max) return t;
-  return t.slice(0, max).trimEnd() + '...';
+  const window = t.slice(0, max);
+  // Prefer the last sentence break ("X. ") then any trailing period.
+  const lastBreak = Math.max(window.lastIndexOf('. '), window.lastIndexOf('.'));
+  if (lastBreak !== -1) return window.slice(0, lastBreak + 1).trimEnd();
+  return window.trimEnd() + '...';
 }
 
 function formatDate(iso: string): string {
@@ -261,7 +270,7 @@ const competitors = Array.isArray(report?.competitors) ? report!.competitors : [
                   </div>
                 </div>
                 {p.result.context && (
-                  <p class="platform-card__context">{truncate(p.result.context, 180)}</p>
+                  <p class="platform-card__context">{truncate(p.result.context, 320)}</p>
                 )}
                 {p.result.queriesChecked && p.result.queriesChecked.length > 0 && (
                   <div class="platform-card__queries">
