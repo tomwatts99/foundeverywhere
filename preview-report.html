@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Your AI Visibility Report | Found Everywhere</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0C7B82" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="src/styles/global.css" />
+</head>
+<body>
+  <!--
+    Static preview of src/pages/report/[id].astro with sample data.
+    Demonstrates the new two-row platform scores (Discovery + Brand) and the
+    "Who is appearing instead of you" competitors section. Sample business and
+    competitor names are illustrative only.
+  -->
+  <article class="report">
+    <div class="report__wrap">
+      <!-- Header -->
+      <header class="report__header">
+        <a href="/" class="report__brand" aria-label="Found Everywhere, home">
+          <img src="public/images/logo.svg" alt="Found Everywhere" width="146" height="40" />
+        </a>
+        <div class="report__heading">
+          <div class="report__heading-top">
+            <p class="report__kicker">AI Visibility Report</p>
+            <div class="report__actions">
+              <button type="button" class="report__action" id="report-print">
+                <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 6V2.5h8V6" />
+                  <path d="M4 12H2.5V6.5h11V12H12" />
+                  <rect x="4.5" y="10" width="7" height="3.5" />
+                </svg>
+                Download PDF
+              </button>
+              <button type="button" class="report__action" id="report-copy">
+                <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6.5 9.5a2.5 2.5 0 0 0 3.6.1l2-2a2.5 2.5 0 1 0-3.5-3.6l-1 1" />
+                  <path d="M9.5 6.5a2.5 2.5 0 0 0-3.6-.1l-2 2a2.5 2.5 0 1 0 3.5 3.6l1-1" />
+                </svg>
+                <span class="report__action-label">Copy report link</span>
+              </button>
+            </div>
+          </div>
+          <p class="report__date">Generated 1 June 2026</p>
+        </div>
+      </header>
+
+      <!-- Score hero -->
+      <section class="report__score" aria-label="Overall AI visibility score">
+        <div class="score-ring" style="--ring-colour:#F59E0B">
+          <svg class="score-ring__svg" viewBox="0 0 80 80" aria-hidden="true">
+            <circle class="score-ring__track" cx="40" cy="40" r="35" />
+            <circle class="score-ring__arc" cx="40" cy="40" r="35" style="stroke-dasharray:219.9;stroke-dashoffset:131.9" />
+          </svg>
+          <span class="score-ring__value">40</span>
+        </div>
+        <p class="report__score-label">AI Visibility Score</p>
+        <p class="report__business">Brighton Web Co</p>
+        <p class="report__score-note">
+          Scores are generated live from AI systems and may vary slightly between
+          reports as AI responses evolve.
+        </p>
+      </section>
+
+      <!-- Platform results -->
+      <section class="report__platforms" aria-label="Results by platform">
+        <!-- Claude -->
+        <div class="platform-card" style="border-color:#EF4444">
+          <div class="platform-card__head">
+            <img class="platform-card__logo" src="public/images/brands/claude.svg" alt="Claude" width="80" height="22" />
+            <span class="platform-card__name">Claude</span>
+          </div>
+          <div class="platform-card__scores">
+            <div class="score-row">
+              <div class="score-row__meta">
+                <span class="score-row__label">Discovery score</span>
+                <span class="score-row__caption">When customers search without your name</span>
+              </div>
+              <span class="score-row__value" style="color:#EF4444">25<span class="score-row__out">/100</span></span>
+            </div>
+            <div class="score-row">
+              <div class="score-row__meta">
+                <span class="score-row__label">Brand score</span>
+                <span class="score-row__caption">When customers search for you by name</span>
+              </div>
+              <span class="score-row__value" style="color:#0C7B82">70<span class="score-row__out">/100</span></span>
+            </div>
+          </div>
+          <p class="platform-card__context">Brighton Web Co is not named among the agencies typically recommended for these category searches; the answers centre on a handful of established local studios.</p>
+          <div class="platform-card__queries">
+            <p class="platform-card__queries-label">Searches tested</p>
+            <ul class="platform-card__queries-list">
+              <li class="platform-card__query">best web design agency in Brighton</li>
+              <li class="platform-card__query">recommended digital agency in Brighton</li>
+              <li class="platform-card__query">top web design companies in Brighton</li>
+              <li class="platform-card__query">who should I use for web design in Brighton</li>
+              <li class="platform-card__query">what does Brighton Web Co do</li>
+              <li class="platform-card__query">is Brighton Web Co a good web design agency in Brighton</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Perplexity -->
+        <div class="platform-card" style="border-color:#EF4444">
+          <div class="platform-card__head">
+            <img class="platform-card__logo" src="public/images/brands/perplexity.svg" alt="Perplexity" width="80" height="22" />
+            <span class="platform-card__name">Perplexity</span>
+          </div>
+          <div class="platform-card__scores">
+            <div class="score-row">
+              <div class="score-row__meta">
+                <span class="score-row__label">Discovery score</span>
+                <span class="score-row__caption">When customers search without your name</span>
+              </div>
+              <span class="score-row__value" style="color:#EF4444">15<span class="score-row__out">/100</span></span>
+            </div>
+            <div class="score-row">
+              <div class="score-row__meta">
+                <span class="score-row__label">Brand score</span>
+                <span class="score-row__caption">When customers search for you by name</span>
+              </div>
+              <span class="score-row__value" style="color:#F59E0B">55<span class="score-row__out">/100</span></span>
+            </div>
+          </div>
+          <p class="platform-card__context">For unbranded discovery searches the results list other Brighton studios with stronger review profiles and directory presence; Brighton Web Co does not surface.</p>
+          <div class="platform-card__queries">
+            <p class="platform-card__queries-label">Searches tested</p>
+            <ul class="platform-card__queries-list">
+              <li class="platform-card__query">best web design agency in Brighton</li>
+              <li class="platform-card__query">recommended digital agency in Brighton</li>
+              <li class="platform-card__query">top web design companies in Brighton</li>
+              <li class="platform-card__query">who should I use for web design in Brighton</li>
+              <li class="platform-card__query">what does Brighton Web Co do</li>
+              <li class="platform-card__query">is Brighton Web Co a good web design agency in Brighton</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ChatGPT -->
+        <div class="platform-card" style="border-color:#F59E0B">
+          <div class="platform-card__head">
+            <img class="platform-card__logo" src="public/images/brands/chatgpt.svg" alt="ChatGPT" width="80" height="22" />
+            <span class="platform-card__name">ChatGPT</span>
+          </div>
+          <div class="platform-card__scores">
+            <div class="score-row">
+              <div class="score-row__meta">
+                <span class="score-row__label">Discovery score</span>
+                <span class="score-row__caption">When customers search without your name</span>
+              </div>
+              <span class="score-row__value" style="color:#F59E0B">45<span class="score-row__out">/100</span></span>
+            </div>
+            <div class="score-row">
+              <div class="score-row__meta">
+                <span class="score-row__label">Brand score</span>
+                <span class="score-row__caption">When customers search for you by name</span>
+              </div>
+              <span class="score-row__value" style="color:#0C7B82">75<span class="score-row__out">/100</span></span>
+            </div>
+          </div>
+          <p class="platform-card__context">Brighton Web Co is occasionally mentioned alongside several competitors for category searches, but is rarely the primary recommendation.</p>
+          <div class="platform-card__queries">
+            <p class="platform-card__queries-label">Searches tested</p>
+            <ul class="platform-card__queries-list">
+              <li class="platform-card__query">best web design agency in Brighton</li>
+              <li class="platform-card__query">recommended digital agency in Brighton</li>
+              <li class="platform-card__query">top web design companies in Brighton</li>
+              <li class="platform-card__query">who should I use for web design in Brighton</li>
+              <li class="platform-card__query">what does Brighton Web Co do</li>
+              <li class="platform-card__query">is Brighton Web Co a good web design agency in Brighton</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Competitors appearing instead -->
+      <section class="report__competitors" aria-labelledby="competitors-title">
+        <h2 id="competitors-title" class="report__competitors-title">Who is appearing instead of you</h2>
+        <p class="report__competitors-sub">
+          These businesses appeared in AI results for your service category queries.
+        </p>
+        <ul class="competitor-list">
+          <li class="competitor-pill">Seaside Web Studio</li>
+          <li class="competitor-pill">Pier Digital</li>
+          <li class="competitor-pill">Lanes Creative</li>
+          <li class="competitor-pill">Sussex Web Co</li>
+          <li class="competitor-pill">North Laine Digital</li>
+          <li class="competitor-pill">Brighton Pixel Works</li>
+          <li class="competitor-pill">Coastline Studio</li>
+        </ul>
+      </section>
+
+      <!-- Recommendations -->
+      <section class="report__recs" aria-labelledby="recs-title">
+        <h2 id="recs-title" class="report__recs-title">Your top 5 recommendations</h2>
+        <div class="report__recs-list">
+          <div class="rec-card">
+            <div class="rec-card__top">
+              <span class="rec-card__num">01</span>
+              <div class="rec-card__badges">
+                <span class="badge badge--prio-high">High</span>
+                <span class="badge badge--effort">Significant</span>
+              </div>
+            </div>
+            <h3 class="rec-card__title">Earn the local citations that win category searches</h3>
+            <p class="rec-card__body">You score 70+ when people search for "Brighton Web Co" by name, but almost nothing for "best web design agency in Brighton". Build reviews and trade-directory listings that pair "web design" with "Brighton" so AI systems start naming you in unbranded searches.</p>
+          </div>
+          <div class="rec-card">
+            <div class="rec-card__top">
+              <span class="rec-card__num">02</span>
+              <div class="rec-card__badges">
+                <span class="badge badge--prio-high">High</span>
+                <span class="badge badge--effort">Medium</span>
+              </div>
+            </div>
+            <h3 class="rec-card__title">Publish a category-defining "web design in Brighton" page</h3>
+            <p class="rec-card__body">Create a page that directly answers the discovery query — with proof, FAQs and structured content AI systems can extract when a customer asks who they should use for web design in Brighton.</p>
+          </div>
+          <div class="rec-card">
+            <div class="rec-card__top">
+              <span class="rec-card__num">03</span>
+              <div class="rec-card__badges">
+                <span class="badge badge--prio-high">High</span>
+                <span class="badge badge--effort">Medium</span>
+              </div>
+            </div>
+            <h3 class="rec-card__title">Implement LocalBusiness and Service schema</h3>
+            <p class="rec-card__body">Mark up your services and location so AI systems can confidently associate Brighton Web Co with the "web design agency in Brighton" category, not just your brand name.</p>
+          </div>
+          <div class="rec-card">
+            <div class="rec-card__top">
+              <span class="rec-card__num">04</span>
+              <div class="rec-card__badges">
+                <span class="badge badge--prio-medium">Medium</span>
+                <span class="badge badge--effort">Medium</span>
+              </div>
+            </div>
+            <h3 class="rec-card__title">Standardise your entity across the web</h3>
+            <p class="rec-card__body">Make your name, address and services identical on your site, Google Business Profile and every directory the competitors above appear in — that consistency is what AI draws on when recommending a provider.</p>
+          </div>
+          <div class="rec-card">
+            <div class="rec-card__top">
+              <span class="rec-card__num">05</span>
+              <div class="rec-card__badges">
+                <span class="badge badge--prio-medium">Medium</span>
+                <span class="badge badge--effort">Quick win</span>
+              </div>
+            </div>
+            <h3 class="rec-card__title">Add an llms.txt file to your domain root</h3>
+            <p class="rec-card__body">Publish a plain-text llms.txt describing your business, your service category and key pages. Several major AI systems already check for this file.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="report__cta">
+        <h2 class="report__cta-title">Ready to improve your score?</h2>
+        <p class="report__cta-lead">
+          Found Everywhere can implement every recommendation in this report. Get in
+          touch and we will tell you exactly what is involved.
+        </p>
+        <a href="/contact/" class="report__cta-btn">
+          Book a free consultation <span aria-hidden="true" class="report__cta-arrow">&#x2197;</span>
+        </a>
+      </section>
+    </div>
+  </article>
+
+  <style>
+    /* ============================================================
+       REPORT SHELL — mirrors src/pages/report/[id].astro scoped styles
+       ============================================================ */
+    .report { background: #FFFFFF; }
+    .report__wrap {
+      max-width: 960px;
+      margin-inline: auto;
+      padding: 64px var(--gutter);
+    }
+
+    /* ---------- Header ---------- */
+    .report__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #E4E8EF;
+    }
+    .report__brand { display: inline-flex; align-items: center; line-height: 0; }
+    .report__brand img { display: block; height: 40px; width: auto; }
+    .report__heading { text-align: right; }
+    .report__heading-top {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 16px;
+    }
+    .report__kicker {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 15px;
+      color: #0D1321;
+    }
+    .report__actions { display: flex; align-items: center; gap: 8px; }
+    .report__action {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 13px;
+      line-height: 1;
+      color: #0D1321;
+      background: #FFFFFF;
+      border: 1px solid #E4E8EF;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+    }
+    .report__action svg { flex-shrink: 0; }
+    .report__action:hover { border-color: #CBD5E1; background: #F7F9FC; }
+    .report__date {
+      margin: 8px 0 0;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #64748B;
+      letter-spacing: 0.02em;
+    }
+
+    /* ---------- Score hero ---------- */
+    .report__score { text-align: center; margin-block: 48px; }
+    .score-ring { position: relative; width: 120px; height: 120px; margin: 0 auto; }
+    .score-ring__svg { width: 120px; height: 120px; transform: rotate(-90deg); }
+    .score-ring__track { fill: none; stroke: #EEF2F7; stroke-width: 6; }
+    .score-ring__arc { fill: none; stroke: var(--ring-colour); stroke-width: 6; stroke-linecap: round; }
+    .score-ring__value {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 1;
+      color: #0D1321;
+      font-variant-numeric: tabular-nums;
+    }
+    .report__score-label { margin: 16px 0 0; font-family: var(--font-body); font-size: 14px; color: #64748B; }
+    .report__business { margin: 4px 0 0; font-family: var(--font-display); font-weight: 600; font-size: 18px; color: #0D1321; }
+    .report__score-note {
+      margin: 14px auto 0;
+      max-width: 30rem;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-style: italic;
+      line-height: 1.5;
+      color: #64748B;
+      text-wrap: pretty;
+    }
+
+    /* ---------- Platform cards ---------- */
+    .report__platforms {
+      margin-top: 48px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .platform-card { background: #FFFFFF; border: 1px solid #E4E8EF; border-radius: 12px; padding: 24px; }
+    .platform-card__head { display: flex; align-items: center; gap: 10px; }
+    .platform-card__logo { display: block; height: 22px; width: auto; }
+    .platform-card__name { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: #0D1321; }
+    .platform-card__scores { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .score-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #EEF2F7;
+    }
+    .score-row:first-child { padding-top: 0; border-top: none; }
+    .score-row__meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .score-row__label { font-family: var(--font-display); font-weight: 600; font-size: 13px; line-height: 1.2; color: #0D1321; }
+    .score-row__caption { font-family: var(--font-body); font-size: 11px; line-height: 1.35; color: #94A3B8; text-wrap: pretty; }
+    .score-row__value { flex-shrink: 0; font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .score-row__out { font-size: 13px; color: #94A3B8; font-weight: 600; }
+    .platform-card__context { margin: 14px 0 0; font-family: var(--font-body); font-size: 14px; line-height: 1.55; color: #64748B; font-style: italic; text-wrap: pretty; }
+    .platform-card__queries { margin-top: 16px; padding-top: 14px; border-top: 1px solid #EEF2F7; }
+    .platform-card__queries-label { margin: 0 0 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #94A3B8; }
+    .platform-card__queries-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .platform-card__query { font-family: var(--font-body); font-size: 13px; line-height: 1.45; color: #475569; padding-left: 14px; position: relative; text-wrap: pretty; }
+    .platform-card__query::before { content: '\201C'; position: absolute; left: 0; top: 0; color: #CBD5E1; font-family: var(--font-display); }
+    .platform-card__query::after { content: '\201D'; color: #CBD5E1; }
+
+    /* ---------- Competitors ---------- */
+    .report__competitors { margin-top: 40px; padding: 28px; background: #F7F9FC; border: 1px solid #E4E8EF; border-radius: 12px; }
+    .report__competitors-title { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 20px; line-height: 1.25; color: #0D1321; }
+    .report__competitors-sub { margin: 6px 0 0; font-family: var(--font-body); font-size: 14px; line-height: 1.55; color: #64748B; text-wrap: pretty; }
+    .competitor-list { margin: 18px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+    .competitor-pill { display: inline-flex; align-items: center; padding: 7px 14px; font-family: var(--font-body); font-weight: 500; font-size: 13px; line-height: 1.3; color: #475569; background: #FFFFFF; border: 1px solid #E4E8EF; border-radius: 999px; }
+    .report__competitors-empty { margin: 16px 0 0; font-family: var(--font-body); font-size: 14px; line-height: 1.55; color: #64748B; }
+
+    /* ---------- Badges ---------- */
+    .badge { display: inline-flex; align-items: center; padding: 3px 9px; font-family: var(--font-body); font-weight: 500; font-size: 11px; line-height: 1.4; border-radius: 999px; text-transform: capitalize; }
+    .badge--prio-high { background: #E0F4F5; color: #0A6970; }
+    .badge--prio-medium { background: #FEF3E2; color: #B45309; }
+    .badge--prio-low { background: #F1F5F9; color: #64748B; }
+    .badge--effort { background: #F1F5F9; color: #64748B; }
+
+    /* ---------- Recommendations ---------- */
+    .report__recs { margin-top: 64px; }
+    .report__recs-title { margin: 0 0 24px; font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1.2; letter-spacing: -0.01em; color: #0D1321; }
+    .report__recs-list { display: flex; flex-direction: column; gap: 12px; }
+    .rec-card { background: #FFFFFF; border: 1px solid #E4E8EF; border-radius: 12px; padding: 24px; }
+    .rec-card__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .rec-card__num { font-family: var(--font-mono); font-size: 12px; color: #94A3B8; letter-spacing: 0.04em; }
+    .rec-card__badges { display: flex; flex-wrap: wrap; gap: 6px; }
+    .rec-card__title { margin: 12px 0 0; font-family: var(--font-display); font-weight: 600; font-size: 16px; line-height: 1.35; color: #0D1321; }
+    .rec-card__body { margin: 8px 0 0; font-family: var(--font-body); font-size: 15px; line-height: 1.65; color: #64748B; text-wrap: pretty; }
+
+    /* ---------- CTA ---------- */
+    .report__cta { margin-top: 64px; background: #0D1826; border-radius: 16px; padding: 40px; text-align: center; }
+    .report__cta-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1.2; letter-spacing: -0.01em; color: #FFFFFF; text-wrap: balance; }
+    .report__cta-lead { margin: 12px auto 0; max-width: 40rem; font-family: var(--font-body); font-size: 15px; line-height: 1.65; color: #94A3B8; text-wrap: pretty; }
+    .report__cta-btn { display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 28px; padding: 13px 24px; font-family: var(--font-display); font-weight: 600; font-size: 15px; color: #FFFFFF; background: #0C7B82; border-radius: 8px; text-decoration: none; transition: background-color var(--duration-fast) var(--ease-out); }
+    .report__cta-btn:hover { background: #0A6970; }
+    .report__cta-arrow { display: inline-block; transition: transform var(--duration-base) var(--ease-out); }
+    .report__cta-btn:hover .report__cta-arrow { transform: translate(2px, -2px); }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 48rem) {
+      .report__wrap { padding-block: 40px; }
+      .report__header { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .report__heading { text-align: left; width: 100%; }
+      .report__heading-top { justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+      .report__actions { flex-wrap: wrap; }
+      .report__platforms { grid-template-columns: 1fr; }
+      .report__recs-title { font-size: 24px; }
+      .report__cta { padding: 28px; }
+      .report__cta-title { font-size: 24px; }
+    }
+  </style>
+</body>
+</html>

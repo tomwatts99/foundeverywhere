@@ -24,7 +24,7 @@ const PERPLEXITY_MODEL = 'sonar';
 const OPENAI_MODEL = 'gpt-4o-mini';
 
 const SYSTEM_PROMPT =
-  'You are an AI visibility analyst. You will be given a business name, website, location, a list of the specific services the business offers, and a set of real search queries a customer might ask an AI assistant. Your job is to determine whether this business would appear as a recommended result for those specific queries. Respond only with valid JSON matching the schema provided.';
+  'You are an AI visibility analyst. You will be given a business name, website, location, and the specific services it offers, then asked to judge how it performs for two kinds of search: unbranded discovery searches (where the customer does not know the business and is choosing a provider) and branded searches (where the customer already knows the name). Score unbranded results harshly — most businesses do not appear for category searches. Respond only with valid JSON matching the schema provided.';
 
 /* ------------------------------------------------------------------ */
 /* CORS                                                                */
@@ -92,11 +92,11 @@ function normaliseResult(parsed) {
     mentions: Array.isArray(parsed?.mentions) ? parsed.mentions.slice(0, 8) : [],
     context: typeof parsed?.context === 'string' ? stripMarkdown(parsed.context) : '',
     score,
-    // The specific queries the model evaluated. Populated from the
-    // deterministic query set after the call (see handleGenerateReport),
-    // but we keep any the model echoed back as a sensible default.
-    queriesChecked: Array.isArray(parsed?.queriesChecked)
-      ? parsed.queriesChecked.filter((q) => typeof q === 'string').slice(0, 6)
+    competitors: Array.isArray(parsed?.competitors)
+      ? parsed.competitors
+          .map((c) => (typeof c === 'string' ? c.trim() : ''))
+          .filter(Boolean)
+          .slice(0, 8)
       : [],
   };
 }
@@ -136,67 +136,136 @@ function locationClause(location) {
 }
 
 /**
- * Build the concrete search queries we test each AI system against,
- * derived from the business's actual service keywords plus location.
- * Deterministic, so every model is judged against (and the report shows)
- * the exact same list. Returns [] when no keywords are available.
+ * SET 1 — UNBRANDED DISCOVERY QUERIES (70% of the score).
+ *
+ * These are the commercially important queries: how a customer searches
+ * when they do NOT yet know the business exists. The business name is
+ * deliberately excluded — only service keywords + location. Returns []
+ * when no keywords are available.
  */
-function buildSearchQueries(serviceKeywords, location) {
+function buildUnbrandedQueries(serviceKeywords, location) {
   const kw = (serviceKeywords || [])
     .map((k) => (typeof k === 'string' ? k.trim() : ''))
     .filter(Boolean);
   if (kw.length === 0) return [];
 
   const loc = location ? ` in ${location}` : '';
-  const near = location ? ` near ${location}` : '';
   const queries = [];
 
   queries.push(`best ${kw[0]}${loc}`);
-  if (kw[1]) queries.push(`${kw[1]}${near}`);
-  queries.push(`recommend a ${kw[0]}`);
-  if (kw[2]) queries.push(`top ${kw[2]}${loc}`);
-  if (kw[3]) queries.push(`who offers ${kw[3]}${loc}`);
+  queries.push(`recommended ${kw[1] || kw[0]}${loc}`);
+  if (kw[2]) queries.push(`top ${kw[2]} companies${loc}`);
+  queries.push(`who should I use for ${kw[0]}${loc}`);
+  if (kw[3]) queries.push(`${kw[3]}${loc}`);
 
   // De-duplicate and cap at 5.
   return [...new Set(queries)].slice(0, 5);
 }
 
 /**
- * The shared user prompt for the JSON-returning models (Claude, OpenAI).
- * When service keywords are available it asks the model to judge the
- * business against the specific queries; otherwise it falls back to a
- * generic visibility check so the report still produces a result.
+ * SET 2 — BRANDED QUERIES (30% of the score).
+ *
+ * Include the business name to test whether the AI systems actually know
+ * about the business when asked directly. We always have a business name
+ * (inferred from the site), so this set is never empty.
  */
-function userPrompt({ businessName, websiteUrl, location, serviceKeywords, queries }) {
+function buildBrandedQueries(businessName, serviceKeywords, location) {
+  const name = (businessName || 'this business').trim();
+  const sector =
+    (serviceKeywords || []).map((k) => (typeof k === 'string' ? k.trim() : '')).find(Boolean) ||
+    'business';
+  const loc = location ? ` in ${location}` : '';
+  const queries = [
+    `what does ${name} do`,
+    `is ${name} a good ${sector}${loc}`,
+  ];
+  return [...new Set(queries)].slice(0, 2);
+}
+
+/**
+ * Combine a discovery (unbranded) score and a brand (branded) score into
+ * one platform score. Unbranded carries 70%, branded 30%. When there are
+ * no unbranded queries (no keywords extracted) the brand score stands in
+ * fully so the platform still produces a sensible number.
+ */
+function combineScores(discoveryScore, brandScore, hasUnbranded) {
+  if (!hasUnbranded) return clampScore(brandScore);
+  return clampScore(discoveryScore * 0.7 + brandScore * 0.3);
+}
+
+/**
+ * Merge the competitor lists every model returned into one deduplicated
+ * set of business names (case-insensitive), dropping the target business
+ * itself. Capped at 12 for display.
+ */
+function aggregateCompetitors(results, businessName) {
+  const out = new Map();
+  const nameLower = (businessName || '').toLowerCase();
+  for (const r of results) {
+    for (const raw of (r && Array.isArray(r.competitors) ? r.competitors : [])) {
+      const name = typeof raw === 'string' ? raw.trim() : '';
+      if (!name || name.length > 60) continue;
+      const key = name.toLowerCase();
+      if (key === nameLower || (nameLower && key.includes(nameLower))) continue;
+      if (!out.has(key)) out.set(key, name);
+    }
+  }
+  return [...out.values()].slice(0, 12);
+}
+
+/**
+ * SET 1 prompt — unbranded discovery. Asks the model to judge whether the
+ * business would actually be named for category/location searches (the
+ * name must not flatter the score) and to surface the competitors that
+ * appear instead. Scored harshly.
+ */
+function unbrandedPrompt({ businessName, websiteUrl, location, serviceKeywords, unbrandedQueries }) {
   const loc = location || 'not specified';
   const services = (serviceKeywords || []).filter(Boolean);
-  const queryList = queries || [];
-
-  if (services.length === 0 || queryList.length === 0) {
-    // Fallback: no keywords were extracted — generic visibility check.
-    return (
-      `Analyse the AI search visibility for this business. ` +
-      `Business: ${businessName}. Website: ${websiteUrl}. Location: ${loc}. ` +
-      `Based on your training data, would this business appear when someone asks an AI ` +
-      `assistant to recommend this kind of business${locationClause(location)}? ` +
-      `Return JSON with this exact schema: { found: boolean, confidence: 'high'|'medium'|'low', ` +
-      `mentions: string[], context: string, score: number between 0 and 100, queriesChecked: string[] }`
-    );
-  }
-
-  const queryLines = queryList.map((q) => `'${q}'`).join('\n');
+  const queryLines = (unbrandedQueries || []).map((q) => `"${q}"`).join('\n');
   return (
-    `You are checking whether a specific business appears in AI search results for relevant queries. ` +
+    `You are judging whether a specific business appears in AI assistant answers for UNBRANDED discovery ` +
+    `searches — the kind a customer types when they do NOT yet know this business exists. ` +
+    `The business name must NOT influence the score: judge only on whether a business like this, with its ` +
+    `real online presence, reviews and authority, would actually be named.\n\n` +
     `Business: ${businessName}. Website: ${websiteUrl}. Location: ${loc}. ` +
-    `This business offers: ${services.join(', ')}.\n\n` +
-    `For each of these search queries, determine if ${businessName} would likely appear as a recommended result:\n` +
+    `This business offers: ${services.join(', ') || 'not specified'}.\n\n` +
+    `For each of these discovery queries, decide whether ${businessName} would genuinely be named in the ` +
+    `AI's answer, and which OTHER businesses would be named instead:\n` +
     queryLines +
     `\n\n` +
-    `Score the business from 0 to 100 based on how likely it is to appear in AI-generated answers for these ` +
-    `specific queries. Consider: does this business have sufficient online presence, reviews, and authority to ` +
-    `appear when someone asks an AI for recommendations in this specific service category and location?\n\n` +
-    `Return JSON: { found: boolean, confidence: 'high'|'medium'|'low', mentions: string[], context: string, ` +
-    `score: number, queriesChecked: string[] }`
+    `Score 0-100 HARSHLY:\n` +
+    `- Not mentioned at all across these queries: 0-25.\n` +
+    `- Mentioned alongside competitors but not the clear top pick: 35-60.\n` +
+    `- The primary / first recommendation: 70-100.\n\n` +
+    `Also list the real business names that WOULD be recommended for these queries (the competitors appearing ` +
+    `instead of ${businessName}). Only include genuine, specific businesses you are confident actually exist — ` +
+    `NEVER invent names. If you are unsure, return an empty array.\n\n` +
+    `Return JSON: { found: boolean, confidence: 'high'|'medium'|'low', mentions: string[], ` +
+    `competitors: string[], context: string, score: number }`
+  );
+}
+
+/**
+ * SET 2 prompt — branded. Tests whether the AI systems actually know the
+ * business when asked about it by name.
+ */
+function brandedPrompt({ businessName, websiteUrl, location, serviceKeywords, brandedQueries }) {
+  const loc = location || 'not specified';
+  const services = (serviceKeywords || []).filter(Boolean);
+  const queryLines = (brandedQueries || []).map((q) => `"${q}"`).join('\n');
+  return (
+    `You are checking whether AI assistants KNOW about a specific business when asked about it BY NAME.\n\n` +
+    `Business: ${businessName}. Website: ${websiteUrl}. Location: ${loc}. ` +
+    `This business offers: ${services.join(', ') || 'not specified'}.\n\n` +
+    `Consider these branded queries:\n` +
+    queryLines +
+    `\n\n` +
+    `Score 0-100 based on how much accurate, specific detail you can give about THIS business — its services, ` +
+    `location and reputation — and whether it clearly exists as a recognised entity. If you have no real ` +
+    `knowledge of this business, score low (0-25).\n\n` +
+    `Return JSON: { found: boolean, confidence: 'high'|'medium'|'low', mentions: string[], ` +
+    `context: string, score: number }`
   );
 }
 
@@ -204,165 +273,268 @@ function userPrompt({ businessName, websiteUrl, location, serviceKeywords, queri
 /* Model calls - each returns a normalised result; never throws.       */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Combine the unbranded (discovery) and branded result objects from one
+ * platform into the stored shape: a discovery score, a brand score, the
+ * 70/30 combined score, and the competitors surfaced by the unbranded run.
+ */
+function buildPlatformResult(unbranded, branded, hasUnbranded) {
+  const discoveryScore = clampScore(unbranded?.score);
+  const brandScore = clampScore(branded?.score);
+  return {
+    // "Found" reflects the commercially meaningful discovery result when we
+    // have unbranded queries; otherwise fall back to the branded check.
+    found: hasUnbranded ? !!unbranded?.found : !!branded?.found,
+    confidence: unbranded?.confidence || branded?.confidence || 'low',
+    mentions: [
+      ...new Set([...(unbranded?.mentions || []), ...(branded?.mentions || [])]),
+    ].slice(0, 8),
+    // The unbranded narrative is the one that matters — lead with it.
+    context: unbranded?.context || branded?.context || '',
+    discoveryScore,
+    brandScore,
+    score: combineScores(discoveryScore, brandScore, hasUnbranded),
+    competitors: Array.isArray(unbranded?.competitors) ? unbranded.competitors : [],
+  };
+}
+
+/** POST a single prompt to Claude and return its raw text. Throws on error. */
+async function callAnthropic(env, prompt, maxTokens = 1024) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: ANTHROPIC_MODEL,
+      max_tokens: maxTokens,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: prompt }],
+    }),
+  });
+  if (!res.ok) throw new Error(`Anthropic ${res.status}`);
+  const data = await res.json();
+  return data?.content?.map((b) => b.text).join('') || '';
+}
+
 async function queryClaude(env, input) {
+  const hasUnbranded = (input.unbrandedQueries || []).length > 0;
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: ANTHROPIC_MODEL,
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: userPrompt(input) }],
-      }),
-    });
-    if (!res.ok) throw new Error(`Anthropic ${res.status}`);
-    const data = await res.json();
-    const text = data?.content?.map((b) => b.text).join('') || '';
-    return normaliseResult(extractJson(text));
+    const tasks = [
+      hasUnbranded
+        ? callAnthropic(env, unbrandedPrompt(input)).then((t) => normaliseResult(extractJson(t)))
+        : Promise.resolve(normaliseResult(null)),
+      callAnthropic(env, brandedPrompt(input)).then((t) => normaliseResult(extractJson(t))),
+    ];
+    const [unbranded, branded] = await Promise.all(tasks);
+    return buildPlatformResult(unbranded, branded, hasUnbranded);
   } catch (err) {
     console.error('Claude query failed:', err);
-    return normaliseResult(null);
+    return buildPlatformResult(normaliseResult(null), normaliseResult(null), hasUnbranded);
   }
+}
+
+/** POST a single prompt to Perplexity and return its prose. Throws on error. */
+async function callPerplexity(env, content) {
+  const res = await fetch('https://api.perplexity.ai/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${env.PERPLEXITY_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: PERPLEXITY_MODEL,
+      messages: [{ role: 'user', content }],
+    }),
+  });
+  if (!res.ok) throw new Error(`Perplexity ${res.status}`);
+  const data = await res.json();
+  return data?.choices?.[0]?.message?.content || '';
 }
 
 async function queryPerplexity(env, input) {
-  const { businessName, websiteUrl, location, serviceKeywords, queries } = input;
+  const { businessName, websiteUrl, location, serviceKeywords, unbrandedQueries, brandedQueries } = input;
   const services = (serviceKeywords || []).filter(Boolean);
-  const queryList = queries || [];
-  try {
-    const content =
-      services.length > 0 && queryList.length > 0
-        ? `I want to know whether ${businessName} (${websiteUrl}) would appear as a recommended result ` +
-          `when someone asks an AI assistant or searches online for: ` +
-          queryList.map((q) => `"${q}"`).join(', ') +
-          `. This business offers: ${services.join(', ')}${locationClause(location)}. ` +
-          `Do they appear in search results, directories, or online recommendations for these kinds of ` +
-          `queries? Give a brief factual answer.`
-        : `Is ${businessName} (${websiteUrl}) a well-known or recommended business${locationClause(location)}? ` +
-          `Do they appear in search results or online recommendations? Give a brief factual answer.`;
+  const hasUnbranded = (unbrandedQueries || []).length > 0;
+  const loc = locationClause(location);
 
-    const res = await fetch('https://api.perplexity.ai/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${env.PERPLEXITY_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: PERPLEXITY_MODEL,
-        messages: [{ role: 'user', content }],
-      }),
-    });
-    if (!res.ok) throw new Error(`Perplexity ${res.status}`);
-    const data = await res.json();
-    const text = data?.choices?.[0]?.message?.content || '';
-    return interpretPerplexity(text, businessName);
+  try {
+    const unbrandedContent =
+      `A customer who does not know any specific provider is searching for these things: ` +
+      (unbrandedQueries || []).map((q) => `"${q}"`).join(', ') +
+      `. They are looking for ${services.join(', ') || 'this kind of business'}${loc}. ` +
+      `Which specific businesses would you actually recommend, and is ${businessName} among them? ` +
+      `Give a brief factual answer. Then, on a final separate line, list the businesses you would recommend ` +
+      `in exactly this format: COMPETITORS: Name One; Name Two; Name Three`;
+
+    const brandedContent =
+      `What can you tell me about ${businessName} (${websiteUrl})${loc}? ` +
+      (brandedQueries || []).map((q) => `"${q}"`).join(', ') +
+      `. Do they appear in search results, directories or online recommendations? Give a brief factual answer.`;
+
+    const tasks = [
+      hasUnbranded
+        ? callPerplexity(env, unbrandedContent).then((t) => interpretPerplexityUnbranded(t, businessName))
+        : Promise.resolve({ found: false, confidence: 'low', mentions: [], context: '', score: 0, competitors: [] }),
+      callPerplexity(env, brandedContent).then((t) => interpretPerplexityBranded(t, businessName)),
+    ];
+    const [unbranded, branded] = await Promise.all(tasks);
+    return buildPlatformResult(unbranded, branded, hasUnbranded);
   } catch (err) {
     console.error('Perplexity query failed:', err);
-    return { found: false, confidence: 'low', mentions: [], context: '', score: 0, queriesChecked: [] };
+    return buildPlatformResult(
+      { found: false, confidence: 'low', mentions: [], context: '', score: 0, competitors: [] },
+      { found: false, confidence: 'low', mentions: [], context: '', score: 0 },
+      hasUnbranded,
+    );
   }
 }
 
+const NEGATIVE_SIGNALS = [
+  "couldn't find", 'could not find', 'no information', 'not appear', "don't have",
+  'do not have', 'unable to find', 'no specific', 'not well-known', 'no online presence',
+  'no results', 'not recommended', 'not listed', 'i cannot find',
+];
+const POSITIVE_SIGNALS = [
+  'recommended', 'well-known', 'popular', 'highly rated', 'appears in', 'positive reviews',
+  'reputable', 'established', 'frequently mentioned', 'top choice', 'leading',
+];
+
+/** Split prose into a clean context string, dropping the COMPETITORS line. */
+function perplexityContext(text) {
+  const withoutList = String(text || '').replace(/COMPETITORS:.*$/ims, '');
+  const cleaned = stripMarkdown(withoutList);
+  const sentences = cleaned.replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+/);
+  return sentences.slice(0, 2).join(' ');
+}
+
 /**
- * Perplexity returns prose, not JSON. Infer a score from whether the
- * business name appears and whether the tone is positive or negative.
+ * Interpret an UNBRANDED Perplexity reply. Prose, not JSON — infer a harsh
+ * discovery score from whether the business name appears (and how
+ * prominently) and parse the trailing COMPETITORS list.
  */
-function interpretPerplexity(text, businessName) {
-  const lower = text.toLowerCase();
-  const name = businessName.toLowerCase();
-  const nameAppears =
-    name.length > 1 && lower.includes(name);
+function interpretPerplexityUnbranded(text, businessName) {
+  const lower = (text || '').toLowerCase();
+  const name = (businessName || '').toLowerCase();
+  const nameAppears = name.length > 1 && lower.includes(name);
+  const isNegative = NEGATIVE_SIGNALS.some((s) => lower.includes(s));
+  const positiveCount = POSITIVE_SIGNALS.filter((s) => lower.includes(s)).length;
 
-  const negativeSignals = [
-    "couldn't find",
-    'could not find',
-    'no information',
-    'not appear',
-    "don't have",
-    'do not have',
-    'unable to find',
-    'no specific',
-    'not well-known',
-    'no online presence',
-    'no results',
-    'not recommended',
-  ];
-  const positiveSignals = [
-    'recommended',
-    'well-known',
-    'popular',
-    'highly rated',
-    'appears in',
-    'positive reviews',
-    'reputable',
-    'established',
-    'frequently mentioned',
-  ];
+  // Is the business named right at the top of the answer (the primary pick)?
+  const firstSentence = (lower.split(/(?<=[.!?])\s+/)[0] || '');
+  const isPrimary = nameAppears && name && firstSentence.includes(name);
 
-  const isNegative = negativeSignals.some((s) => lower.includes(s));
-  const positiveCount = positiveSignals.filter((s) => lower.includes(s)).length;
-
-  let score = 0;
+  let score;
   let found = false;
   let confidence = 'low';
-
-  if (nameAppears && !isNegative) {
-    found = true;
-    score = Math.min(100, 45 + positiveCount * 12);
-    confidence = positiveCount >= 2 ? 'high' : 'medium';
-  } else if (nameAppears && isNegative) {
-    found = false;
-    score = 20;
-    confidence = 'medium';
-  } else {
-    found = false;
-    score = isNegative ? 5 : 15;
+  if (!nameAppears) {
+    score = isNegative ? 8 : 15; // absent — score harshly
     confidence = isNegative ? 'high' : 'low';
+  } else if (isNegative) {
+    score = 25;
+    found = false;
+    confidence = 'medium';
+  } else if (isPrimary) {
+    score = Math.min(100, 70 + positiveCount * 8); // primary recommendation
+    found = true;
+    confidence = positiveCount >= 2 ? 'high' : 'medium';
+  } else {
+    score = Math.min(65, 40 + positiveCount * 8); // mentioned among others
+    found = true;
+    confidence = 'medium';
   }
 
-  // First two sentences as context (markdown/citations stripped).
-  const cleaned = stripMarkdown(text);
-  const sentences = cleaned.replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+/);
-  const context = sentences.slice(0, 2).join(' ');
+  // Parse the trailing "COMPETITORS: a; b; c" line.
+  let competitors = [];
+  const m = String(text || '').match(/COMPETITORS:\s*(.+)$/im);
+  if (m && m[1]) {
+    competitors = m[1]
+      .split(/[;,]/)
+      .map((s) => stripMarkdown(s).trim())
+      .filter((s) => s && s.length <= 60 && s.toLowerCase() !== name)
+      .slice(0, 8);
+  }
 
   return {
     found,
     confidence,
     mentions: nameAppears ? [businessName] : [],
-    context,
+    context: perplexityContext(text),
     score: clampScore(score),
-    queriesChecked: [],
+    competitors,
   };
 }
 
+/** Interpret a BRANDED Perplexity reply — does it know the business by name? */
+function interpretPerplexityBranded(text, businessName) {
+  const lower = (text || '').toLowerCase();
+  const name = (businessName || '').toLowerCase();
+  const nameAppears = name.length > 1 && lower.includes(name);
+  const isNegative = NEGATIVE_SIGNALS.some((s) => lower.includes(s));
+  const positiveCount = POSITIVE_SIGNALS.filter((s) => lower.includes(s)).length;
+
+  let score = 0;
+  let found = false;
+  let confidence = 'low';
+  if (nameAppears && !isNegative) {
+    found = true;
+    score = Math.min(100, 45 + positiveCount * 12);
+    confidence = positiveCount >= 2 ? 'high' : 'medium';
+  } else if (nameAppears && isNegative) {
+    score = 20;
+    confidence = 'medium';
+  } else {
+    score = isNegative ? 5 : 15;
+    confidence = isNegative ? 'high' : 'low';
+  }
+
+  return {
+    found,
+    confidence,
+    mentions: nameAppears ? [businessName] : [],
+    context: perplexityContext(text),
+    score: clampScore(score),
+  };
+}
+
+/** POST a single prompt to OpenAI (JSON mode) and return its text. Throws on error. */
+async function callOpenAI(env, prompt) {
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: OPENAI_MODEL,
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: prompt },
+      ],
+    }),
+  });
+  if (!res.ok) throw new Error(`OpenAI ${res.status}`);
+  const data = await res.json();
+  return data?.choices?.[0]?.message?.content || '';
+}
+
 async function queryOpenAI(env, input) {
+  const hasUnbranded = (input.unbrandedQueries || []).length > 0;
   try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: OPENAI_MODEL,
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: userPrompt(input) },
-        ],
-      }),
-    });
-    if (!res.ok) throw new Error(`OpenAI ${res.status}`);
-    const data = await res.json();
-    const text = data?.choices?.[0]?.message?.content || '';
-    return normaliseResult(extractJson(text));
+    const tasks = [
+      hasUnbranded
+        ? callOpenAI(env, unbrandedPrompt(input)).then((t) => normaliseResult(extractJson(t)))
+        : Promise.resolve(normaliseResult(null)),
+      callOpenAI(env, brandedPrompt(input)).then((t) => normaliseResult(extractJson(t))),
+    ];
+    const [unbranded, branded] = await Promise.all(tasks);
+    return buildPlatformResult(unbranded, branded, hasUnbranded);
   } catch (err) {
     console.error('OpenAI query failed:', err);
-    return normaliseResult(null);
+    return buildPlatformResult(normaliseResult(null), normaliseResult(null), hasUnbranded);
   }
 }
 
@@ -414,7 +586,7 @@ async function extractServiceKeywords(env, { businessName, pageTitle, metaDescri
 
 async function generateRecommendations(env, input, scores) {
   const { businessName, location, serviceKeywords } = input;
-  const { claudeScore, perplexityScore, openaiScore, overallScore } = scores;
+  const { claudeScore, perplexityScore, openaiScore, overallScore, discoveryScore, brandScore, competitors } = scores;
   const services = (serviceKeywords || []).filter(Boolean);
   const fallback = defaultRecommendations();
   try {
@@ -424,13 +596,24 @@ async function generateRecommendations(env, input, scores) {
           `Make every recommendation specific to this type of business and these services — ` +
           `not generic SEO advice. `
         : '';
+    const competitorClause =
+      competitors && competitors.length
+        ? `When customers search WITHOUT the business name, these competitors appear instead: ` +
+          `${competitors.slice(0, 8).join(', ')}. `
+        : '';
     const prompt =
       `Based on this AI visibility data for ${businessName}: ` +
-      `Claude score ${claudeScore}/100, Perplexity score ${perplexityScore}/100, ` +
-      `OpenAI score ${openaiScore}/100, overall ${overallScore}/100. ` +
+      `overall ${overallScore}/100, made up of a DISCOVERY score of ${discoveryScore}/100 ` +
+      `(unbranded category searches, weighted 70%) and a BRAND score of ${brandScore}/100 ` +
+      `(searches by name, weighted 30%). ` +
+      `Per platform — Claude ${claudeScore}/100, Perplexity ${perplexityScore}/100, OpenAI ${openaiScore}/100. ` +
       serviceClause +
-      `Generate exactly 5 specific, actionable recommendations to improve their AI visibility ` +
-      `for the specific services and location above. ` +
+      competitorClause +
+      `The critical commercial gap is the DISCOVERY score: this business is largely invisible when customers ` +
+      `search for its service category without knowing its name. Generate exactly 5 specific, actionable ` +
+      `recommendations that focus FIRST on how to start appearing in these unbranded category and location ` +
+      `searches (not just searches for the business by name) — e.g. earning the third-party citations, reviews, ` +
+      `directory listings and category-page authority that AI systems draw on when recommending a provider. ` +
       `Return as JSON array of objects with fields: title (string), description (string), ` +
       `priority ('high'|'medium'|'low'), effort ('quick'|'medium'|'significant').`;
 
@@ -467,39 +650,39 @@ async function generateRecommendations(env, input, scores) {
 function defaultRecommendations() {
   return [
     {
+      title: 'Build authority for your service category, not just your name',
+      description:
+        'AI systems only recommend you in unbranded "best [service] in [town]" searches if independent sources establish you as a category leader. Prioritise reviews, trade directory listings and local press that name your service and location together.',
+      priority: 'high',
+      effort: 'significant',
+    },
+    {
+      title: 'Create category-defining service and location pages',
+      description:
+        'Publish pages that directly answer the category searches customers actually use — e.g. "[service] in [town]" — with clear evidence, FAQs and structured content AI systems can extract and cite when recommending a provider.',
+      priority: 'high',
+      effort: 'medium',
+    },
+    {
       title: 'Implement comprehensive schema markup',
       description:
-        'Add Organisation, WebSite, LocalBusiness, Service, and FAQPage schema across your site so AI systems can identify your business as a coherent entity.',
+        'Add Organisation, WebSite, LocalBusiness, Service, and FAQPage schema across your site so AI systems can identify your business as a coherent entity in your service category.',
       priority: 'high',
+      effort: 'medium',
+    },
+    {
+      title: 'Standardise your entity across the web',
+      description:
+        'Make your business name, address, services and contact details identical on your website, Google Business Profile, and every directory you appear in, so AI systems associate you confidently with your category.',
+      priority: 'medium',
       effort: 'medium',
     },
     {
       title: 'Add an llms.txt file to your domain root',
       description:
-        'Publish a plain-text llms.txt describing your business and key pages. Several major AI systems already check for this file.',
-      priority: 'high',
+        'Publish a plain-text llms.txt describing your business, service category and key pages. Several major AI systems already check for this file.',
+      priority: 'medium',
       effort: 'quick',
-    },
-    {
-      title: 'Standardise your entity across the web',
-      description:
-        'Make your business name, address, and contact details identical on your website, Google Business Profile, and every directory you appear in.',
-      priority: 'high',
-      effort: 'medium',
-    },
-    {
-      title: 'Restructure key pages to answer questions directly',
-      description:
-        'Add FAQ sections to service pages and open each section with a direct answer so AI systems can extract and cite your content.',
-      priority: 'medium',
-      effort: 'medium',
-    },
-    {
-      title: 'Build authoritative third-party citations',
-      description:
-        'Get listed in relevant industry directories and seek coverage in local or trade press to strengthen the signals AI systems rely on.',
-      priority: 'medium',
-      effort: 'significant',
     },
   ];
 }
@@ -714,7 +897,9 @@ async function handleGenerateReport(request, env) {
     .slice(0, 600);
 
   /* Step 1.6 - extract the specific services this business offers, then
-     build the concrete search queries every model is tested against. */
+     build BOTH query sets every model is tested against:
+       Set 1 — unbranded discovery queries (no business name, 70% weight)
+       Set 2 — branded queries (include the name, 30% weight) */
   const serviceKeywords = await extractServiceKeywords(env, {
     businessName,
     pageTitle,
@@ -722,7 +907,10 @@ async function handleGenerateReport(request, env) {
     headingText,
     location,
   });
-  const queries = buildSearchQueries(serviceKeywords, location);
+  const unbrandedQueries = buildUnbrandedQueries(serviceKeywords, location);
+  const brandedQueries = buildBrandedQueries(businessName, serviceKeywords, location);
+  // Combined list kept for the email + backward-compatible `queries` field.
+  const queries = [...unbrandedQueries, ...brandedQueries];
 
   const input = {
     businessName,
@@ -730,36 +918,62 @@ async function handleGenerateReport(request, env) {
     businessContext,
     location,
     serviceKeywords,
+    unbrandedQueries,
+    brandedQueries,
     queries,
   };
 
-  /* Steps 2–4 - query the three systems in parallel against the specific
-     service queries. */
+  /* Steps 2–4 - query the three systems in parallel. Each runs BOTH query
+     sets and returns a discovery score, a brand score and a 70/30 combined
+     score, plus any competitors surfaced by the unbranded run. */
   const [claudeResult, perplexityResult, openaiResult] = await Promise.all([
     queryClaude(env, input),
     queryPerplexity(env, input),
     queryOpenAI(env, input),
   ]);
 
-  /* Stamp the canonical (deterministic) query list onto every result so
-     the report and email show exactly what was checked, regardless of
-     what each model echoed back. */
+  /* Stamp the canonical query lists onto every result so the report and
+     email show exactly what was checked, regardless of model echo. */
   for (const r of [claudeResult, perplexityResult, openaiResult]) {
+    r.unbrandedQueriesChecked = unbrandedQueries;
+    r.brandedQueriesChecked = brandedQueries;
     r.queriesChecked = queries;
   }
 
-  /* Step 5 - overall score (average, 1 dp). */
-  const overallScore =
-    Math.round(
-      ((claudeResult.score + perplexityResult.score + openaiResult.score) / 3) * 10,
-    ) / 10;
+  /* Aggregate the competitors appearing instead of the business across all
+     three platforms' unbranded results. */
+  const competitors = aggregateCompetitors(
+    [claudeResult, perplexityResult, openaiResult],
+    businessName,
+  );
 
-  /* Step 6 - recommendations. */
+  /* Step 5 - scores. Average each component across platforms, then apply
+     the 70/30 weighting for the headline number. */
+  const avg = (a, b, c) => Math.round(((a + b + c) / 3) * 10) / 10;
+  const discoveryScore = avg(
+    claudeResult.discoveryScore,
+    perplexityResult.discoveryScore,
+    openaiResult.discoveryScore,
+  );
+  const brandScore = avg(
+    claudeResult.brandScore,
+    perplexityResult.brandScore,
+    openaiResult.brandScore,
+  );
+  const hasUnbranded = unbrandedQueries.length > 0;
+  const overallScore = hasUnbranded
+    ? Math.round((discoveryScore * 0.7 + brandScore * 0.3) * 10) / 10
+    : brandScore;
+
+  /* Step 6 - recommendations, focused on the unbranded discovery gap. */
   const recommendations = await generateRecommendations(env, input, {
     claudeScore: claudeResult.score,
     perplexityScore: perplexityResult.score,
     openaiScore: openaiResult.score,
     overallScore,
+    discoveryScore,
+    brandScore,
+    competitors,
   });
 
   /* Step 7 - persist (30 day TTL). */
@@ -772,9 +986,14 @@ async function handleGenerateReport(request, env) {
     location,
     businessContext,
     serviceKeywords,
+    unbrandedQueries,
+    brandedQueries,
     queries,
     email,
     overallScore,
+    discoveryScore,
+    brandScore,
+    competitors,
     claudeResult,
     perplexityResult,
     openaiResult,
