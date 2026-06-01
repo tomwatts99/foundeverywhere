@@ -44,6 +44,8 @@ type Report = {
   discoveryScore?: number;
   googleResults?: GoogleResult[] | null;
   googleScore?: number | null;
+  claudeAppeared?: boolean;
+  chatgptAppeared?: boolean;
   competitors?: string[];
   claudeBrandResponse?: string;
   brandScore?: number;
@@ -178,66 +180,51 @@ const brandWhere = report?.location ? ` in ${report.location}` : '';
 const brandSub = `We asked Claude and ChatGPT who they would recommend for ${brandService}${brandWhere} and checked whether ${report?.businessName ?? 'your business'} appeared.`;
 
 /**
- * Fix 3 — clean and format an AI brand response for display. Strips bold
- * markers and markdown links, removes leading numbered-list markers, splits
- * into paragraphs on blank lines, and caps the output at ~300 words,
- * truncating at the last complete sentence (with a trailing ellipsis when
- * content was cut). Returns an array of paragraph strings to render as <p>.
+ * Fix 3 — parse an AI brand response into a clean numbered list. Splits on
+ * newlines, keeps only lines that start with a number, strips markdown
+ * links and citation markers, and separates each item into a bold business
+ * NAME and a slate DESCRIPTION. Claude wraps names in **bold**; for ChatGPT
+ * (no bold) the name is taken as the text before the first separator.
  */
-function formatBrandResponse(raw: string, maxWords = 300): string[] {
-  let t = String(raw || '');
-  if (!t.trim()) return [];
-  // Strip markdown bold/italic markers.
-  t = t
-    .replace(/\*\*([^*]+)\*\*/g, '$1')
-    .replace(/__([^_]+)__/g, '$1')
-    .replace(/\*([^*]+)\*/g, '$1');
-  // Strip markdown links [text](url) → text.
-  t = t.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1');
+function parseBrandList(raw: string): { name: string; desc: string }[] {
+  const items: { name: string; desc: string }[] = [];
+  for (let line of String(raw || '').split(/\n+/)) {
+    line = line.trim();
+    const m = line.match(/^(\d+)[.)]\s+(.*)$/);
+    if (!m) continue; // drop any line that does not start with a number
+    let body = m[2]
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // markdown links → text
+      .replace(/\[\d+\]/g, '') // citation markers
+      .trim();
 
-  // Split into paragraphs on blank lines; clean numbered markers per line.
-  let chunks = t
-    .split(/\n\s*\n/)
-    .map((c) =>
-      c
-        .split('\n')
-        .map((line) => line.replace(/^\s*\d+[.)]\s+/, '').trim())
-        .filter(Boolean)
-        .join(' ')
-        .replace(/\s{2,}/g, ' ')
-        .trim(),
-    )
-    .filter(Boolean);
-  if (chunks.length === 0) chunks = [t.replace(/\s{2,}/g, ' ').trim()];
-
-  // Word-cap across paragraphs, truncating the overflowing one at the last
-  // complete sentence within the remaining budget.
-  const out: string[] = [];
-  let used = 0;
-  for (const chunk of chunks) {
-    const words = chunk.split(/\s+/);
-    if (used + words.length <= maxWords) {
-      out.push(chunk);
-      used += words.length;
-      continue;
+    let name = '';
+    let desc = '';
+    const bold = body.match(/^\*\*([^*]+)\*\*\s*[-–—:.]?\s*(.*)$/);
+    if (bold) {
+      name = bold[1].trim();
+      desc = bold[2].trim();
+    } else {
+      const sep = body.match(/^(.+?)\s*[-–—:]\s+(.*)$/);
+      if (sep) {
+        name = sep[1].trim();
+        desc = sep[2].trim();
+      } else {
+        name = body.trim();
+        desc = '';
+      }
     }
-    const remaining = maxWords - used;
-    let partial = words.slice(0, Math.max(0, remaining)).join(' ');
-    const lastStop = Math.max(
-      partial.lastIndexOf('.'),
-      partial.lastIndexOf('!'),
-      partial.lastIndexOf('?'),
-    );
-    if (lastStop > 0) partial = partial.slice(0, lastStop + 1);
-    partial = partial.replace(/[.!?]+$/, '').trim();
-    if (partial) out.push(partial + '…');
-    break;
+    name = name.replace(/\*\*/g, '').replace(/[.:–—-]\s*$/, '').trim();
+    desc = desc.replace(/\*\*/g, '').trim();
+    if (name) items.push({ name, desc });
   }
-  return out;
+  return items;
 }
 
-const claudeParagraphs = formatBrandResponse(claudeBrandResponse);
-const chatgptParagraphs = formatBrandResponse(chatgptBrandResponse);
+const claudeItems = parseBrandList(claudeBrandResponse);
+const chatgptItems = parseBrandList(chatgptBrandResponse);
+const claudeAppeared = report?.claudeAppeared === true;
+const chatgptAppeared = report?.chatgptAppeared === true;
+const reportBusiness = report?.businessName ?? 'Your business';
 ---
 
 <Page
@@ -379,11 +366,16 @@ const chatgptParagraphs = formatBrandResponse(chatgptBrandResponse);
                         </span>
                       </div>
                       {g.topResults && g.topResults.length > 0 && (
-                        <ul class="google-tops">
-                          {g.topResults.map((r) => (
-                            <li class="google-domain">{domainOf(r.link)}</li>
-                          ))}
-                        </ul>
+                        <Fragment>
+                          <ul class="google-tops">
+                            {g.topResults.map((r) => (
+                              <li>
+                                <a class="google-domain" href={r.link} target="_blank" rel="noopener noreferrer">{domainOf(r.link)}</a>
+                              </li>
+                            ))}
+                          </ul>
+                          <p class="google-tops-note">These are the domains currently ranking in Google for this search term.</p>
+                        </Fragment>
                       )}
                     </li>
                   );
@@ -421,12 +413,26 @@ const chatgptParagraphs = formatBrandResponse(chatgptBrandResponse);
                 <span style="font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;color:#0D1321;">Claude</span>
                 <span style={`font-family:'Outfit',sans-serif;font-size:20px;font-weight:700;color:${scoreColour(brandScore)};`}>{brandScore}/100</span>
               </div>
-              <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
-                {claudeParagraphs.map((para) => (
-                  <p style="font-family:'Inter',sans-serif;font-size:14px;color:#64748B;line-height:1.7;margin:0;">{para}</p>
+              <ol style="list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:12px;">
+                {claudeItems.map((item, i) => (
+                  <li style="margin:0;display:flex;gap:8px;align-items:baseline;">
+                    <span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:#94A3B8;flex-shrink:0;">{i + 1}.</span>
+                    <span style="line-height:1.6;"><span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:#0D1321;">{item.name}</span>{item.desc && <span style="font-family:'Inter',sans-serif;font-size:14px;color:#64748B;"> &mdash; {item.desc}</span>}</span>
+                  </li>
                 ))}
-              </div>
-              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#64748B;">Based on AI training data, not live search</span>
+              </ol>
+              {claudeAppeared ? (
+                <p style="display:flex;align-items:center;gap:6px;margin:0 0 12px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;color:#0C7B82;">
+                  <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7" /></svg>
+                  {reportBusiness} appears in these results
+                </p>
+              ) : (
+                <p style="display:flex;align-items:center;gap:6px;margin:0 0 12px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;color:#EF4444;">
+                  <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+                  {reportBusiness} does not appear in the top recommendations
+                </p>
+              )}
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#64748B;">Based on live web search</span>
             </div>
 
             <!-- ChatGPT card -->
@@ -435,12 +441,26 @@ const chatgptParagraphs = formatBrandResponse(chatgptBrandResponse);
                 <span style="font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;color:#0D1321;">ChatGPT</span>
                 <span style={`font-family:'Outfit',sans-serif;font-size:20px;font-weight:700;color:${scoreColour(chatgptBrandScore)};`}>{chatgptBrandScore}/100</span>
               </div>
-              <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
-                {chatgptParagraphs.map((para) => (
-                  <p style="font-family:'Inter',sans-serif;font-size:14px;color:#64748B;line-height:1.7;margin:0;">{para}</p>
+              <ol style="list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:12px;">
+                {chatgptItems.map((item, i) => (
+                  <li style="margin:0;display:flex;gap:8px;align-items:baseline;">
+                    <span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:#94A3B8;flex-shrink:0;">{i + 1}.</span>
+                    <span style="line-height:1.6;"><span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:#0D1321;">{item.name}</span>{item.desc && <span style="font-family:'Inter',sans-serif;font-size:14px;color:#64748B;"> &mdash; {item.desc}</span>}</span>
+                  </li>
                 ))}
-              </div>
-              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#64748B;">Based on AI training data, not live search</span>
+              </ol>
+              {chatgptAppeared ? (
+                <p style="display:flex;align-items:center;gap:6px;margin:0 0 12px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;color:#0C7B82;">
+                  <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7" /></svg>
+                  {reportBusiness} appears in these results
+                </p>
+              ) : (
+                <p style="display:flex;align-items:center;gap:6px;margin:0 0 12px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;color:#EF4444;">
+                  <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+                  {reportBusiness} does not appear in the top recommendations
+                </p>
+              )}
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#64748B;">Based on live web search</span>
             </div>
           </div>
 
@@ -827,6 +847,20 @@ const chatgptParagraphs = formatBrandResponse(chatgptBrandResponse);
     background: #F7F9FC;
     border: 1px solid #E4E8EF;
     border-radius: 20px;
+    text-decoration: none;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+  .google-domain:hover { color: #0C7B82; border-color: #0C7B82; }
+  .google-tops-note {
+    margin: 8px 0 0;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-style: italic;
+    line-height: 1.4;
+    color: #64748B;
+    text-wrap: pretty;
   }
   .report__google-note {
     margin: 14px 0 0;

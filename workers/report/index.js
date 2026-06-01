@@ -300,99 +300,137 @@ async function extractCompetitors(env, discoveryResults, location) {
 }
 
 /**
- * Build the location-strict brand-visibility prompt shared by the Claude
- * and ChatGPT brand checks. When a location is present the model is told to
- * include ONLY locally-based providers; with no location it falls back to a
- * UK-wide search.
+ * Build the brand-recommendation prompt. The prompt asks ONLY for the top
+ * providers in the category — the business being tested is never mentioned,
+ * so its appearance is an unbiased signal. Claude gets a "name in bold"
+ * instruction; ChatGPT does not (bold is applied on the display side).
  */
-function brandVisibilityPrompt(service, businessName, location) {
-  if (location) {
-    return (
-      `Search the web for ${service} based in ${location}, UK only. ` +
-      `Only include businesses that are physically located in or explicitly serve ${location}. ` +
-      `Do not include agencies from other cities or national agencies unless they have a specific ` +
-      `${location} office. List the top 5 local businesses you find. For each one state their name, ` +
-      `location, and one sentence about what they do. Then confirm: is ${businessName} based in ` +
-      `${location} in your results? Rate their local visibility 1 to 10.`
-    );
-  }
-  return (
-    `Search the web for the best ${service} in the UK. List the top 5 businesses you find. ` +
-    `For each one state their name, location, and one sentence about what they do. ` +
-    `Then confirm: is ${businessName} in your results? Rate their visibility 1 to 10.`
-  );
+function brandRecommendationPrompt(service, location, bold) {
+  const head = location
+    ? `Search the web for the top 5 ${service} agencies based in ${location}, UK. ` +
+      `Only include agencies physically located in ${location}.`
+    : `Search the web for the top 5 ${service} agencies in the UK.`;
+  const nameFmt = bold
+    ? `For each one give their name in bold and one sentence about what they do.`
+    : `For each one give their name and one sentence about what they do.`;
+  return `${head} ${nameFmt} Number them 1 to 5.`;
 }
 
 /**
- * Fix 1 — consistent score extraction. Rather than regex-parsing each
- * model's prose differently, run a single Claude Haiku call that reads the
- * response and returns one 1-10 number (inferring from sentiment when no
- * explicit rating is given). Used for BOTH Claude and ChatGPT so the two
- * platforms score identically. Returns a 0-100 score; falls back to the
- * regex extractor if the call fails.
+ * Clean a brand response for storage WHILE PRESERVING the numbered-list
+ * structure: strip citation markers and code ticks, collapse runs of spaces
+ * but keep newlines (and the `**bold**` markers Claude adds) so the report
+ * page can render a proper numbered list.
  */
-async function extractVisibilityScore(env, businessName, responseText) {
-  if (!responseText) return 0;
-  const prompt =
-    `From this AI response, extract the visibility rating given for ${businessName}. ` +
-    `The rating should be a number from 1 to 10. If no explicit rating is given, infer one from ` +
-    `the sentiment -- very positive = 8-10, positive = 6-7, neutral = 4-5, negative = 2-3, ` +
-    `not mentioned = 1. Return only the number, nothing else.\n\nAI response:\n${responseText}`;
-  try {
-    const out = await anthropicText(env, prompt, 16);
-    const n = parseInt(String(out).match(/\d{1,2}/)?.[0] ?? '', 10);
-    if (Number.isFinite(n)) return clampScore(Math.max(0, Math.min(10, n)) * 10);
-  } catch (err) {
-    console.error('Score extraction failed:', err);
-  }
-  return clampScore(extractTenScore(responseText) * 10);
+function cleanBrandResponse(text) {
+  if (!text) return '';
+  return String(text)
+    .replace(/\[\d+\]/g, '')
+    .replace(/`+/g, '')
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 }
 
 /**
- * STEP 4 — Claude brand visibility, using the Anthropic web search tool so
- * Claude surfaces the real top providers in the category, then self-rates
- * the target's visibility. Stores the raw prose and a 0-100 score.
+ * Find the 1-based list position at which the business name first appears in
+ * a numbered response (0 if it appears outside any numbered item or not at
+ * all). Used to award a position bonus to the score.
+ */
+function appearancePosition(text, businessName) {
+  const nameLower = (businessName || '').toLowerCase().trim();
+  if (!nameLower) return 0;
+  for (const line of String(text || '').split(/\n+/)) {
+    const m = line.match(/^\s*(\d+)[.)]\s+(.*)$/);
+    if (m && m[2].toLowerCase().includes(nameLower)) return parseInt(m[1], 10);
+  }
+  return 0;
+}
+
+/**
+ * Appearance-based score. Not appearing in the top recommendations is the
+ * key negative signal (score 20). Appearing scores 75, with a bonus for
+ * ranking first (95), second (85) or third (75).
+ */
+function brandScoreFromAppearance(appeared, position) {
+  if (!appeared) return 20;
+  if (position === 1) return 95;
+  if (position === 2) return 85;
+  if (position === 3) return 75;
+  return 75;
+}
+
+/**
+ * STEP 4 — Claude brand visibility via the Anthropic web search tool. Asks
+ * only for the category's top providers (no business name in the prompt),
+ * then checks programmatically whether the business appears and scores by
+ * appearance + position. Stores the list prose, the 0-100 score, and an
+ * `appeared` boolean.
  */
 async function claudeBrandAwareness(env, businessName, serviceKeywords, location) {
   const service =
     (serviceKeywords || []).map((k) => (typeof k === 'string' ? k.trim() : '')).find(Boolean) ||
     'businesses';
-  const prompt = brandVisibilityPrompt(service, businessName, location);
+  const prompt = brandRecommendationPrompt(service, location, true);
+  const nameLower = (businessName || '').toLowerCase().trim();
   try {
-    const text = await anthropicWebSearch(env, prompt, 3);
-    const brandScore = await extractVisibilityScore(env, businessName, text);
-    return { response: stripMarkdown(text), brandScore };
+    const raw = await anthropicWebSearch(env, prompt, 3);
+    const response = cleanBrandResponse(raw);
+    const appeared = !!(nameLower && response.toLowerCase().includes(nameLower));
+    const brandScore = brandScoreFromAppearance(appeared, appearancePosition(response, businessName));
+    return { response, brandScore, appeared };
   } catch (err) {
     console.error('Claude brand awareness failed:', err);
-    return { response: '', brandScore: 0 };
+    return { response: '', brandScore: 0, appeared: false };
   }
 }
 
 /**
  * STEP 5 — ChatGPT brand visibility via the OpenAI Responses API with live
- * web search. Falls back to the gpt-4.1 chat completions call if the
- * Responses API errors. Stores raw prose and a 0-100 score.
+ * web search (falls back to gpt-4.1 chat completions). Same no-business
+ * prompt + appearance/position scoring as Claude. Stores prose, 0-100 score,
+ * and an `appeared` boolean.
  */
 async function chatgptBrandAwareness(env, businessName, serviceKeywords, location) {
   const service =
     (serviceKeywords || []).map((k) => (typeof k === 'string' ? k.trim() : '')).find(Boolean) ||
     'businesses';
-  const prompt = brandVisibilityPrompt(service, businessName, location);
-  let text = '';
+  const prompt = brandRecommendationPrompt(service, location, false);
+  const nameLower = (businessName || '').toLowerCase().trim();
+  let raw = '';
   try {
-    text = await openaiWebSearch(env, prompt);
+    raw = await openaiWebSearch(env, prompt);
   } catch (err) {
     console.error('ChatGPT Responses API failed, falling back to chat completions:', err);
     try {
-      text = await openaiText(env, prompt);
+      raw = await openaiText(env, prompt);
     } catch (err2) {
       console.error('ChatGPT brand awareness failed:', err2);
-      return { response: '', brandScore: 0 };
+      return { response: '', brandScore: 0, appeared: false };
     }
   }
-  const brandScore = await extractVisibilityScore(env, businessName, text);
-  return { response: stripMarkdown(text), brandScore };
+  const response = cleanBrandResponse(raw);
+  const appeared = !!(nameLower && response.toLowerCase().includes(nameLower));
+  const brandScore = brandScoreFromAppearance(appeared, appearancePosition(response, businessName));
+  return { response, brandScore, appeared };
 }
+
+/**
+ * Domains to exclude from Google "who is ranking" results — directories and
+ * social platforms, not actual competitor agencies.
+ */
+const EXCLUDED_RESULT_DOMAINS = [
+  'reddit.com',
+  'instagram.com',
+  'facebook.com',
+  'linkedin.com',
+  'youtube.com',
+  'twitter.com',
+  'yelp.com',
+  'tripadvisor.com',
+  'yell.com',
+  'checkatrade.com',
+];
 
 /**
  * NEW STEP — Google rankings via SerpAPI. For the top 3 service keywords,
@@ -413,7 +451,11 @@ async function runGoogleRankings(env, websiteUrl, serviceKeywords, location) {
   try {
     const googleResults = await Promise.all(
       keywords.map(async (keyword) => {
-        const q = location ? `${keyword} ${location}` : keyword;
+        // Append "agency" unless the keyword already implies a provider type,
+        // so generic service terms ("SEO") still surface agencies.
+        const hasProviderWord = /\b(agency|studio|services|company)\b/i.test(keyword);
+        const term = hasProviderWord ? keyword : `${keyword} agency`;
+        const q = location ? `${term} ${location}` : term;
         const url =
           `https://serpapi.com/search.json?q=${encodeURIComponent(q)}` +
           `&location=United+Kingdom&hl=en&gl=uk&api_key=${encodeURIComponent(env.SERPAPI_KEY)}`;
@@ -434,10 +476,18 @@ async function runGoogleRankings(env, websiteUrl, serviceKeywords, location) {
           }
         }
         const found = position !== null;
-        const topResults = organic.slice(0, 3).map((r) => ({
-          title: String(r?.title || ''),
-          link: String(r?.link || ''),
-        }));
+        // Drop directories / social platforms — these are not competitor
+        // agencies — then keep the top 3 real results.
+        const topResults = organic
+          .filter((r) => {
+            const link = String(r?.link || '').toLowerCase();
+            return link && !EXCLUDED_RESULT_DOMAINS.some((d) => link.includes(d));
+          })
+          .slice(0, 3)
+          .map((r) => ({
+            title: String(r?.title || ''),
+            link: String(r?.link || ''),
+          }));
         return { keyword, position: found ? position : 'Not in top 10', found, topResults };
       }),
     );
@@ -844,8 +894,10 @@ async function handleGenerateReport(request, env) {
   const { googleResults, googleScore } = googleData;
   const claudeBrandResponse = claude.response;
   const brandScore = claude.brandScore;
+  const claudeAppeared = claude.appeared;
   const chatgptBrandResponse = chatgpt.response;
   const chatgptBrandScore = chatgpt.brandScore;
+  const chatgptAppeared = chatgpt.appeared;
 
   /* STEP 6 — overall score. With Google data: discovery 40%, Google 35%,
      each brand 12.5%. Without it: discovery 60%, each brand 20%. */
@@ -891,8 +943,10 @@ async function handleGenerateReport(request, env) {
     competitors,
     claudeBrandResponse,
     brandScore,
+    claudeAppeared,
     chatgptBrandResponse,
     chatgptBrandScore,
+    chatgptAppeared,
     overallScore,
     recommendations,
     email,
