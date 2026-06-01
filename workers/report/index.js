@@ -149,14 +149,24 @@ function buildUnbrandedQueries(serviceKeywords, location) {
     .filter(Boolean);
   if (kw.length === 0) return [];
 
-  const loc = location ? ` in ${location}` : '';
   const queries = [];
 
-  queries.push(`best ${kw[0]}${loc}`);
-  queries.push(`recommended ${kw[1] || kw[0]}${loc}`);
-  if (kw[2]) queries.push(`top ${kw[2]} companies${loc}`);
-  queries.push(`who should I use for ${kw[0]}${loc}`);
-  if (kw[3]) queries.push(`${kw[3]}${loc}`);
+  if (location) {
+    // Local discovery: pin every query to the location.
+    const loc = ` in ${location}`;
+    queries.push(`best ${kw[0]}${loc}`);
+    queries.push(`recommended ${kw[1] || kw[0]}${loc}`);
+    if (kw[2]) queries.push(`top ${kw[2]} companies${loc}`);
+    queries.push(`who should I use for ${kw[0]}${loc}`);
+    if (kw[3]) queries.push(`${kw[3]}${loc}`);
+  } else {
+    // National discovery: no location — frame queries UK-wide.
+    queries.push(`best ${kw[0]} agency UK`);
+    queries.push(`recommended ${kw[1] || kw[0]} service`);
+    queries.push(`top ${kw[0]} companies`);
+    queries.push(`who should I use for ${kw[0]}`);
+    if (kw[2]) queries.push(`best ${kw[2]} companies UK`);
+  }
 
   // De-duplicate and cap at 5.
   return [...new Set(queries)].slice(0, 5);
@@ -223,14 +233,14 @@ function unbrandedPrompt({ businessName, websiteUrl, location, serviceKeywords, 
   const loc = location || 'not specified';
   const services = (serviceKeywords || []).filter(Boolean);
   const queryLines = (unbrandedQueries || []).map((q) => `"${q}"`).join('\n');
-  // When we know the location, constrain competitor extraction to businesses
-  // that actually serve it — national/global names only count if they have a
-  // genuine local presence there.
+  // Constrain competitor extraction: local when we have a location,
+  // national/UK-wide when we don't.
   const locationConstraint = location
     ? `Only include competitors that are based in or explicitly serve ${location}. Do not include national or ` +
       `global businesses unless they have a specific local presence in ${location}. If no location-specific ` +
       `competitors are found return an empty array. `
-    : '';
+    : `Extract national or UK-wide competitors that appeared in these results. Include well-known national ` +
+      `businesses in this category. `;
   return (
     `You are judging whether a specific business appears in AI assistant answers for UNBRANDED discovery ` +
     `searches — the kind a customer types when they do NOT yet know this business exists. ` +
@@ -375,7 +385,8 @@ async function queryPerplexity(env, input) {
       ? ` Only list businesses that are based in or explicitly serve ${location}; do not list national or global ` +
         `businesses unless they have a specific local presence in ${location}. If there are no location-specific ` +
         `businesses, write "COMPETITORS:" with nothing after it.`
-      : '';
+      : ` List national or UK-wide competitors that appeared in these results, including well-known national ` +
+        `businesses in this category.`;
     const unbrandedContent =
       `A customer who does not know any specific provider is searching for these things: ` +
       (unbrandedQueries || []).map((q) => `"${q}"`).join(', ') +

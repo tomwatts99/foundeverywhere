@@ -100,7 +100,8 @@ const REPORT_INCLUDES = [
 
         <div class="field">
           <label class="field__label" for="rf-location">Location (optional)</label>
-          <input class="field__input" type="text" id="rf-location" name="location" placeholder="e.g. Brighton, Sussex" />
+          <input class="field__input" type="text" id="rf-location" name="location" placeholder="e.g. Brighton — leave blank for national results" aria-describedby="rf-location-hint" />
+          <p class="field__hint" id="rf-location-hint">Include a location for local competitor analysis. Leave blank if you serve customers nationally.</p>
         </div>
 
         <div class="field">
@@ -123,7 +124,8 @@ const REPORT_INCLUDES = [
         <p class="report-error" id="report-error" role="alert" hidden></p>
 
         <p class="report-finewrap">
-          We will email your report within 2 minutes. By submitting you agree to our
+          Your report runs in the background. You can close this page once submitted &mdash; we will
+          email your results directly to you. By submitting you agree to our
           <a href="/privacy/">privacy policy</a>.
         </p>
       </form>
@@ -324,6 +326,14 @@ const REPORT_INCLUDES = [
     font-size: 13px;
     line-height: 1.4;
     color: #0D1321;
+  }
+  .field__hint {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 12px;
+    line-height: 1.45;
+    color: #64748B;
+    text-wrap: pretty;
   }
 
   /* The `hidden` attribute must win over the explicit `display` values

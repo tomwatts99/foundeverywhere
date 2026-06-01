@@ -157,6 +157,12 @@ const overallOffset = RING_CIRC * (1 - overallPct);
 // Competitors appearing instead of the business across the unbranded
 // (discovery) queries on all three platforms.
 const competitors = Array.isArray(report?.competitors) ? report!.competitors : [];
+
+// Subheading reflects whether the report was run for a specific location
+// (local competitor analysis) or with no location (national results).
+const competitorsSub = report?.location
+  ? `These businesses appeared in AI results for ${report.location} service category queries.`
+  : 'These businesses appeared in AI results for national service category queries.';
 ---
 
 <Page
@@ -291,7 +297,7 @@ const competitors = Array.isArray(report?.competitors) ? report!.competitors : [
         <section class="report__competitors" aria-labelledby="competitors-title">
           <h2 id="competitors-title" class="report__competitors-title">Who is appearing instead of you</h2>
           <p class="report__competitors-sub">
-            These businesses appeared in AI results for your service category queries.
+            {competitorsSub}
           </p>
           {competitors.length > 0 ? (
             <ul class="competitor-list">
