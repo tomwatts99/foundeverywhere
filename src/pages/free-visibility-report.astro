@@ -18,15 +18,15 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
 const REPORT_INCLUDES = [
   {
-    title: 'Overall visibility score',
+    title: 'Overall search and AI score',
     body: 'A single score out of 100 showing how visible your business is across AI search systems.',
   },
   {
-    title: 'Platform breakdown',
+    title: 'Google rankings and AI breakdown',
     body: 'Individual results from Claude, Perplexity, and ChatGPT showing exactly where you appear and where you do not.',
   },
   {
-    title: 'Competitor comparison',
+    title: 'Who is ranking and appearing instead of you',
     body: 'See which businesses in your sector are appearing instead of you when AI tools are asked for recommendations.',
   },
   {
@@ -37,8 +37,8 @@ const REPORT_INCLUDES = [
 ---
 
 <Page
-  title="Free AI Visibility Report | Found Everywhere"
-  description="Find out if your business appears in ChatGPT, Perplexity, and Claude. Free AI visibility report in minutes. No commitment."
+  title="Free AI and Search Visibility Report | Found Everywhere"
+  description="Find out where you rank in Google and whether AI tools like ChatGPT, Perplexity, and Claude cite your business. Free report in minutes."
   path="/free-visibility-report/"
   bleed
 >
@@ -51,12 +51,11 @@ const REPORT_INCLUDES = [
     <div class="container">
       <p class="report-hero__eyebrow">Free in minutes</p>
       <h1 id="report-title" class="report-hero__title">
-        Find out if AI search can find your business
+        Find out if search can find your business
       </h1>
       <p class="report-hero__lead">
-        We test your business across ChatGPT, Perplexity, and Claude and tell you
-        exactly where you appear, where you do not, and what to do about it. Free.
-        No commitment.
+        We check your Google rankings and test your business across ChatGPT, Perplexity, and Claude.
+        You get a complete picture of your search and AI visibility in minutes. Free, no commitment.
       </p>
 
       <ul class="report-hero__trust" role="list">
@@ -72,7 +71,7 @@ const REPORT_INCLUDES = [
             <rect x="2" y="3" width="12" height="10" rx="1.5" />
             <path d="M2 5.5h12" />
           </svg>
-          <span>Tests 3 AI systems</span>
+          <span>Tests Google and 3 AI systems</span>
         </li>
         <li>
           <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

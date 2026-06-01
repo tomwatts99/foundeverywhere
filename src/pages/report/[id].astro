@@ -13,18 +13,16 @@ import Page from '../../layouts/Page.astro';
 
 const { id } = Astro.params;
 
-type ModelResult = {
+type DiscoveryResult = {
+  query: string;
+  response: string;
+  appeared: boolean;
+};
+type GoogleResult = {
+  keyword: string;
+  position: number | string;
   found: boolean;
-  confidence: 'high' | 'medium' | 'low';
-  mentions: string[];
-  context: string;
-  score: number;
-  discoveryScore?: number;
-  brandScore?: number;
-  competitors?: string[];
-  queriesChecked?: string[];
-  unbrandedQueriesChecked?: string[];
-  brandedQueriesChecked?: string[];
+  topResults: { title: string; link: string }[];
 };
 type Recommendation = {
   title: string;
@@ -38,19 +36,21 @@ type Report = {
   businessName: string;
   websiteUrl: string;
   location: string;
-  businessContext?: string;
+  metaDescription?: string;
   serviceKeywords?: string[];
-  queries?: string[];
-  unbrandedQueries?: string[];
-  brandedQueries?: string[];
+  discoveryQueries?: string[];
+  discoveryResults?: DiscoveryResult[];
+  appearanceCount?: number;
+  discoveryScore?: number;
+  googleResults?: GoogleResult[] | null;
+  googleScore?: number | null;
+  competitors?: string[];
+  claudeBrandResponse?: string;
+  brandScore?: number;
+  chatgptBrandResponse?: string;
+  chatgptBrandScore?: number;
   email: string;
   overallScore: number;
-  discoveryScore?: number;
-  brandScore?: number;
-  competitors?: string[];
-  claudeResult: ModelResult;
-  perplexityResult: ModelResult;
-  openaiResult: ModelResult;
   recommendations: Recommendation[];
   generatedAt: string;
 };
@@ -64,10 +64,6 @@ let report: Report | null = null;
 // HTTP round-trip, which avoids the classic same-zone subrequest failure
 // (a Pages Function fetching its own hostname loops back into Pages, which
 // has no /api/report route, and returns a 404 → "Report not found").
-//
-// Requires the REPORTS KV binding to be added to the PAGES project too
-// (Pages → Settings → Functions → KV namespace bindings), using the same
-// namespace id as in wrangler.toml.
 const runtimeEnv = (Astro.locals as any)?.runtime?.env;
 
 if (id && runtimeEnv?.REPORTS) {
@@ -84,8 +80,7 @@ if (id && runtimeEnv?.REPORTS) {
 }
 
 // FALLBACK PATH — HTTP fetch to the Worker. Used in local dev (where the
-// KV binding may be absent) or if the binding is not configured. Always
-// absolute; override the origin with PUBLIC_API_ORIGIN for testing.
+// KV binding may be absent) or if the binding is not configured.
 if (!report && id) {
   const API_ORIGIN = import.meta.env.PUBLIC_API_ORIGIN || 'https://foundeverywhere.co.uk';
   const apiUrl = `${API_ORIGIN}/api/report/${id}`;
@@ -102,28 +97,14 @@ if (!report && id) {
 }
 
 /* ---------- presentation helpers ---------- */
-const RING_CIRC = 2 * Math.PI * 35; // 219.9 - matches StatsRow geometry
+const RING_CIRC = 2 * Math.PI * 35; // 219.9
 
+// New honest score bands: 0-25 red, 26-50 amber, 51-75 teal, 76-100 green.
 function scoreColour(score: number): string {
-  if (score < 40) return '#EF4444'; // 0-39 red
-  if (score < 65) return '#F59E0B'; // 40-64 amber
-  return '#0C7B82'; // 65-100 teal
-}
-
-/**
- * Shorten a context string for card display; full text stays in KV.
- * Cuts at the last complete sentence within `max` characters so the text
- * always ends at a natural boundary; falls back to a hard cut with an
- * ellipsis when no sentence boundary is found.
- */
-function truncate(text: string, max = 320): string {
-  const t = (text || '').trim();
-  if (t.length <= max) return t;
-  const window = t.slice(0, max);
-  // Prefer the last sentence break ("X. ") then any trailing period.
-  const lastBreak = Math.max(window.lastIndexOf('. '), window.lastIndexOf('.'));
-  if (lastBreak !== -1) return window.slice(0, lastBreak + 1).trimEnd();
-  return window.trimEnd() + '...';
+  if (score <= 25) return '#EF4444';
+  if (score <= 50) return '#F59E0B';
+  if (score <= 75) return '#0C7B82';
+  return '#16A34A';
 }
 
 function formatDate(iso: string): string {
@@ -141,53 +122,58 @@ function formatDate(iso: string): string {
 const PRIORITY_LABEL = { high: 'High', medium: 'Medium', low: 'Low' } as const;
 const EFFORT_LABEL = { quick: 'Quick win', medium: 'Medium', significant: 'Significant' } as const;
 
-const platforms = report
-  ? [
-      {
-        name: 'Perplexity',
-        logo: '/images/brands/perplexity.svg',
-        result: report.perplexityResult,
-        kind: 'discovery',
-        label: 'Live search discovery',
-        subtitle: 'Based on real-time web search results.',
-      },
-      {
-        name: 'Claude',
-        logo: '/images/brands/claude.svg',
-        result: report.claudeResult,
-        kind: 'brand',
-        label: 'Brand recognition',
-        subtitle: 'Based on AI training data awareness.',
-      },
-      {
-        name: 'ChatGPT',
-        logo: '/images/brands/chatgpt.svg',
-        result: report.openaiResult,
-        kind: 'brand',
-        label: 'Brand recognition',
-        subtitle: 'Based on AI training data awareness.',
-      },
-    ]
-  : [];
-
-const overall = report?.overallScore ?? 0;
+const overall = Math.round(report?.overallScore ?? 0);
 const overallColour = scoreColour(overall);
 const overallPct = Math.max(0, Math.min(1, overall / 100));
 const overallOffset = RING_CIRC * (1 - overallPct);
 
-// Competitors appearing instead of the business — extracted from
-// Perplexity's live search results only (the most accurate, current source).
-const competitors = Array.isArray(report?.competitors) ? report!.competitors : [];
+// Live discovery — four unbranded searches; hard boolean appearance check.
+const discoveryResults: DiscoveryResult[] = Array.isArray(report?.discoveryResults)
+  ? report!.discoveryResults
+  : [];
+const appearanceCount =
+  typeof report?.appearanceCount === 'number'
+    ? report.appearanceCount
+    : discoveryResults.filter((d) => d.appeared).length;
+// Summary colour: 0 red, 1-2 amber, 3-4 teal.
+const appearanceColour =
+  appearanceCount === 0 ? '#EF4444' : appearanceCount <= 2 ? '#F59E0B' : '#0C7B82';
 
-// Subheading reflects whether the report was run for a specific location
-// (local competitor analysis) or with no location (national results).
+// Google rankings — null when SerpAPI was unavailable for this report.
+const googleResults: GoogleResult[] | null = Array.isArray(report?.googleResults)
+  ? report!.googleResults
+  : null;
+function domainOf(link: string): string {
+  try {
+    return new URL(link).hostname.replace(/^www\./i, '');
+  } catch {
+    return (link || '').replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0];
+  }
+}
+function googleTier(g: GoogleResult): 'top' | 'mid' | 'low' | 'none' {
+  const pos = typeof g.position === 'number' ? g.position : null;
+  if (!g.found || pos === null) return 'none';
+  if (pos <= 3) return 'top';
+  if (pos <= 6) return 'mid';
+  return 'low';
+}
+
+// Competitors appearing instead — from Perplexity's live search only.const competitors = Array.isArray(report?.competitors) ? report!.competitors : [];
 const competitorsSub = report?.location
-  ? `These businesses appeared in AI results for ${report.location} service category queries.`
-  : 'These businesses appeared in AI results for national service category queries.';
+  ? `These businesses appeared in AI results for ${report.location} when customers searched the service category.`
+  : 'These businesses appeared in AI results when customers searched the service category.';
+
+// Brand awareness — what Claude / ChatGPT know from training data.
+const brandScore = Math.round(report?.brandScore ?? 0);
+const chatgptBrandScore = Math.round(report?.chatgptBrandScore ?? 0);
+const claudeBrandResponse =
+  report?.claudeBrandResponse || 'No response was returned for this check.';
+const chatgptBrandResponse =
+  report?.chatgptBrandResponse || 'No response was returned for this check.';
 ---
 
 <Page
-  title="Your AI Visibility Report | Found Everywhere"
+  title="Your Search and AI Visibility Report | Found Everywhere"
   description="Your private AI visibility report from Found Everywhere."
   path={`/report/${id}/`}
   noindex
@@ -216,7 +202,7 @@ const competitorsSub = report?.location
           </a>
           <div class="report__heading">
             <div class="report__heading-top">
-              <p class="report__kicker">AI Visibility Report</p>
+              <p class="report__kicker">Search and AI Visibility Report</p>
               <div class="report__actions">
                 <button type="button" class="report__action" id="report-print">
                   <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -254,76 +240,141 @@ const competitorsSub = report?.location
             </svg>
             <span class="score-ring__value">{overall}</span>
           </div>
-          <p class="report__score-label">AI Visibility Score</p>
+          <p class="report__score-label">Visibility Score</p>
           <p class="report__business">{report.businessName}</p>
           <p class="report__score-note">
-            Scores are generated live from AI systems and may vary slightly between
-            reports as AI responses evolve.
+            Scores are generated from live Google data and AI systems. They may vary
+            slightly as search results and AI responses evolve.
           </p>
         </section>
 
-        <!-- Platform results -->
-        <section class="report__platforms" aria-label="Results by platform">
-          {platforms.map((p) => {
-            const score = p.kind === 'discovery'
-              ? (p.result.discoveryScore ?? p.result.score)
-              : (p.result.brandScore ?? p.result.score);
-            const colour = scoreColour(score);
-            return (
-              <div class="platform-card" style={`border-color:${colour}`}>
-                <div class="platform-card__head">
-                  <img class="platform-card__logo" src={p.logo} alt={p.name} width="80" height="22" />
-                  <span class="platform-card__name">{p.name}</span>
-                </div>
-                <p class="platform-card__role">{p.label}</p>
-                <p class="platform-card__role-sub">{p.subtitle}</p>
-                <div class="platform-card__bigscore" style={`color:${colour}`}>
-                  {score}<span class="platform-card__out">/100</span>
-                </div>
-                {p.result.context && (
-                  <div class="platform-card__excerpt">
-                    {p.kind === 'discovery' && (
-                      <p class="platform-card__excerpt-label">What Perplexity returned</p>
-                    )}
-                    <p class="platform-card__context">{truncate(p.result.context, 320)}</p>
-                  </div>
+        <!-- Live discovery -->
+        <section class="report__discovery" aria-labelledby="discovery-title">
+          <h2 id="discovery-title" class="report__section-title">Live AI search discovery</h2>
+          <p class="report__section-sub">
+            We ran 4 unbranded searches in Perplexity to see if your business appears
+            when customers search without knowing your name.
+          </p>
+          <ul class="discovery-list">
+            {discoveryResults.map((d) => (
+              <li class:list={['discovery-row', d.appeared ? 'is-appeared' : 'is-missing']}>
+                <span class="discovery-row__query">{d.query}</span>
+                {d.appeared ? (
+                  <span class="discovery-row__status discovery-row__status--yes">
+                    <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3.5 8.5l3 3 6-7" />
+                    </svg>
+                    Appeared
+                  </span>
+                ) : (
+                  <span class="discovery-row__status discovery-row__status--no">
+                    <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 4l8 8M12 4l-8 8" />
+                    </svg>
+                    Not found
+                  </span>
                 )}
-                {p.result.queriesChecked && p.result.queriesChecked.length > 0 && (
-                  <div class="platform-card__queries">
-                    <p class="platform-card__queries-label">Searches tested</p>
-                    <ul class="platform-card__queries-list">
-                      {p.result.queriesChecked.map((q) => (
-                        <li class="platform-card__query">{q}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+              </li>
+            ))}
+          </ul>
+          <p class="discovery-summary" style={`color:${appearanceColour}`}>
+            Your business appeared in <strong>{appearanceCount}</strong> of 4 searches.
+          </p>
         </section>
 
-        <p class="report__methodology">
-          Discovery score uses Perplexity's live web search to check real results. Brand recognition
-          scores show how well Claude and ChatGPT know your business from their training data. Both
-          matter &mdash; discovery drives new customers, brand recognition builds trust.
-        </p>
+        <!-- Google rankings -->
+        <section class="report__google" aria-labelledby="google-title">
+          <h2 id="google-title" class="report__section-title">Google search rankings</h2>
+          <p class="report__section-sub">Where you appear in Google for your key service searches.</p>
+          {googleResults === null ? (
+            <div class="google-empty">
+              <p class="google-empty__text">
+                Google ranking data was unavailable for this report. Run a new report to include Google rankings.
+              </p>
+            </div>
+          ) : (
+            <Fragment>
+              <ul class="google-list">
+                {googleResults.map((g) => {
+                  const tier = googleTier(g);
+                  return (
+                    <li class="google-row">
+                      <div class="google-row__head">
+                        <span class="google-row__keyword">{g.keyword}</span>
+                        <span class:list={['google-pos', `google-pos--${tier}`]}>
+                          {tier === 'top' && (
+                            <svg aria-hidden="true" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M8 13V4M4 7.5 8 3.5l4 4" />
+                            </svg>
+                          )}
+                          {g.found ? `Position ${g.position}` : 'Not in top 10'}
+                        </span>
+                      </div>
+                      {g.topResults && g.topResults.length > 0 && (
+                        <ul class="google-tops">
+                          {g.topResults.map((r) => (
+                            <li class="google-domain">{domainOf(r.link)}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+              <p class="report__google-note">
+                Rankings shown are for UK Google search. Positions may vary by location and device.
+              </p>
+            </Fragment>
+          )}
+        </section>
 
         <!-- Competitors appearing instead -->
-        <section class="report__competitors" aria-labelledby="competitors-title">
-          <h2 id="competitors-title" class="report__competitors-title">Who is appearing instead of you</h2>
-          <p class="report__competitors-sub">
-            {competitorsSub}
-          </p>
-          {competitors.length > 0 ? (
+        {competitors.length > 0 && (
+          <section class="report__competitors" aria-labelledby="competitors-title">
+            <h2 id="competitors-title" class="report__competitors-title">Who appears when you do not</h2>
+            <p class="report__section-sub">{competitorsSub}</p>
             <ul class="competitor-list">
               {competitors.map((c) => (
                 <li class="competitor-pill">{c}</li>
               ))}
             </ul>
-          ) : (
-            <p class="report__competitors-empty">No local competitors identified &mdash; this may mean the queries returned generic results. Try running the report with a more specific location.</p>
-          )}
+          </section>
+        )}
+
+        <!-- Brand awareness -->
+        <section class="report__brand" aria-labelledby="brand-title">
+          <h2 id="brand-title" class="report__section-title">What AI systems know about you</h2>
+          <div class="brand-grid">
+            <div class="brand-card">
+              <div class="brand-card__head">
+                <div class="brand-card__id">
+                  <img class="brand-card__logo" src="/images/brands/claude.svg" alt="Claude" width="74" height="20" />
+                </div>
+                <span class="brand-card__score" style={`color:${scoreColour(brandScore)}`}>
+                  {brandScore}<span class="brand-card__out">/100</span>
+                </span>
+              </div>
+              <p class="brand-card__body">{claudeBrandResponse}</p>
+              <p class="brand-card__meta">Based on AI training data &mdash; not live search</p>
+            </div>
+            <div class="brand-card">
+              <div class="brand-card__head">
+                <div class="brand-card__id">
+                  <img class="brand-card__logo" src="/images/brands/chatgpt.svg" alt="ChatGPT" width="86" height="20" />
+                </div>
+                <span class="brand-card__score" style={`color:${scoreColour(chatgptBrandScore)}`}>
+                  {chatgptBrandScore}<span class="brand-card__out">/100</span>
+                </span>
+              </div>
+              <p class="brand-card__body">{chatgptBrandResponse}</p>
+              <p class="brand-card__meta">Based on AI training data &mdash; not live search</p>
+            </div>
+          </div>
+          <p class="report__brand-note">
+            Brand awareness scores show what Claude and ChatGPT know about your business
+            from their training data. A low score here is common for growing businesses and
+            can be improved by building third-party mentions, press coverage, and directory listings.
+          </p>
         </section>
 
         <!-- Recommendations -->
@@ -382,7 +433,6 @@ const competitorsSub = report?.location
       try {
         await navigator.clipboard.writeText(window.location.href);
       } catch {
-        // Fallback for older browsers / insecure contexts.
         const ta = document.createElement('textarea');
         ta.value = window.location.href;
         ta.style.position = 'fixed';
@@ -482,11 +532,7 @@ const competitorsSub = report?.location
     font-size: 15px;
     color: #0D1321;
   }
-  .report__actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .report__actions { display: flex; align-items: center; gap: 8px; }
   .report__action {
     display: inline-flex;
     align-items: center;
@@ -508,10 +554,7 @@ const competitorsSub = report?.location
   }
   .report__action svg { flex-shrink: 0; }
   .report__action:hover { border-color: #CBD5E1; background: #F7F9FC; }
-  .report__action.is-copied {
-    color: #0C7B82;
-    border-color: #0C7B82;
-  }
+  .report__action.is-copied { color: #0C7B82; border-color: #0C7B82; }
   .report__date {
     margin: 8px 0 0;
     font-family: var(--font-mono);
@@ -521,21 +564,9 @@ const competitorsSub = report?.location
   }
 
   /* ---------- Score hero ---------- */
-  .report__score {
-    text-align: center;
-    margin-block: 48px;
-  }
-  .score-ring {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    margin: 0 auto;
-  }
-  .score-ring__svg {
-    width: 120px;
-    height: 120px;
-    transform: rotate(-90deg);
-  }
+  .report__score { text-align: center; margin-block: 48px; }
+  .score-ring { position: relative; width: 120px; height: 120px; margin: 0 auto; }
+  .score-ring__svg { width: 120px; height: 120px; transform: rotate(-90deg); }
   .score-ring__track { fill: none; stroke: #EEF2F7; stroke-width: 6; }
   .score-ring__arc {
     fill: none;
@@ -555,12 +586,7 @@ const competitorsSub = report?.location
     color: #0D1321;
     font-variant-numeric: tabular-nums;
   }
-  .report__score-label {
-    margin: 16px 0 0;
-    font-family: var(--font-body);
-    font-size: 14px;
-    color: #64748B;
-  }
+  .report__score-label { margin: 16px 0 0; font-family: var(--font-body); font-size: 14px; color: #64748B; }
   .report__business {
     margin: 4px 0 0;
     font-family: var(--font-display);
@@ -579,125 +605,161 @@ const competitorsSub = report?.location
     text-wrap: pretty;
   }
 
-  /* ---------- Platform cards ---------- */
-  .report__platforms {
-    margin-top: 48px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-  .platform-card {
-    background: #FFFFFF;
-    border: 1px solid #E4E8EF;
-    border-radius: 12px;
-    padding: 24px;
-  }
-  .platform-card__head {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .platform-card__logo { display: block; height: 22px; width: auto; }
-  .platform-card__name {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 15px;
-    color: #0D1321;
-  }
-  .platform-card__role {
-    margin: 16px 0 0;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 1.25;
-    color: #0D1321;
-  }
-  .platform-card__role-sub {
-    margin: 3px 0 0;
-    font-family: var(--font-body);
-    font-size: 12px;
-    line-height: 1.4;
-    color: #94A3B8;
-    text-wrap: pretty;
-  }
-  .platform-card__bigscore {
-    margin-top: 14px;
+  /* ---------- Shared section headings ---------- */
+  .report__section-title {
+    margin: 0;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 40px;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
+    font-size: 24px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: #0D1321;
   }
-  .platform-card__out { font-size: 16px; color: #94A3B8; font-weight: 600; }
-  .platform-card__excerpt { margin-top: 16px; }
-  .platform-card__excerpt-label {
-    margin: 0 0 6px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #94A3B8;
-  }
-  .platform-card__context {
-    margin: 14px 0 0;
+  .report__section-sub {
+    margin: 8px 0 0;
+    max-width: 46rem;
     font-family: var(--font-body);
-    font-size: 14px;
-    line-height: 1.55;
+    font-size: 15px;
+    line-height: 1.6;
     color: #64748B;
-    font-style: italic;
     text-wrap: pretty;
   }
-  .platform-card__excerpt .platform-card__context { margin-top: 0; }
-  .platform-card__queries {
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid #EEF2F7;
+
+  /* ---------- Live discovery ---------- */
+  .report__discovery { margin-top: 56px; }
+  .discovery-list {
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    overflow: hidden;
   }
-  .platform-card__queries-label {
-    margin: 0 0 8px;
+  .discovery-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #EEF2F7;
+  }
+  .discovery-row:last-child { border-bottom: 0; }
+  .discovery-row.is-missing { background: #FEFAFA; }
+  .discovery-row__query {
     font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #94A3B8;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #0D1321;
+    word-break: break-word;
   }
-  .platform-card__queries-list {
+  .discovery-row__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .discovery-row__status svg { flex-shrink: 0; }
+  .discovery-row__status--yes { color: #16A34A; }
+  .discovery-row__status--no { color: #EF4444; }
+  .discovery-summary {
+    margin: 18px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .discovery-summary strong { font-weight: 700; }
+
+  /* ---------- Google rankings ---------- */
+  .report__google { margin-top: 56px; }
+  .google-empty {
+    margin-top: 24px;
+    padding: 28px;
+    background: #F7F9FC;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .google-empty__text {
     margin: 0;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .google-list {
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .google-row {
+    padding: 16px 20px;
+    border-bottom: 1px solid #EEF2F7;
+  }
+  .google-row:last-child { border-bottom: 0; }
+  .google-row__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .google-row__keyword {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.4;
+    color: #0D1321;
+    word-break: break-word;
+  }
+  .google-pos {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .google-pos svg { flex-shrink: 0; }
+  .google-pos--top { color: #0C7B82; }
+  .google-pos--mid { color: #F59E0B; }
+  .google-pos--low { color: #64748B; }
+  .google-pos--none { color: #EF4444; }
+  .google-tops {
+    margin: 10px 0 0;
     padding: 0;
     list-style: none;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 6px;
   }
-  .platform-card__query {
+  .google-domain {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
     font-family: var(--font-body);
-    font-size: 13px;
-    line-height: 1.45;
-    color: #475569;
-    padding-left: 14px;
-    position: relative;
-    text-wrap: pretty;
-  }
-  .platform-card__query::before {
-    content: '\201C';
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: #CBD5E1;
-    font-family: var(--font-display);
-  }
-  .platform-card__query::after { content: '\201D'; color: #CBD5E1; }
-
-  /* ---------- Methodology note ---------- */
-  .report__methodology {
-    margin: 20px 0 0;
-    padding: 16px 20px;
+    font-size: 12px;
+    line-height: 1.3;
+    color: #64748B;
     background: #F7F9FC;
     border: 1px solid #E4E8EF;
-    border-radius: 10px;
+    border-radius: 20px;
+  }
+  .report__google-note {
+    margin: 14px 0 0;
     font-family: var(--font-body);
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: 12px;
+    line-height: 1.5;
     color: #64748B;
     text-wrap: pretty;
   }
@@ -713,19 +775,13 @@ const competitorsSub = report?.location
   .report__competitors-title {
     margin: 0;
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 20px;
     line-height: 1.25;
+    letter-spacing: -0.01em;
     color: #0D1321;
   }
-  .report__competitors-sub {
-    margin: 6px 0 0;
-    font-family: var(--font-body);
-    font-size: 14px;
-    line-height: 1.55;
-    color: #64748B;
-    text-wrap: pretty;
-  }
+  .report__competitors .report__section-sub { margin-top: 6px; }
   .competitor-list {
     margin: 18px 0 0;
     padding: 0;
@@ -737,22 +793,77 @@ const competitorsSub = report?.location
   .competitor-pill {
     display: inline-flex;
     align-items: center;
-    padding: 7px 14px;
+    padding: 6px 14px;
     font-family: var(--font-body);
     font-weight: 500;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.3;
     color: #475569;
     background: #FFFFFF;
     border: 1px solid #E4E8EF;
-    border-radius: 999px;
+    border-radius: 20px;
   }
-  .report__competitors-empty {
+
+  /* ---------- Brand awareness ---------- */
+  .report__brand { margin-top: 56px; }
+  .brand-grid {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .brand-card {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .brand-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #EEF2F7;
+  }
+  .brand-card__id { display: inline-flex; align-items: center; line-height: 0; }
+  .brand-card__logo { display: block; height: 20px; width: auto; }
+  .brand-card__score {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .brand-card__out { font-size: 13px; color: #94A3B8; font-weight: 600; }
+  .brand-card__body {
     margin: 16px 0 0;
     font-family: var(--font-body);
     font-size: 14px;
-    line-height: 1.55;
+    line-height: 1.65;
     color: #64748B;
+    text-wrap: pretty;
+  }
+  .brand-card__meta {
+    margin: 16px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: #64748B;
+  }
+  .report__brand-note {
+    margin: 20px 0 0;
+    padding: 16px 20px;
+    background: #F7F9FC;
+    border: 1px solid #E4E8EF;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
   }
 
   /* ---------- Badges ---------- */
@@ -767,16 +878,13 @@ const competitorsSub = report?.location
     border-radius: 999px;
     text-transform: capitalize;
   }
-  .badge--found { background: #E0F4F5; color: #0A6970; }
-  .badge--not { background: #FEF2F2; color: #DC2626; }
-  .badge--confidence { background: #F1F5F9; color: #64748B; }
   .badge--prio-high { background: #E0F4F5; color: #0A6970; }
   .badge--prio-medium { background: #FEF3E2; color: #B45309; }
   .badge--prio-low { background: #F1F5F9; color: #64748B; }
   .badge--effort { background: #F1F5F9; color: #64748B; }
 
   /* ---------- Recommendations ---------- */
-  .report__recs { margin-top: 64px; }
+  .report__recs { margin-top: 56px; }
   .report__recs-title {
     margin: 0 0 24px;
     font-family: var(--font-display);
@@ -786,11 +894,7 @@ const competitorsSub = report?.location
     letter-spacing: -0.01em;
     color: #0D1321;
   }
-  .report__recs-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+  .report__recs-list { display: flex; flex-direction: column; gap: 12px; }
   .rec-card {
     background: #FFFFFF;
     border: 1px solid #E4E8EF;
@@ -829,7 +933,7 @@ const competitorsSub = report?.location
 
   /* ---------- CTA ---------- */
   .report__cta {
-    margin-top: 64px;
+    margin-top: 56px;
     background: #0D1826;
     border-radius: 16px;
     padding: 40px;
@@ -885,7 +989,8 @@ const competitorsSub = report?.location
     .report__heading { text-align: left; width: 100%; }
     .report__heading-top { justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .report__actions { flex-wrap: wrap; }
-    .report__platforms { grid-template-columns: 1fr; }
+    .brand-grid { grid-template-columns: 1fr; }
+    .discovery-row { flex-direction: column; align-items: flex-start; gap: 8px; }
     .report__recs-title { font-size: 24px; }
     .report__cta { padding: 28px; }
     .report__cta-title { font-size: 24px; }
@@ -895,7 +1000,6 @@ const competitorsSub = report?.location
      PRINT — clean PDF output via the browser print dialog
      ============================================================ */
   @media print {
-    /* Hide site chrome and on-screen-only controls. */
     :global(header.nav),
     :global(.nav),
     :global(footer),
@@ -912,27 +1016,21 @@ const competitorsSub = report?.location
       color: #0D1321 !important;
     }
 
-    .report__wrap {
-      max-width: 100%;
-      padding: 0 !important;
-      margin: 0 auto;
-    }
-
-    /* Keep the brand + report label + date at the top of the printed page. */
-    .report__header {
-      border-bottom: 1px solid #000 !important;
-      padding-bottom: 12px;
-    }
+    .report__wrap { max-width: 100%; padding: 0 !important; margin: 0 auto; }
+    .report__header { border-bottom: 1px solid #000 !important; padding-bottom: 12px; }
     .report__heading-top { justify-content: flex-end; }
 
-    /* Flatten cards: no shadows, hairline borders, no page-break splits. */
-    .platform-card,
-    .rec-card {
+    .brand-card,
+    .rec-card,
+    .discovery-list,
+    .google-list,
+    .google-empty {
       border: 1px solid #C9D2DE !important;
       box-shadow: none !important;
       break-inside: avoid;
       page-break-inside: avoid;
     }
+    .google-domain { border: 1px solid #C9D2DE !important; }
     .report__score { margin-block: 28px; break-inside: avoid; }
     .report__competitors {
       background: #FFFFFF !important;
@@ -941,21 +1039,15 @@ const competitorsSub = report?.location
       page-break-inside: avoid;
     }
     .competitor-pill { border: 1px solid #C9D2DE !important; }
-    .report__platforms {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
+    .report__brand-note { background: #FFFFFF !important; border: 1px solid #C9D2DE !important; }
     .report__recs { margin-top: 32px; }
     .report__recs-title { font-size: 20px; }
     .rec-card { padding: 16px; }
-
-    /* Tighten type for print. */
     .report__business { font-size: 15px; }
     .rec-card__title { font-size: 14px; }
     .rec-card__body { font-size: 12px; }
-    .platform-card__context { font-size: 12px; }
+    .brand-card__body { font-size: 12px; }
 
-    /* Avoid awkward link URL expansion. */
     a { text-decoration: none !important; color: inherit !important; }
   }
 </style>
