@@ -345,6 +345,10 @@ const chatgptBrandResponse =
         <!-- Brand awareness -->
         <section class="report__brand" aria-labelledby="brand-title">
           <h2 id="brand-title" class="report__section-title">What AI systems know about you</h2>
+          <p class="report__section-sub">
+            We asked Claude and ChatGPT to recommend businesses in your category and
+            checked whether you appeared.
+          </p>
           <div class="brand-grid">
             <div class="brand-card">
               <div class="brand-card__head">
@@ -356,7 +360,7 @@ const chatgptBrandResponse =
                 </span>
               </div>
               <p class="brand-card__body">{claudeBrandResponse}</p>
-              <p class="brand-card__meta">Based on AI training data &mdash; not live search</p>
+              <p class="brand-card__meta">Based on AI training data, not live search</p>
             </div>
             <div class="brand-card">
               <div class="brand-card__head">
@@ -368,7 +372,7 @@ const chatgptBrandResponse =
                 </span>
               </div>
               <p class="brand-card__body">{chatgptBrandResponse}</p>
-              <p class="brand-card__meta">Based on AI training data &mdash; not live search</p>
+              <p class="brand-card__meta">Based on AI training data, not live search</p>
             </div>
           </div>
           <p class="report__brand-note">
@@ -808,14 +812,14 @@ const chatgptBrandResponse =
   /* ---------- Brand awareness ---------- */
   .report__brand { margin-top: 56px; }
   .brand-grid {
-    margin-top: 24px;
+    margin-top: 32px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 20px;
   }
   .brand-card {
     background: #FFFFFF;
-    border: 1px solid #E4E8EF;
+    border: 0.5px solid #E4E8EF;
     border-radius: 12px;
     padding: 24px;
     display: flex;
@@ -848,7 +852,8 @@ const chatgptBrandResponse =
     text-wrap: pretty;
   }
   .brand-card__meta {
-    margin: 16px 0 0;
+    margin-top: auto;
+    padding-top: 16px;
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 0.04em;

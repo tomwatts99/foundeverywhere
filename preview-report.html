@@ -177,6 +177,10 @@
       <!-- Brand awareness -->
       <section class="report__brand" aria-labelledby="brand-title">
         <h2 id="brand-title" class="report__section-title">What AI systems know about you</h2>
+        <p class="report__section-sub">
+          We asked Claude and ChatGPT to recommend businesses in your category and
+          checked whether you appeared.
+        </p>
         <div class="brand-grid">
           <div class="brand-card">
             <div class="brand-card__head">
@@ -186,7 +190,7 @@
               <span class="brand-card__score" style="color:#0C7B82">70<span class="brand-card__out">/100</span></span>
             </div>
             <p class="brand-card__body">I have some familiarity with Brighton Web Co. Based on my training data they appear to be a web design and digital agency based in Brighton, UK, offering website design, development and branding for local businesses. I would put their general recognition at around 7 out of 10 within their regional market, though I do not hold detailed information about their client work or reputation.</p>
-            <p class="brand-card__meta">Based on AI training data &mdash; not live search</p>
+            <p class="brand-card__meta">Based on AI training data, not live search</p>
           </div>
           <div class="brand-card">
             <div class="brand-card__head">
@@ -196,7 +200,7 @@
               <span class="brand-card__score" style="color:#0C7B82">60<span class="brand-card__out">/100</span></span>
             </div>
             <p class="brand-card__body">Brighton Web Co looks to be a Brighton-based web design studio offering websites and digital services for small and medium businesses. I have limited specific information about them in my training data and cannot confirm details about their team or portfolio. My confidence in what I know about this business is around 6 out of 10.</p>
-            <p class="brand-card__meta">Based on AI training data &mdash; not live search</p>
+            <p class="brand-card__meta">Based on AI training data, not live search</p>
           </div>
         </div>
         <p class="report__brand-note">
@@ -451,15 +455,15 @@
 
     /* ---------- Brand awareness ---------- */
     .report__brand { margin-top: 56px; }
-    .brand-grid { margin-top: 24px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .brand-card { background: #FFFFFF; border: 1px solid #E4E8EF; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; }
+    .brand-grid { margin-top: 32px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .brand-card { background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; }
     .brand-card__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid #EEF2F7; }
     .brand-card__id { display: inline-flex; align-items: center; line-height: 0; }
     .brand-card__logo { display: block; height: 20px; width: auto; }
     .brand-card__score { font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1; font-variant-numeric: tabular-nums; }
     .brand-card__out { font-size: 13px; color: #94A3B8; font-weight: 600; }
     .brand-card__body { margin: 16px 0 0; font-family: var(--font-body); font-size: 14px; line-height: 1.65; color: #64748B; text-wrap: pretty; }
-    .brand-card__meta { margin: 16px 0 0; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; color: #64748B; }
+    .brand-card__meta { margin-top: auto; padding-top: 16px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; color: #64748B; }
     .report__brand-note {
       margin: 20px 0 0;
       padding: 16px 20px;

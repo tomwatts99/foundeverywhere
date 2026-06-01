@@ -227,17 +227,21 @@ async function extractCompetitors(env, discoveryResults, location) {
 }
 
 /**
- * STEP 4 — Claude brand awareness. One honest question about what Claude
- * knows of the business from training data. Stores the raw prose and a
- * 0-100 score derived from the model's own 1-10 self-rating.
+ * STEP 4 — Claude brand visibility. Rather than asking what Claude knows,
+ * we simulate a real customer asking for a recommendation in the category
+ * and see whether the business surfaces naturally. Stores the raw prose and
+ * a 0-100 score derived from the model's own 1-10 visibility rating.
  */
-async function claudeBrandAwareness(env, businessName, websiteUrl) {
+async function claudeBrandAwareness(env, businessName, serviceKeywords, location) {
+  const service =
+    (serviceKeywords || []).map((k) => (typeof k === 'string' ? k.trim() : '')).find(Boolean) ||
+    'businesses';
+  const where = location ? `in ${location}` : 'in the UK';
   const prompt =
-    `What do you know about a business called ${businessName}? Their website is ${websiteUrl}. ` +
-    `Please tell me: 1) Do you have any information about this business in your training data? ` +
-    `2) If yes, what do you know about what they do and where they are based? ` +
-    `3) On a scale of 1 to 10, how well-known do you think this business is based on your training data? ` +
-    `Be completely honest -- if you have no information, say so clearly. Keep your response to 3 to 4 sentences.`;
+    `A potential customer asks you: "${service} ${where} -- who would you recommend?" ` +
+    `Please answer that question as you naturally would, recommending specific businesses you know about. ` +
+    `Then tell me: does ${businessName} appear in your answer? Rate their visibility from 1 to 10 based on ` +
+    `whether you would naturally recommend them. Keep your response to 4 to 5 sentences.`;
   try {
     const text = await anthropicText(env, prompt, 512);
     return { response: stripMarkdown(text), brandScore: clampScore(extractTenScore(text) * 10) };
@@ -248,15 +252,19 @@ async function claudeBrandAwareness(env, businessName, websiteUrl) {
 }
 
 /**
- * STEP 5 — ChatGPT brand awareness. The same honest question to
- * GPT-4o-mini. Stores raw prose and a 0-100 score.
+ * STEP 5 — ChatGPT brand visibility. The same simulated-recommendation
+ * approach against GPT-4o-mini. Stores raw prose and a 0-100 score.
  */
-async function chatgptBrandAwareness(env, businessName, websiteUrl) {
+async function chatgptBrandAwareness(env, businessName, serviceKeywords, location) {
+  const service =
+    (serviceKeywords || []).map((k) => (typeof k === 'string' ? k.trim() : '')).find(Boolean) ||
+    'businesses';
+  const where = location ? `in ${location}` : 'in the UK';
   const prompt =
-    `What do you know about a business called ${businessName} with website ${websiteUrl}? ` +
-    `Do you have information about them in your training data? If yes, what do they do and where ` +
-    `are they based? Rate your confidence 1 to 10. Be honest if you have no information. ` +
-    `Keep to 3 to 4 sentences.`;
+    `A potential customer asks: "who are the best ${service} businesses ${where}?" ` +
+    `Please give your natural answer recommending specific businesses. ` +
+    `Then confirm: is ${businessName} in your recommendation? Rate their visibility 1 to 10. ` +
+    `Keep to 4 to 5 sentences.`;
   try {
     const text = await openaiText(env, prompt);
     return { response: stripMarkdown(text), brandScore: clampScore(extractTenScore(text) * 10) };
@@ -710,8 +718,8 @@ async function handleGenerateReport(request, env) {
   const [googleData, competitors, claude, chatgpt] = await Promise.all([
     googlePromise,
     extractCompetitors(env, discoveryResults, location),
-    claudeBrandAwareness(env, businessName, websiteUrl),
-    chatgptBrandAwareness(env, businessName, websiteUrl),
+    claudeBrandAwareness(env, businessName, serviceKeywords, location),
+    chatgptBrandAwareness(env, businessName, serviceKeywords, location),
   ]);
   const { googleResults, googleScore } = googleData;
   const claudeBrandResponse = claude.response;
