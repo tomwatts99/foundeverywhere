@@ -158,7 +158,8 @@ function googleTier(g: GoogleResult): 'top' | 'mid' | 'low' | 'none' {
   return 'low';
 }
 
-// Competitors appearing instead — from Perplexity's live search only.const competitors = Array.isArray(report?.competitors) ? report!.competitors : [];
+// Competitors appearing instead — from Perplexity's live search only.
+const competitors = Array.isArray(report?.competitors) ? report!.competitors : [];
 const competitorsSub = report?.location
   ? `These businesses appeared in AI results for ${report.location} when customers searched the service category.`
   : 'These businesses appeared in AI results when customers searched the service category.';
@@ -334,7 +335,7 @@ const chatgptBrandResponse =
             <h2 id="competitors-title" class="report__competitors-title">Who appears when you do not</h2>
             <p class="report__section-sub">{competitorsSub}</p>
             <ul class="competitor-list">
-              {competitors.map((c) => (
+              {competitors.map((c: string) => (
                 <li class="competitor-pill">{c}</li>
               ))}
             </ul>
