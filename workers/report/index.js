@@ -105,14 +105,14 @@ function buildDiscoveryQueries(serviceKeywords, location) {
     .filter(Boolean);
   const k0 = kw[0] || 'services';
   const k1 = kw[1] || k0;
+  const k2 = kw[2] || k0;
   const inLoc = location ? ` in ${location}` : '';
-  const nearLoc = location ? ` near ${location}` : '';
   const trailLoc = location ? ` ${location}` : '';
   return [
     `best ${k0}${inLoc}`,
-    `recommended ${k1}${nearLoc}`,
-    `who should I use for ${k0}${inLoc}`,
-    `top ${k0} companies${trailLoc}`,
+    `top ${k1}${trailLoc}`,
+    `${k0}${inLoc}`,
+    `${k2} agency${trailLoc}`,
   ];
 }
 
