@@ -236,12 +236,15 @@ async function claudeBrandAwareness(env, businessName, serviceKeywords, location
   const service =
     (serviceKeywords || []).map((k) => (typeof k === 'string' ? k.trim() : '')).find(Boolean) ||
     'businesses';
-  const where = location ? `in ${location}` : 'in the UK';
+  const where = location ? `${location}, UK` : 'the UK';
   const prompt =
-    `A potential customer asks you: "${service} ${where} -- who would you recommend?" ` +
-    `Please answer that question as you naturally would, recommending specific businesses you know about. ` +
-    `Then tell me: does ${businessName} appear in your answer? Rate their visibility from 1 to 10 based on ` +
-    `whether you would naturally recommend them. Keep your response to 4 to 5 sentences.`;
+    `A potential customer asks you: "Who would you recommend for ${service} in ${where}?" ` +
+    `Please answer naturally as you would to a real user. Only recommend businesses you are confident ` +
+    `actually exist and serve ${location || 'the UK'} -- do not guess or make up business names. If you are not confident ` +
+    `about specific local businesses, say so clearly rather than inventing names. Then answer these two ` +
+    `questions: 1) Does ${businessName} appear in your recommendation? Yes or no. ` +
+    `2) Rate ${businessName}'s visibility from 1 to 10 based on how likely you would be to recommend them. ` +
+    `Keep your total response to 4 to 5 sentences.`;
   try {
     const text = await anthropicText(env, prompt, 512);
     return { response: stripMarkdown(text), brandScore: clampScore(extractTenScore(text) * 10) };
@@ -259,12 +262,15 @@ async function chatgptBrandAwareness(env, businessName, serviceKeywords, locatio
   const service =
     (serviceKeywords || []).map((k) => (typeof k === 'string' ? k.trim() : '')).find(Boolean) ||
     'businesses';
-  const where = location ? `in ${location}` : 'in the UK';
+  const where = location ? `${location}, UK` : 'the UK';
   const prompt =
-    `A potential customer asks: "who are the best ${service} businesses ${where}?" ` +
-    `Please give your natural answer recommending specific businesses. ` +
-    `Then confirm: is ${businessName} in your recommendation? Rate their visibility 1 to 10. ` +
-    `Keep to 4 to 5 sentences.`;
+    `A potential customer asks you: "Who would you recommend for ${service} in ${where}?" ` +
+    `Please answer naturally as you would to a real user. Only recommend businesses you are confident ` +
+    `actually exist and serve ${location || 'the UK'} -- do not guess or make up business names. If you are not confident ` +
+    `about specific local businesses, say so clearly rather than inventing names. Then answer these two ` +
+    `questions: 1) Does ${businessName} appear in your recommendation? Yes or no. ` +
+    `2) Rate ${businessName}'s visibility from 1 to 10 based on how likely you would be to recommend them. ` +
+    `Keep your total response to 4 to 5 sentences.`;
   try {
     const text = await openaiText(env, prompt);
     return { response: stripMarkdown(text), brandScore: clampScore(extractTenScore(text) * 10) };
