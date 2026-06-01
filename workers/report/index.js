@@ -300,23 +300,68 @@ async function extractCompetitors(env, discoveryResults, location) {
 }
 
 /**
+ * Build the location-strict brand-visibility prompt shared by the Claude
+ * and ChatGPT brand checks. When a location is present the model is told to
+ * include ONLY locally-based providers; with no location it falls back to a
+ * UK-wide search.
+ */
+function brandVisibilityPrompt(service, businessName, location) {
+  if (location) {
+    return (
+      `Search the web for ${service} based in ${location}, UK only. ` +
+      `Only include businesses that are physically located in or explicitly serve ${location}. ` +
+      `Do not include agencies from other cities or national agencies unless they have a specific ` +
+      `${location} office. List the top 5 local businesses you find. For each one state their name, ` +
+      `location, and one sentence about what they do. Then confirm: is ${businessName} based in ` +
+      `${location} in your results? Rate their local visibility 1 to 10.`
+    );
+  }
+  return (
+    `Search the web for the best ${service} in the UK. List the top 5 businesses you find. ` +
+    `For each one state their name, location, and one sentence about what they do. ` +
+    `Then confirm: is ${businessName} in your results? Rate their visibility 1 to 10.`
+  );
+}
+
+/**
+ * Fix 1 — consistent score extraction. Rather than regex-parsing each
+ * model's prose differently, run a single Claude Haiku call that reads the
+ * response and returns one 1-10 number (inferring from sentiment when no
+ * explicit rating is given). Used for BOTH Claude and ChatGPT so the two
+ * platforms score identically. Returns a 0-100 score; falls back to the
+ * regex extractor if the call fails.
+ */
+async function extractVisibilityScore(env, businessName, responseText) {
+  if (!responseText) return 0;
+  const prompt =
+    `From this AI response, extract the visibility rating given for ${businessName}. ` +
+    `The rating should be a number from 1 to 10. If no explicit rating is given, infer one from ` +
+    `the sentiment -- very positive = 8-10, positive = 6-7, neutral = 4-5, negative = 2-3, ` +
+    `not mentioned = 1. Return only the number, nothing else.\n\nAI response:\n${responseText}`;
+  try {
+    const out = await anthropicText(env, prompt, 16);
+    const n = parseInt(String(out).match(/\d{1,2}/)?.[0] ?? '', 10);
+    if (Number.isFinite(n)) return clampScore(Math.max(0, Math.min(10, n)) * 10);
+  } catch (err) {
+    console.error('Score extraction failed:', err);
+  }
+  return clampScore(extractTenScore(responseText) * 10);
+}
+
+/**
  * STEP 4 — Claude brand visibility, using the Anthropic web search tool so
  * Claude surfaces the real top providers in the category, then self-rates
- * the target's visibility. Stores the raw prose and a 0-100 score derived
- * from the 1-10 rating.
+ * the target's visibility. Stores the raw prose and a 0-100 score.
  */
 async function claudeBrandAwareness(env, businessName, serviceKeywords, location) {
   const service =
     (serviceKeywords || []).map((k) => (typeof k === 'string' ? k.trim() : '')).find(Boolean) ||
     'businesses';
-  const where = location ? `${location} UK` : 'the UK';
-  const prompt =
-    `Search the web for: best ${service} agencies in ${where}. ` +
-    `List the top 5 businesses you find with brief descriptions. Then confirm: is ${businessName} ` +
-    `in your results? Rate their visibility 1 to 10 based on their web presence.`;
+  const prompt = brandVisibilityPrompt(service, businessName, location);
   try {
     const text = await anthropicWebSearch(env, prompt, 3);
-    return { response: stripMarkdown(text), brandScore: clampScore(extractTenScore(text) * 10) };
+    const brandScore = await extractVisibilityScore(env, businessName, text);
+    return { response: stripMarkdown(text), brandScore };
   } catch (err) {
     console.error('Claude brand awareness failed:', err);
     return { response: '', brandScore: 0 };
@@ -332,11 +377,7 @@ async function chatgptBrandAwareness(env, businessName, serviceKeywords, locatio
   const service =
     (serviceKeywords || []).map((k) => (typeof k === 'string' ? k.trim() : '')).find(Boolean) ||
     'businesses';
-  const where = location ? `${location}, UK` : 'the UK';
-  const prompt =
-    `Who would you recommend for ${service} in ${where}? Please give specific business names ` +
-    `with brief reasons. Then tell me: does ${businessName} appear in your recommendations? ` +
-    `Rate their visibility 1 to 10.`;
+  const prompt = brandVisibilityPrompt(service, businessName, location);
   let text = '';
   try {
     text = await openaiWebSearch(env, prompt);
@@ -349,7 +390,8 @@ async function chatgptBrandAwareness(env, businessName, serviceKeywords, locatio
       return { response: '', brandScore: 0 };
     }
   }
-  return { response: stripMarkdown(text), brandScore: clampScore(extractTenScore(text) * 10) };
+  const brandScore = await extractVisibilityScore(env, businessName, text);
+  return { response: stripMarkdown(text), brandScore };
 }
 
 /**
