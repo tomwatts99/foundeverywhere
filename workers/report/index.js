@@ -152,24 +152,22 @@ function buildUnbrandedQueries(serviceKeywords, location) {
   const queries = [];
 
   if (location) {
-    // Local discovery: pin every query to the location.
+    // Local discovery: 4 location-specific queries, all pinned to the location.
     const loc = ` in ${location}`;
     queries.push(`best ${kw[0]}${loc}`);
     queries.push(`recommended ${kw[1] || kw[0]}${loc}`);
-    if (kw[2]) queries.push(`top ${kw[2]} companies${loc}`);
+    queries.push(`top ${kw[2] || kw[0]} companies${loc}`);
     queries.push(`who should I use for ${kw[0]}${loc}`);
-    if (kw[3]) queries.push(`${kw[3]}${loc}`);
   } else {
     // National discovery: no location — frame queries UK-wide.
     queries.push(`best ${kw[0]} agency UK`);
     queries.push(`recommended ${kw[1] || kw[0]} service`);
     queries.push(`top ${kw[0]} companies`);
     queries.push(`who should I use for ${kw[0]}`);
-    if (kw[2]) queries.push(`best ${kw[2]} companies UK`);
   }
 
-  // De-duplicate and cap at 5.
-  return [...new Set(queries)].slice(0, 5);
+  // De-duplicate and cap at 4 discovery queries.
+  return [...new Set(queries)].slice(0, 4);
 }
 
 /**
@@ -193,14 +191,36 @@ function buildBrandedQueries(businessName, serviceKeywords, location) {
 }
 
 /**
- * Combine a discovery (unbranded) score and a brand (branded) score into
- * one platform score. Unbranded carries 70%, branded 30%. When there are
- * no unbranded queries (no keywords extracted) the brand score stands in
- * fully so the platform still produces a sensible number.
+ * Shape a Perplexity DISCOVERY result (live web search). Carries the
+ * discovery score, the response excerpt and the competitors it surfaced.
  */
-function combineScores(discoveryScore, brandScore, hasUnbranded) {
-  if (!hasUnbranded) return clampScore(brandScore);
-  return clampScore(discoveryScore * 0.7 + brandScore * 0.3);
+function buildDiscoveryResult(unbranded) {
+  const discoveryScore = clampScore(unbranded?.score);
+  return {
+    found: !!unbranded?.found,
+    confidence: unbranded?.confidence || 'low',
+    mentions: Array.isArray(unbranded?.mentions) ? unbranded.mentions.slice(0, 8) : [],
+    context: unbranded?.context || '',
+    discoveryScore,
+    score: discoveryScore,
+    competitors: Array.isArray(unbranded?.competitors) ? unbranded.competitors : [],
+  };
+}
+
+/**
+ * Shape a Claude / ChatGPT BRAND RECOGNITION result (training-data
+ * awareness). Carries the brand score only.
+ */
+function buildBrandResult(branded) {
+  const brandScore = clampScore(branded?.score);
+  return {
+    found: !!branded?.found,
+    confidence: branded?.confidence || 'low',
+    mentions: Array.isArray(branded?.mentions) ? branded.mentions.slice(0, 8) : [],
+    context: branded?.context || '',
+    brandScore,
+    score: brandScore,
+  };
 }
 
 /**
@@ -221,49 +241,6 @@ function aggregateCompetitors(results, businessName) {
     }
   }
   return [...out.values()].slice(0, 12);
-}
-
-/**
- * SET 1 prompt — unbranded discovery. Asks the model to judge whether the
- * business would actually be named for category/location searches (the
- * name must not flatter the score) and to surface the competitors that
- * appear instead. Scored harshly.
- */
-function unbrandedPrompt({ businessName, websiteUrl, location, serviceKeywords, unbrandedQueries }) {
-  const loc = location || 'not specified';
-  const services = (serviceKeywords || []).filter(Boolean);
-  const queryLines = (unbrandedQueries || []).map((q) => `"${q}"`).join('\n');
-  // Constrain competitor extraction: local when we have a location,
-  // national/UK-wide when we don't.
-  const locationConstraint = location
-    ? `Only include competitors that are based in or explicitly serve ${location}. Do not include national or ` +
-      `global businesses unless they have a specific local presence in ${location}. If no location-specific ` +
-      `competitors are found return an empty array. `
-    : `Extract national or UK-wide competitors that appeared in these results. Include well-known national ` +
-      `businesses in this category. `;
-  return (
-    `You are judging whether a specific business appears in AI assistant answers for UNBRANDED discovery ` +
-    `searches — the kind a customer types when they do NOT yet know this business exists. ` +
-    `The business name must NOT influence the score: judge only on whether a business like this, with its ` +
-    `real online presence, reviews and authority, would actually be named.\n\n` +
-    `Business: ${businessName}. Website: ${websiteUrl}. Location: ${loc}. ` +
-    `This business offers: ${services.join(', ') || 'not specified'}.\n\n` +
-    `For each of these discovery queries, decide whether ${businessName} would genuinely be named in the ` +
-    `AI's answer, and which OTHER businesses would be named instead:\n` +
-    queryLines +
-    `\n\n` +
-    `Score 0-100 HARSHLY:\n` +
-    `- Not mentioned at all across these queries: 0-25.\n` +
-    `- Mentioned alongside competitors but not the clear top pick: 35-60.\n` +
-    `- The primary / first recommendation: 70-100.\n\n` +
-    `Also list the real business names that WOULD be recommended for these queries (the competitors appearing ` +
-    `instead of ${businessName}). Only include genuine, specific businesses you are confident actually exist — ` +
-    `NEVER invent names. ` +
-    locationConstraint +
-    `If you are unsure, return an empty array.\n\n` +
-    `Return JSON: { found: boolean, confidence: 'high'|'medium'|'low', mentions: string[], ` +
-    `competitors: string[], context: string, score: number }`
-  );
 }
 
 /**
@@ -293,31 +270,6 @@ function brandedPrompt({ businessName, websiteUrl, location, serviceKeywords, br
 /* Model calls - each returns a normalised result; never throws.       */
 /* ------------------------------------------------------------------ */
 
-/**
- * Combine the unbranded (discovery) and branded result objects from one
- * platform into the stored shape: a discovery score, a brand score, the
- * 70/30 combined score, and the competitors surfaced by the unbranded run.
- */
-function buildPlatformResult(unbranded, branded, hasUnbranded) {
-  const discoveryScore = clampScore(unbranded?.score);
-  const brandScore = clampScore(branded?.score);
-  return {
-    // "Found" reflects the commercially meaningful discovery result when we
-    // have unbranded queries; otherwise fall back to the branded check.
-    found: hasUnbranded ? !!unbranded?.found : !!branded?.found,
-    confidence: unbranded?.confidence || branded?.confidence || 'low',
-    mentions: [
-      ...new Set([...(unbranded?.mentions || []), ...(branded?.mentions || [])]),
-    ].slice(0, 8),
-    // The unbranded narrative is the one that matters — lead with it.
-    context: unbranded?.context || branded?.context || '',
-    discoveryScore,
-    brandScore,
-    score: combineScores(discoveryScore, brandScore, hasUnbranded),
-    competitors: Array.isArray(unbranded?.competitors) ? unbranded.competitors : [],
-  };
-}
-
 /** POST a single prompt to Claude and return its raw text. Throws on error. */
 async function callAnthropic(env, prompt, maxTokens = 1024) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -340,19 +292,14 @@ async function callAnthropic(env, prompt, maxTokens = 1024) {
 }
 
 async function queryClaude(env, input) {
-  const hasUnbranded = (input.unbrandedQueries || []).length > 0;
+  // Claude = BRAND RECOGNITION only. Branded queries against training-data
+  // awareness; it does not perform live discovery.
   try {
-    const tasks = [
-      hasUnbranded
-        ? callAnthropic(env, unbrandedPrompt(input)).then((t) => normaliseResult(extractJson(t)))
-        : Promise.resolve(normaliseResult(null)),
-      callAnthropic(env, brandedPrompt(input)).then((t) => normaliseResult(extractJson(t))),
-    ];
-    const [unbranded, branded] = await Promise.all(tasks);
-    return buildPlatformResult(unbranded, branded, hasUnbranded);
+    const text = await callAnthropic(env, brandedPrompt(input));
+    return buildBrandResult(normaliseResult(extractJson(text)));
   } catch (err) {
     console.error('Claude query failed:', err);
-    return buildPlatformResult(normaliseResult(null), normaliseResult(null), hasUnbranded);
+    return buildBrandResult(normaliseResult(null));
   }
 }
 
@@ -375,47 +322,48 @@ async function callPerplexity(env, content) {
 }
 
 async function queryPerplexity(env, input) {
-  const { businessName, websiteUrl, location, serviceKeywords, unbrandedQueries, brandedQueries } = input;
+  // Perplexity = LIVE SEARCH DISCOVERY only. It searches the real web, so we
+  // use it exclusively for the unbranded discovery queries and treat its
+  // results as the source of truth for competitors.
+  const { businessName, location, serviceKeywords, unbrandedQueries } = input;
   const services = (serviceKeywords || []).filter(Boolean);
   const hasUnbranded = (unbrandedQueries || []).length > 0;
   const loc = locationClause(location);
 
+  if (!hasUnbranded) {
+    return buildDiscoveryResult({
+      found: false, confidence: 'low', mentions: [], context: '', score: 0, competitors: [],
+    });
+  }
+
   try {
-    const competitorConstraint = location
-      ? ` Only list businesses that are based in or explicitly serve ${location}; do not list national or global ` +
-        `businesses unless they have a specific local presence in ${location}. If there are no location-specific ` +
-        `businesses, write "COMPETITORS:" with nothing after it.`
-      : ` List national or UK-wide competitors that appeared in these results, including well-known national ` +
-        `businesses in this category.`;
-    const unbrandedContent =
-      `A customer who does not know any specific provider is searching for these things: ` +
+    // Strict competitor instruction: only businesses Perplexity's live
+    // results explicitly tie to the location (or, with no location, real
+    // national/UK competitors).
+    const competitorInstruction = location
+      ? `Then, on a final separate line, list ONLY the businesses whose results explicitly state they are based ` +
+        `in or serve ${location}. Use exactly this format, giving each business's location: ` +
+        `COMPETITORS: Name One — ${location}; Name Two — ${location}. ` +
+        `Do NOT list any business unless its connection to ${location} is explicit in the results. ` +
+        `If none qualify, write "COMPETITORS:" with nothing after it.`
+      : `Then, on a final separate line, list the real national or UK-wide businesses recommended in these ` +
+        `results, in exactly this format: COMPETITORS: Name One; Name Two; Name Three.`;
+
+    const content =
+      `Search the live web. A customer who does not know any specific provider is searching for these things: ` +
       (unbrandedQueries || []).map((q) => `"${q}"`).join(', ') +
       `. They are looking for ${services.join(', ') || 'this kind of business'}${loc}. ` +
-      `Which specific businesses would you actually recommend, and is ${businessName} among them? ` +
-      `Give a brief factual answer. Then, on a final separate line, list the businesses you would recommend ` +
-      `in exactly this format: COMPETITORS: Name One; Name Two; Name Three.` +
-      competitorConstraint;
+      `Based on real current search results, which specific businesses actually appear, and does ` +
+      `${businessName} appear among them? Give a brief factual answer describing what the results show. ` +
+      competitorInstruction;
 
-    const brandedContent =
-      `What can you tell me about ${businessName} (${websiteUrl})${loc}? ` +
-      (brandedQueries || []).map((q) => `"${q}"`).join(', ') +
-      `. Do they appear in search results, directories or online recommendations? Give a brief factual answer.`;
-
-    const tasks = [
-      hasUnbranded
-        ? callPerplexity(env, unbrandedContent).then((t) => interpretPerplexityUnbranded(t, businessName))
-        : Promise.resolve({ found: false, confidence: 'low', mentions: [], context: '', score: 0, competitors: [] }),
-      callPerplexity(env, brandedContent).then((t) => interpretPerplexityBranded(t, businessName)),
-    ];
-    const [unbranded, branded] = await Promise.all(tasks);
-    return buildPlatformResult(unbranded, branded, hasUnbranded);
+    const text = await callPerplexity(env, content);
+    return buildDiscoveryResult(interpretPerplexityUnbranded(text, businessName, location));
   } catch (err) {
     console.error('Perplexity query failed:', err);
-    return buildPlatformResult(
-      { found: false, confidence: 'low', mentions: [], context: '', score: 0, competitors: [] },
-      { found: false, confidence: 'low', mentions: [], context: '', score: 0 },
-      hasUnbranded,
-    );
+    return buildDiscoveryResult({
+      found: false, confidence: 'low', mentions: [], context: '', score: 0, competitors: [],
+    });
   }
 }
 
@@ -429,20 +377,23 @@ const POSITIVE_SIGNALS = [
   'reputable', 'established', 'frequently mentioned', 'top choice', 'leading',
 ];
 
-/** Split prose into a clean context string, dropping the COMPETITORS line. */
+/**
+ * Clean a Perplexity reply into a response excerpt for the report card:
+ * drop the COMPETITORS line, strip markdown/citations, collapse whitespace.
+ * Returns the full prose (the report truncates it to a sentence boundary).
+ */
 function perplexityContext(text) {
   const withoutList = String(text || '').replace(/COMPETITORS:.*$/ims, '');
-  const cleaned = stripMarkdown(withoutList);
-  const sentences = cleaned.replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+/);
-  return sentences.slice(0, 2).join(' ');
+  return stripMarkdown(withoutList).replace(/\s+/g, ' ').trim();
 }
 
 /**
- * Interpret an UNBRANDED Perplexity reply. Prose, not JSON — infer a harsh
- * discovery score from whether the business name appears (and how
- * prominently) and parse the trailing COMPETITORS list.
+ * Interpret an UNBRANDED Perplexity reply (live web search). Prose, not
+ * JSON — infer a STRICT discovery score from whether the business name
+ * appears (and how prominently) and parse the trailing COMPETITORS list,
+ * filtering to businesses explicitly tied to the location.
  */
-function interpretPerplexityUnbranded(text, businessName) {
+function interpretPerplexityUnbranded(text, businessName, location) {
   const lower = (text || '').toLowerCase();
   const name = (businessName || '').toLowerCase();
   const nameAppears = name.length > 1 && lower.includes(name);
@@ -457,31 +408,51 @@ function interpretPerplexityUnbranded(text, businessName) {
   let found = false;
   let confidence = 'low';
   if (!nameAppears) {
-    score = isNegative ? 8 : 15; // absent — score harshly
+    // Business name does not appear in the live results — score 0-15.
+    score = isNegative ? 6 : 12;
     confidence = isNegative ? 'high' : 'low';
-  } else if (isNegative) {
-    score = 25;
-    found = false;
-    confidence = 'medium';
   } else if (isPrimary) {
-    score = Math.min(100, 70 + positiveCount * 8); // primary recommendation
+    // Primary recommendation — 70+.
+    score = Math.min(100, 72 + positiveCount * 7);
     found = true;
     confidence = positiveCount >= 2 ? 'high' : 'medium';
   } else {
-    score = Math.min(65, 40 + positiveCount * 8); // mentioned among others
+    // Appears once, alongside others — 30-50.
+    score = Math.min(50, 30 + positiveCount * 6);
     found = true;
     confidence = 'medium';
   }
 
-  // Parse the trailing "COMPETITORS: a; b; c" line.
+  // Parse the trailing "COMPETITORS: ..." line and filter strictly.
   let competitors = [];
   const m = String(text || '').match(/COMPETITORS:\s*(.+)$/im);
   if (m && m[1]) {
-    competitors = m[1]
-      .split(/[;,]/)
-      .map((s) => stripMarkdown(s).trim())
-      .filter((s) => s && s.length <= 60 && s.toLowerCase() !== name)
-      .slice(0, 8);
+    // Location tokens (words >2 chars) used to require explicit local context.
+    const locTokens = (location || '')
+      .toLowerCase()
+      .split(/[^a-z]+/)
+      .filter((t) => t.length > 2);
+    const seen = new Set();
+    for (const entry of m[1].split(/[;\n]/)) {
+      const clean = stripMarkdown(entry).trim();
+      if (!clean) continue;
+      // Name is the part before a dash/colon/pipe separator.
+      const cleanName = clean
+        .split(/\s+[—–\-:|(]\s*/)[0]
+        .replace(/[.)]+$/, '')
+        .trim();
+      const key = cleanName.toLowerCase();
+      if (!cleanName || cleanName.length > 60 || key === name) continue;
+      // Strict: with a location, the entry must explicitly reference it.
+      if (location && locTokens.length) {
+        const hasLoc = locTokens.some((t) => clean.toLowerCase().includes(t));
+        if (!hasLoc) continue;
+      }
+      if (seen.has(key)) continue;
+      seen.add(key);
+      competitors.push(cleanName);
+    }
+    competitors = competitors.slice(0, 8);
   }
 
   return {
@@ -491,38 +462,6 @@ function interpretPerplexityUnbranded(text, businessName) {
     context: perplexityContext(text),
     score: clampScore(score),
     competitors,
-  };
-}
-
-/** Interpret a BRANDED Perplexity reply — does it know the business by name? */
-function interpretPerplexityBranded(text, businessName) {
-  const lower = (text || '').toLowerCase();
-  const name = (businessName || '').toLowerCase();
-  const nameAppears = name.length > 1 && lower.includes(name);
-  const isNegative = NEGATIVE_SIGNALS.some((s) => lower.includes(s));
-  const positiveCount = POSITIVE_SIGNALS.filter((s) => lower.includes(s)).length;
-
-  let score = 0;
-  let found = false;
-  let confidence = 'low';
-  if (nameAppears && !isNegative) {
-    found = true;
-    score = Math.min(100, 45 + positiveCount * 12);
-    confidence = positiveCount >= 2 ? 'high' : 'medium';
-  } else if (nameAppears && isNegative) {
-    score = 20;
-    confidence = 'medium';
-  } else {
-    score = isNegative ? 5 : 15;
-    confidence = isNegative ? 'high' : 'low';
-  }
-
-  return {
-    found,
-    confidence,
-    mentions: nameAppears ? [businessName] : [],
-    context: perplexityContext(text),
-    score: clampScore(score),
   };
 }
 
@@ -549,19 +488,14 @@ async function callOpenAI(env, prompt) {
 }
 
 async function queryOpenAI(env, input) {
-  const hasUnbranded = (input.unbrandedQueries || []).length > 0;
+  // ChatGPT = BRAND RECOGNITION only. Branded queries against training-data
+  // awareness; it does not perform live discovery.
   try {
-    const tasks = [
-      hasUnbranded
-        ? callOpenAI(env, unbrandedPrompt(input)).then((t) => normaliseResult(extractJson(t)))
-        : Promise.resolve(normaliseResult(null)),
-      callOpenAI(env, brandedPrompt(input)).then((t) => normaliseResult(extractJson(t))),
-    ];
-    const [unbranded, branded] = await Promise.all(tasks);
-    return buildPlatformResult(unbranded, branded, hasUnbranded);
+    const text = await callOpenAI(env, brandedPrompt(input));
+    return buildBrandResult(normaliseResult(extractJson(text)));
   } catch (err) {
     console.error('OpenAI query failed:', err);
-    return buildPlatformResult(normaliseResult(null), normaliseResult(null), hasUnbranded);
+    return buildBrandResult(normaliseResult(null));
   }
 }
 
@@ -924,9 +858,9 @@ async function handleGenerateReport(request, env) {
     .slice(0, 600);
 
   /* Step 1.6 - extract the specific services this business offers, then
-     build BOTH query sets every model is tested against:
-       Set 1 — unbranded discovery queries (no business name, 70% weight)
-       Set 2 — branded queries (include the name, 30% weight) */
+     build BOTH query sets:
+       Set 1 — unbranded discovery queries (no business name) → Perplexity
+       Set 2 — branded queries (include the name) → Claude + ChatGPT */
   const serviceKeywords = await extractServiceKeywords(env, {
     businessName,
     pageTitle,
@@ -950,46 +884,40 @@ async function handleGenerateReport(request, env) {
     queries,
   };
 
-  /* Steps 2–4 - query the three systems in parallel. Each runs BOTH query
-     sets and returns a discovery score, a brand score and a 70/30 combined
-     score, plus any competitors surfaced by the unbranded run. */
+  /* Steps 2–4 - query the three systems in parallel, each with its own job:
+       Perplexity → live web-search DISCOVERY (unbranded queries only)
+       Claude     → BRAND RECOGNITION (branded queries only)
+       ChatGPT    → BRAND RECOGNITION (branded queries only) */
   const [claudeResult, perplexityResult, openaiResult] = await Promise.all([
     queryClaude(env, input),
     queryPerplexity(env, input),
     queryOpenAI(env, input),
   ]);
 
-  /* Stamp the canonical query lists onto every result so the report and
-     email show exactly what was checked, regardless of model echo. */
-  for (const r of [claudeResult, perplexityResult, openaiResult]) {
-    r.unbrandedQueriesChecked = unbrandedQueries;
+  /* Stamp the relevant query list onto each result so the report and email
+     show exactly what was checked. Perplexity ran the discovery queries;
+     Claude and ChatGPT ran the branded queries. */
+  perplexityResult.queriesChecked = unbrandedQueries;
+  perplexityResult.unbrandedQueriesChecked = unbrandedQueries;
+  for (const r of [claudeResult, openaiResult]) {
+    r.queriesChecked = brandedQueries;
     r.brandedQueriesChecked = brandedQueries;
-    r.queriesChecked = queries;
   }
 
-  /* Aggregate the competitors appearing instead of the business across all
-     three platforms' unbranded results. */
-  const competitors = aggregateCompetitors(
-    [claudeResult, perplexityResult, openaiResult],
-    businessName,
-  );
+  /* Competitors come ONLY from Perplexity — its live search results are the
+     most accurate, current source. */
+  const competitors = aggregateCompetitors([perplexityResult], businessName);
 
-  /* Step 5 - scores. Average each component across platforms, then apply
-     the 70/30 weighting for the headline number. */
-  const avg = (a, b, c) => Math.round(((a + b + c) / 3) * 10) / 10;
-  const discoveryScore = avg(
-    claudeResult.discoveryScore,
-    perplexityResult.discoveryScore,
-    openaiResult.discoveryScore,
-  );
-  const brandScore = avg(
-    claudeResult.brandScore,
-    perplexityResult.brandScore,
-    openaiResult.brandScore,
-  );
+  /* Step 5 - scores. New honest methodology:
+       Overall = Perplexity discovery (60%) + Claude brand (20%) + ChatGPT brand (20%).
+     Discovery is Perplexity's live-search score; brand is the average of the
+     two training-data awareness scores (for display). */
+  const round1 = (n) => Math.round(n * 10) / 10;
+  const discoveryScore = clampScore(perplexityResult.discoveryScore);
+  const brandScore = round1((claudeResult.brandScore + openaiResult.brandScore) / 2);
   const hasUnbranded = unbrandedQueries.length > 0;
   const overallScore = hasUnbranded
-    ? Math.round((discoveryScore * 0.7 + brandScore * 0.3) * 10) / 10
+    ? round1(discoveryScore * 0.6 + claudeResult.brandScore * 0.2 + openaiResult.brandScore * 0.2)
     : brandScore;
 
   /* Step 6 - recommendations, focused on the unbranded discovery gap. */

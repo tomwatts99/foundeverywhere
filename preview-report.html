@@ -53,12 +53,12 @@
 
       <!-- Score hero -->
       <section class="report__score" aria-label="Overall AI visibility score">
-        <div class="score-ring" style="--ring-colour:#F59E0B">
+        <div class="score-ring" style="--ring-colour:#EF4444">
           <svg class="score-ring__svg" viewBox="0 0 80 80" aria-hidden="true">
             <circle class="score-ring__track" cx="40" cy="40" r="35" />
-            <circle class="score-ring__arc" cx="40" cy="40" r="35" style="stroke-dasharray:219.9;stroke-dashoffset:131.9" />
+            <circle class="score-ring__arc" cx="40" cy="40" r="35" style="stroke-dasharray:219.9;stroke-dashoffset:136.3" />
           </svg>
-          <span class="score-ring__value">40</span>
+          <span class="score-ring__value">38</span>
         </div>
         <p class="report__score-label">AI Visibility Score</p>
         <p class="report__business">Brighton Web Co</p>
@@ -70,65 +70,19 @@
 
       <!-- Platform results -->
       <section class="report__platforms" aria-label="Results by platform">
-        <!-- Claude -->
-        <div class="platform-card" style="border-color:#EF4444">
-          <div class="platform-card__head">
-            <img class="platform-card__logo" src="public/images/brands/claude.svg" alt="Claude" width="80" height="22" />
-            <span class="platform-card__name">Claude</span>
-          </div>
-          <div class="platform-card__scores">
-            <div class="score-row">
-              <div class="score-row__meta">
-                <span class="score-row__label">Discovery score</span>
-                <span class="score-row__caption">When customers search without your name</span>
-              </div>
-              <span class="score-row__value" style="color:#EF4444">25<span class="score-row__out">/100</span></span>
-            </div>
-            <div class="score-row">
-              <div class="score-row__meta">
-                <span class="score-row__label">Brand score</span>
-                <span class="score-row__caption">When customers search for you by name</span>
-              </div>
-              <span class="score-row__value" style="color:#0C7B82">70<span class="score-row__out">/100</span></span>
-            </div>
-          </div>
-          <p class="platform-card__context">Brighton Web Co is not named among the agencies typically recommended for these category searches. The answers centre on a handful of established local studios with stronger review profiles, and the business does not surface for unbranded "best web design agency in Brighton" queries.</p>
-          <div class="platform-card__queries">
-            <p class="platform-card__queries-label">Searches tested</p>
-            <ul class="platform-card__queries-list">
-              <li class="platform-card__query">best web design agency in Brighton</li>
-              <li class="platform-card__query">recommended digital agency in Brighton</li>
-              <li class="platform-card__query">top web design companies in Brighton</li>
-              <li class="platform-card__query">who should I use for web design in Brighton</li>
-              <li class="platform-card__query">what does Brighton Web Co do</li>
-              <li class="platform-card__query">is Brighton Web Co a good web design agency in Brighton</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Perplexity -->
+        <!-- Perplexity — live search discovery -->
         <div class="platform-card" style="border-color:#EF4444">
           <div class="platform-card__head">
             <img class="platform-card__logo" src="public/images/brands/perplexity.svg" alt="Perplexity" width="80" height="22" />
             <span class="platform-card__name">Perplexity</span>
           </div>
-          <div class="platform-card__scores">
-            <div class="score-row">
-              <div class="score-row__meta">
-                <span class="score-row__label">Discovery score</span>
-                <span class="score-row__caption">When customers search without your name</span>
-              </div>
-              <span class="score-row__value" style="color:#EF4444">15<span class="score-row__out">/100</span></span>
-            </div>
-            <div class="score-row">
-              <div class="score-row__meta">
-                <span class="score-row__label">Brand score</span>
-                <span class="score-row__caption">When customers search for you by name</span>
-              </div>
-              <span class="score-row__value" style="color:#F59E0B">55<span class="score-row__out">/100</span></span>
-            </div>
+          <p class="platform-card__role">Live search discovery</p>
+          <p class="platform-card__role-sub">Based on real-time web search results.</p>
+          <div class="platform-card__bigscore" style="color:#EF4444">15<span class="platform-card__out">/100</span></div>
+          <div class="platform-card__excerpt">
+            <p class="platform-card__excerpt-label">What Perplexity returned</p>
+            <p class="platform-card__context">For these searches the top results are Seaside Web Studio, Pier Digital and Lanes Creative, all Brighton-based agencies with strong review profiles. Brighton Web Co does not appear in the recommendations for any of the four discovery queries.</p>
           </div>
-          <p class="platform-card__context">For unbranded discovery searches the results list other Brighton studios with stronger review profiles and directory presence; Brighton Web Co does not surface.</p>
           <div class="platform-card__queries">
             <p class="platform-card__queries-label">Searches tested</p>
             <ul class="platform-card__queries-list">
@@ -136,48 +90,58 @@
               <li class="platform-card__query">recommended digital agency in Brighton</li>
               <li class="platform-card__query">top web design companies in Brighton</li>
               <li class="platform-card__query">who should I use for web design in Brighton</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Claude — brand recognition -->
+        <div class="platform-card" style="border-color:#0C7B82">
+          <div class="platform-card__head">
+            <img class="platform-card__logo" src="public/images/brands/claude.svg" alt="Claude" width="80" height="22" />
+            <span class="platform-card__name">Claude</span>
+          </div>
+          <p class="platform-card__role">Brand recognition</p>
+          <p class="platform-card__role-sub">Based on AI training data awareness.</p>
+          <div class="platform-card__bigscore" style="color:#0C7B82">70<span class="platform-card__out">/100</span></div>
+          <div class="platform-card__excerpt">
+            <p class="platform-card__context">Claude recognises Brighton Web Co as a web design agency in Brighton and can describe its core services accurately, indicating solid brand awareness from training data.</p>
+          </div>
+          <div class="platform-card__queries">
+            <p class="platform-card__queries-label">Searches tested</p>
+            <ul class="platform-card__queries-list">
               <li class="platform-card__query">what does Brighton Web Co do</li>
               <li class="platform-card__query">is Brighton Web Co a good web design agency in Brighton</li>
             </ul>
           </div>
         </div>
 
-        <!-- ChatGPT -->
-        <div class="platform-card" style="border-color:#F59E0B">
+        <!-- ChatGPT — brand recognition -->
+        <div class="platform-card" style="border-color:#0C7B82">
           <div class="platform-card__head">
             <img class="platform-card__logo" src="public/images/brands/chatgpt.svg" alt="ChatGPT" width="80" height="22" />
             <span class="platform-card__name">ChatGPT</span>
           </div>
-          <div class="platform-card__scores">
-            <div class="score-row">
-              <div class="score-row__meta">
-                <span class="score-row__label">Discovery score</span>
-                <span class="score-row__caption">When customers search without your name</span>
-              </div>
-              <span class="score-row__value" style="color:#F59E0B">45<span class="score-row__out">/100</span></span>
-            </div>
-            <div class="score-row">
-              <div class="score-row__meta">
-                <span class="score-row__label">Brand score</span>
-                <span class="score-row__caption">When customers search for you by name</span>
-              </div>
-              <span class="score-row__value" style="color:#0C7B82">75<span class="score-row__out">/100</span></span>
-            </div>
+          <p class="platform-card__role">Brand recognition</p>
+          <p class="platform-card__role-sub">Based on AI training data awareness.</p>
+          <div class="platform-card__bigscore" style="color:#0C7B82">75<span class="platform-card__out">/100</span></div>
+          <div class="platform-card__excerpt">
+            <p class="platform-card__context">ChatGPT knows Brighton Web Co by name, correctly identifies it as a Brighton web design agency and summarises its offering, reflecting strong brand recognition.</p>
           </div>
-          <p class="platform-card__context">Brighton Web Co is occasionally mentioned alongside several competitors for category searches, but is rarely the primary recommendation.</p>
           <div class="platform-card__queries">
             <p class="platform-card__queries-label">Searches tested</p>
             <ul class="platform-card__queries-list">
-              <li class="platform-card__query">best web design agency in Brighton</li>
-              <li class="platform-card__query">recommended digital agency in Brighton</li>
-              <li class="platform-card__query">top web design companies in Brighton</li>
-              <li class="platform-card__query">who should I use for web design in Brighton</li>
               <li class="platform-card__query">what does Brighton Web Co do</li>
               <li class="platform-card__query">is Brighton Web Co a good web design agency in Brighton</li>
             </ul>
           </div>
         </div>
       </section>
+
+      <p class="report__methodology">
+        Discovery score uses Perplexity's live web search to check real results. Brand recognition
+        scores show how well Claude and ChatGPT know your business from their training data. Both
+        matter &mdash; discovery drives new customers, brand recognition builds trust.
+      </p>
 
       <!-- Competitors appearing instead -->
       <section class="report__competitors" aria-labelledby="competitors-title">
@@ -377,28 +341,23 @@
     .platform-card__head { display: flex; align-items: center; gap: 10px; }
     .platform-card__logo { display: block; height: 22px; width: auto; }
     .platform-card__name { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: #0D1321; }
-    .platform-card__scores { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
-    .score-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      padding-top: 12px;
-      border-top: 1px solid #EEF2F7;
-    }
-    .score-row:first-child { padding-top: 0; border-top: none; }
-    .score-row__meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-    .score-row__label { font-family: var(--font-display); font-weight: 600; font-size: 13px; line-height: 1.2; color: #0D1321; }
-    .score-row__caption { font-family: var(--font-body); font-size: 11px; line-height: 1.35; color: #94A3B8; text-wrap: pretty; }
-    .score-row__value { flex-shrink: 0; font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1; font-variant-numeric: tabular-nums; }
-    .score-row__out { font-size: 13px; color: #94A3B8; font-weight: 600; }
+    .platform-card__role { margin: 16px 0 0; font-family: var(--font-display); font-weight: 600; font-size: 14px; line-height: 1.25; color: #0D1321; }
+    .platform-card__role-sub { margin: 3px 0 0; font-family: var(--font-body); font-size: 12px; line-height: 1.4; color: #94A3B8; text-wrap: pretty; }
+    .platform-card__bigscore { margin-top: 14px; font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .platform-card__out { font-size: 16px; color: #94A3B8; font-weight: 600; }
+    .platform-card__excerpt { margin-top: 16px; }
+    .platform-card__excerpt-label { margin: 0 0 6px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #94A3B8; }
     .platform-card__context { margin: 14px 0 0; font-family: var(--font-body); font-size: 14px; line-height: 1.55; color: #64748B; font-style: italic; text-wrap: pretty; }
+    .platform-card__excerpt .platform-card__context { margin-top: 0; }
     .platform-card__queries { margin-top: 16px; padding-top: 14px; border-top: 1px solid #EEF2F7; }
     .platform-card__queries-label { margin: 0 0 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #94A3B8; }
     .platform-card__queries-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
     .platform-card__query { font-family: var(--font-body); font-size: 13px; line-height: 1.45; color: #475569; padding-left: 14px; position: relative; text-wrap: pretty; }
     .platform-card__query::before { content: '\201C'; position: absolute; left: 0; top: 0; color: #CBD5E1; font-family: var(--font-display); }
     .platform-card__query::after { content: '\201D'; color: #CBD5E1; }
+
+    /* ---------- Methodology note ---------- */
+    .report__methodology { margin: 20px 0 0; padding: 16px 20px; background: #F7F9FC; border: 1px solid #E4E8EF; border-radius: 10px; font-family: var(--font-body); font-size: 13px; line-height: 1.6; color: #64748B; text-wrap: pretty; }
 
     /* ---------- Competitors ---------- */
     .report__competitors { margin-top: 40px; padding: 28px; background: #F7F9FC; border: 1px solid #E4E8EF; border-radius: 12px; }

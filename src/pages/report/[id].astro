@@ -143,9 +143,30 @@ const EFFORT_LABEL = { quick: 'Quick win', medium: 'Medium', significant: 'Signi
 
 const platforms = report
   ? [
-      { name: 'Claude', logo: '/images/brands/claude.svg', result: report.claudeResult },
-      { name: 'Perplexity', logo: '/images/brands/perplexity.svg', result: report.perplexityResult },
-      { name: 'ChatGPT', logo: '/images/brands/chatgpt.svg', result: report.openaiResult },
+      {
+        name: 'Perplexity',
+        logo: '/images/brands/perplexity.svg',
+        result: report.perplexityResult,
+        kind: 'discovery',
+        label: 'Live search discovery',
+        subtitle: 'Based on real-time web search results.',
+      },
+      {
+        name: 'Claude',
+        logo: '/images/brands/claude.svg',
+        result: report.claudeResult,
+        kind: 'brand',
+        label: 'Brand recognition',
+        subtitle: 'Based on AI training data awareness.',
+      },
+      {
+        name: 'ChatGPT',
+        logo: '/images/brands/chatgpt.svg',
+        result: report.openaiResult,
+        kind: 'brand',
+        label: 'Brand recognition',
+        subtitle: 'Based on AI training data awareness.',
+      },
     ]
   : [];
 
@@ -154,8 +175,8 @@ const overallColour = scoreColour(overall);
 const overallPct = Math.max(0, Math.min(1, overall / 100));
 const overallOffset = RING_CIRC * (1 - overallPct);
 
-// Competitors appearing instead of the business across the unbranded
-// (discovery) queries on all three platforms.
+// Competitors appearing instead of the business — extracted from
+// Perplexity's live search results only (the most accurate, current source).
 const competitors = Array.isArray(report?.competitors) ? report!.competitors : [];
 
 // Subheading reflects whether the report was run for a specific location
@@ -244,39 +265,28 @@ const competitorsSub = report?.location
         <!-- Platform results -->
         <section class="report__platforms" aria-label="Results by platform">
           {platforms.map((p) => {
-            const discovery = p.result.discoveryScore ?? p.result.score;
-            const brand = p.result.brandScore ?? p.result.score;
-            const discoveryColour = scoreColour(discovery);
-            const brandColour = scoreColour(brand);
-            const accent = scoreColour(p.result.score);
+            const score = p.kind === 'discovery'
+              ? (p.result.discoveryScore ?? p.result.score)
+              : (p.result.brandScore ?? p.result.score);
+            const colour = scoreColour(score);
             return (
-              <div class="platform-card" style={`border-color:${accent}`}>
+              <div class="platform-card" style={`border-color:${colour}`}>
                 <div class="platform-card__head">
                   <img class="platform-card__logo" src={p.logo} alt={p.name} width="80" height="22" />
                   <span class="platform-card__name">{p.name}</span>
                 </div>
-                <div class="platform-card__scores">
-                  <div class="score-row">
-                    <div class="score-row__meta">
-                      <span class="score-row__label">Discovery score</span>
-                      <span class="score-row__caption">When customers search without your name</span>
-                    </div>
-                    <span class="score-row__value" style={`color:${discoveryColour}`}>
-                      {discovery}<span class="score-row__out">/100</span>
-                    </span>
-                  </div>
-                  <div class="score-row">
-                    <div class="score-row__meta">
-                      <span class="score-row__label">Brand score</span>
-                      <span class="score-row__caption">When customers search for you by name</span>
-                    </div>
-                    <span class="score-row__value" style={`color:${brandColour}`}>
-                      {brand}<span class="score-row__out">/100</span>
-                    </span>
-                  </div>
+                <p class="platform-card__role">{p.label}</p>
+                <p class="platform-card__role-sub">{p.subtitle}</p>
+                <div class="platform-card__bigscore" style={`color:${colour}`}>
+                  {score}<span class="platform-card__out">/100</span>
                 </div>
                 {p.result.context && (
-                  <p class="platform-card__context">{truncate(p.result.context, 320)}</p>
+                  <div class="platform-card__excerpt">
+                    {p.kind === 'discovery' && (
+                      <p class="platform-card__excerpt-label">What Perplexity returned</p>
+                    )}
+                    <p class="platform-card__context">{truncate(p.result.context, 320)}</p>
+                  </div>
                 )}
                 {p.result.queriesChecked && p.result.queriesChecked.length > 0 && (
                   <div class="platform-card__queries">
@@ -293,6 +303,12 @@ const competitorsSub = report?.location
           })}
         </section>
 
+        <p class="report__methodology">
+          Discovery score uses Perplexity's live web search to check real results. Brand recognition
+          scores show how well Claude and ChatGPT know your business from their training data. Both
+          matter &mdash; discovery drives new customers, brand recognition builds trust.
+        </p>
+
         <!-- Competitors appearing instead -->
         <section class="report__competitors" aria-labelledby="competitors-title">
           <h2 id="competitors-title" class="report__competitors-title">Who is appearing instead of you</h2>
@@ -306,7 +322,7 @@ const competitorsSub = report?.location
               ))}
             </ul>
           ) : (
-            <p class="report__competitors-empty">No direct competitors identified in these queries.</p>
+            <p class="report__competitors-empty">No local competitors identified &mdash; this may mean the queries returned generic results. Try running the report with a more specific location.</p>
           )}
         </section>
 
@@ -588,50 +604,40 @@ const competitorsSub = report?.location
     font-size: 15px;
     color: #0D1321;
   }
-  .platform-card__scores {
-    margin-top: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .score-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    padding-top: 12px;
-    border-top: 1px solid #EEF2F7;
-  }
-  .score-row:first-child { padding-top: 0; border-top: none; }
-  .score-row__meta {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-  .score-row__label {
+  .platform-card__role {
+    margin: 16px 0 0;
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 13px;
-    line-height: 1.2;
+    font-size: 14px;
+    line-height: 1.25;
     color: #0D1321;
   }
-  .score-row__caption {
+  .platform-card__role-sub {
+    margin: 3px 0 0;
     font-family: var(--font-body);
-    font-size: 11px;
-    line-height: 1.35;
+    font-size: 12px;
+    line-height: 1.4;
     color: #94A3B8;
     text-wrap: pretty;
   }
-  .score-row__value {
-    flex-shrink: 0;
+  .platform-card__bigscore {
+    margin-top: 14px;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 24px;
+    font-size: 40px;
     line-height: 1;
     font-variant-numeric: tabular-nums;
   }
-  .score-row__out { font-size: 13px; color: #94A3B8; font-weight: 600; }
+  .platform-card__out { font-size: 16px; color: #94A3B8; font-weight: 600; }
+  .platform-card__excerpt { margin-top: 16px; }
+  .platform-card__excerpt-label {
+    margin: 0 0 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94A3B8;
+  }
   .platform-card__context {
     margin: 14px 0 0;
     font-family: var(--font-body);
@@ -641,6 +647,7 @@ const competitorsSub = report?.location
     font-style: italic;
     text-wrap: pretty;
   }
+  .platform-card__excerpt .platform-card__context { margin-top: 0; }
   .platform-card__queries {
     margin-top: 16px;
     padding-top: 14px;
@@ -680,6 +687,20 @@ const competitorsSub = report?.location
     font-family: var(--font-display);
   }
   .platform-card__query::after { content: '\201D'; color: #CBD5E1; }
+
+  /* ---------- Methodology note ---------- */
+  .report__methodology {
+    margin: 20px 0 0;
+    padding: 16px 20px;
+    background: #F7F9FC;
+    border: 1px solid #E4E8EF;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
 
   /* ---------- Competitors ---------- */
   .report__competitors {
