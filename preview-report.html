@@ -175,42 +175,33 @@
       </section>
 
       <!-- Brand awareness -->
-      <section class="report__brand" aria-labelledby="brand-title">
-        <h2 id="brand-title" class="report__section-title">What AI systems would recommend</h2>
-        <p class="report__section-sub">
-          We asked Claude and ChatGPT who they would recommend for web design in Brighton
-          and checked whether Brighton Web Co appeared.
-        </p>
-        <div class="brand-grid">
-          <div class="brand-card">
-            <div class="brand-card__head">
-              <div class="brand-card__id">
-                <img class="brand-card__logo" src="public/images/brands/claude.svg" alt="" width="20" height="20" />
-                <span class="brand-card__name">Claude</span>
-              </div>
-              <span class="brand-card__score" style="color:#0C7B82">70<span class="brand-card__out">/100</span></span>
+      <section class="report__ai" aria-labelledby="brand-title" style="padding:64px 0;">
+        <h2 id="brand-title" style="font-family:'Outfit',sans-serif;font-size:24px;font-weight:700;color:#0D1321;margin-bottom:8px;">What AI systems would recommend</h2>
+        <p style="font-family:'Inter',sans-serif;font-size:15px;color:#64748B;margin-bottom:40px;">We asked Claude and ChatGPT who they would recommend for web design in Brighton and checked whether Brighton Web Co appeared.</p>
+
+        <div class="brand-grid" style="display:grid;gap:20px;">
+          <!-- Claude card -->
+          <div class="brand-card" style="background:#fff;border:0.5px solid #E4E8EF;border-radius:12px;padding:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:16px;border-bottom:0.5px solid #E4E8EF;">
+              <span style="font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;color:#0D1321;">Claude</span>
+              <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:700;color:#0C7B82;">70/100</span>
             </div>
-            <p class="brand-card__body">For web design in Brighton I would point you toward a few well-established local studios, though I would want you to verify current details directly. Brighton Web Co does come to mind as a Brighton-based web design and branding studio working with local small businesses. I would rate their visibility around 7 out of 10 within their regional market. As always, I would recommend checking recent reviews and portfolios before deciding.</p>
-            <p class="brand-card__meta">Based on AI training data, not live search</p>
+            <p style="font-family:'Inter',sans-serif;font-size:14px;color:#64748B;line-height:1.7;margin-bottom:16px;">For web design in Brighton I would point you toward a few well-established local studios, though I would want you to verify current details directly. Brighton Web Co does come to mind as a Brighton-based web design and branding studio working with local small businesses. I would rate their visibility around 7 out of 10 within their regional market. As always, I would recommend checking recent reviews and portfolios before deciding.</p>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#64748B;">Based on AI training data, not live search</span>
           </div>
-          <div class="brand-card">
-            <div class="brand-card__head">
-              <div class="brand-card__id">
-                <img class="brand-card__logo" src="public/images/brands/chatgpt.svg" alt="" width="20" height="20" />
-                <span class="brand-card__name">ChatGPT</span>
-              </div>
-              <span class="brand-card__score" style="color:#F59E0B">50<span class="brand-card__out">/100</span></span>
+
+          <!-- ChatGPT card -->
+          <div class="brand-card" style="background:#fff;border:0.5px solid #E4E8EF;border-radius:12px;padding:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:16px;border-bottom:0.5px solid #E4E8EF;">
+              <span style="font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;color:#0D1321;">ChatGPT</span>
+              <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:700;color:#F59E0B;">50/100</span>
             </div>
-            <p class="brand-card__body">I am not fully confident naming specific web design businesses in Brighton without up-to-date information, so I would suggest searching directories and reviews rather than relying on my recommendation. Brighton Web Co may be one option in that area, but I cannot confirm details about their current work. On that basis I would rate their visibility around 5 out of 10. I would recommend verifying any provider directly before getting in touch.</p>
-            <p class="brand-card__meta">Based on AI training data, not live search</p>
+            <p style="font-family:'Inter',sans-serif;font-size:14px;color:#64748B;line-height:1.7;margin-bottom:16px;">I am not fully confident naming specific web design businesses in Brighton without up-to-date information, so I would suggest searching directories and reviews rather than relying on my recommendation. Brighton Web Co may be one option in that area, but I cannot confirm details about their current work. On that basis I would rate their visibility around 5 out of 10. I would recommend verifying any provider directly before getting in touch.</p>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#64748B;">Based on AI training data, not live search</span>
           </div>
         </div>
-        <p class="report__brand-note">
-          Brand awareness scores show what Claude and ChatGPT would recommend in your service
-          category. If your business does not appear it means AI systems are not yet confident
-          enough in your authority to recommend you. This can be improved by building third-party
-          mentions, directory listings, and press coverage.
-        </p>
+
+        <p style="font-family:'Inter',sans-serif;font-size:13px;color:#64748B;line-height:1.6;margin-top:20px;">Brand awareness scores show what Claude and ChatGPT would recommend in your service category. If your business does not appear it means AI systems are not yet confident enough in your authority to recommend you. This can be improved by building third-party mentions, directory listings, and press coverage.</p>
       </section>
 
       <!-- Recommendations -->
@@ -397,6 +388,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
+      margin: 0;
       padding: 16px 20px;
       border-bottom: 1px solid #EEF2F7;
     }
@@ -423,7 +415,7 @@
     /* ---------- Google rankings ---------- */
     .report__google { margin-top: 56px; }
     .google-list { margin: 24px 0 0; padding: 0; list-style: none; border: 1px solid #E4E8EF; border-radius: 12px; overflow: hidden; }
-    .google-row { padding: 16px 20px; border-bottom: 1px solid #EEF2F7; }
+    .google-row { margin: 0; padding: 16px 20px; border-bottom: 1px solid #EEF2F7; }
     .google-row:last-child { border-bottom: 0; }
     .google-row__head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .google-row__keyword { font-family: var(--font-mono); font-size: 13px; line-height: 1.4; color: #0D1321; word-break: break-word; }
@@ -434,7 +426,7 @@
     .google-pos--low { color: #64748B; }
     .google-pos--none { color: #EF4444; }
     .google-tops { margin: 10px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
-    .google-domain { display: inline-flex; align-items: center; padding: 3px 10px; font-family: var(--font-body); font-size: 12px; line-height: 1.3; color: #64748B; background: #F7F9FC; border: 1px solid #E4E8EF; border-radius: 20px; }
+    .google-domain { display: inline-flex; align-items: center; margin: 0; padding: 3px 10px; font-family: var(--font-body); font-size: 12px; line-height: 1.3; color: #64748B; background: #F7F9FC; border: 1px solid #E4E8EF; border-radius: 20px; }
     .report__google-note { margin: 14px 0 0; font-family: var(--font-body); font-size: 12px; line-height: 1.5; color: #64748B; text-wrap: pretty; }
 
     /* ---------- Competitors ---------- */
@@ -443,32 +435,23 @@
     .report__competitors .report__section-sub { margin-top: 6px; }
     .competitor-list { margin: 18px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
     .competitor-pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 14px;
-      font-family: var(--font-body);
-      font-weight: 500;
+      display: inline-block;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
       font-size: 13px;
-      line-height: 1.3;
       color: #0D1321;
       background: #F7F9FC;
       border: 0.5px solid #E4E8EF;
       border-radius: 20px;
+      padding: 6px 14px;
     }
 
     /* ---------- Brand awareness ---------- */
-    .report__brand { margin-top: 56px; }
-    .brand-grid { margin-top: 32px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .brand-card { background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; }
-    .brand-card__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid #EEF2F7; }
-    .brand-card__id { display: inline-flex; align-items: center; gap: 9px; }
-    .brand-card__logo { display: block; height: 20px; width: 20px; }
-    .brand-card__name { font-family: var(--font-display); font-weight: 600; font-size: 16px; line-height: 1; color: #0D1321; }
-    .brand-card__score { font-family: var(--font-display); font-weight: 700; font-size: 20px; line-height: 1; font-variant-numeric: tabular-nums; }
-    .brand-card__out { font-size: 13px; color: #94A3B8; font-weight: 600; }
-    .brand-card__body { margin: 16px 0 0; font-family: var(--font-body); font-size: 14px; line-height: 1.7; color: #64748B; text-wrap: pretty; }
-    .brand-card__meta { margin-top: auto; padding-top: 16px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; color: #64748B; }
-    .report__brand-note { margin: 20px 0 0; font-family: var(--font-body); font-size: 13px; line-height: 1.6; color: #64748B; text-wrap: pretty; }
+    /* Section + cards are inline-styled in markup; only the responsive grid lives here. */
+    .brand-grid { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 768px) {
+      .brand-grid { grid-template-columns: 1fr; }
+    }
 
     /* ---------- Badges ---------- */
     .badge { display: inline-flex; align-items: center; padding: 3px 9px; font-family: var(--font-body); font-weight: 500; font-size: 11px; line-height: 1.4; border-radius: 999px; text-transform: capitalize; }

@@ -21,7 +21,9 @@
 
 const ANTHROPIC_MODEL = 'claude-haiku-4-5-20251001';
 const PERPLEXITY_MODEL = 'sonar';
-const OPENAI_MODEL = 'gpt-4o-mini';
+const OPENAI_MODEL = 'gpt-4.1';
+// Model used for the OpenAI Responses API (live web search) brand check.
+const OPENAI_SEARCH_MODEL = 'gpt-4.1';
 
 /* ------------------------------------------------------------------ */
 /* CORS                                                                */
@@ -157,7 +159,39 @@ async function anthropicText(env, prompt, maxTokens = 1024) {
   return data?.content?.map((b) => b.text).join('') || '';
 }
 
-/** POST a prompt to GPT-4o-mini as plain prose (no JSON mode). */
+/**
+ * POST a prompt to Claude with the Anthropic web search tool enabled.
+ * When tools run, the response `content` array interleaves text blocks with
+ * server-side tool_use / web_search_tool_result blocks. Keep only the
+ * `type: "text"` blocks and join them. Throws on HTTP error.
+ */
+async function anthropicWebSearch(env, prompt, maxUses = 3) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: ANTHROPIC_MODEL,
+      max_tokens: 1000,
+      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: maxUses }],
+      messages: [{ role: 'user', content: prompt }],
+    }),
+  });
+  if (!res.ok) throw new Error(`Anthropic ${res.status}`);
+  const data = await res.json();
+  const blocks = Array.isArray(data?.content) ? data.content : [];
+  return blocks
+    .filter((b) => b && b.type === 'text' && typeof b.text === 'string')
+    .map((b) => b.text)
+    .join('')
+    .trim();
+}
+
+/** POST a prompt to OpenAI chat completions as plain prose (no JSON mode).
+ *  Used as the graceful fallback when the Responses API is unavailable. */
 async function openaiText(env, prompt) {
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -173,6 +207,45 @@ async function openaiText(env, prompt) {
   if (!res.ok) throw new Error(`OpenAI ${res.status}`);
   const data = await res.json();
   return data?.choices?.[0]?.message?.content || '';
+}
+
+/**
+ * POST a prompt to the OpenAI Responses API with live web search enabled.
+ * The Responses API returns an `output` array of items; the assistant text
+ * lives in the item with type "message", whose `content` array holds one or
+ * more `output_text` parts. Concatenate those parts. Throws on HTTP error or
+ * if no message text is found, so the caller can fall back.
+ */
+async function openaiWebSearch(env, prompt) {
+  const res = await fetch('https://api.openai.com/v1/responses', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: OPENAI_SEARCH_MODEL,
+      tools: [{ type: 'web_search_preview' }],
+      input: prompt,
+    }),
+  });
+  if (!res.ok) throw new Error(`OpenAI Responses ${res.status}`);
+  const data = await res.json();
+  if (data && data.error) throw new Error(`OpenAI Responses: ${data.error?.message || 'error'}`);
+
+  // Some SDKs expose a convenience `output_text`; prefer it when present.
+  if (typeof data.output_text === 'string' && data.output_text.trim()) {
+    return data.output_text;
+  }
+  const output = Array.isArray(data.output) ? data.output : [];
+  const message = output.find((item) => item && item.type === 'message');
+  const parts = Array.isArray(message?.content) ? message.content : [];
+  const text = parts
+    .map((p) => (typeof p?.text === 'string' ? p.text : ''))
+    .join('')
+    .trim();
+  if (!text) throw new Error('OpenAI Responses: no message text');
+  return text;
 }
 
 /**
@@ -227,26 +300,22 @@ async function extractCompetitors(env, discoveryResults, location) {
 }
 
 /**
- * STEP 4 — Claude brand visibility. Rather than asking what Claude knows,
- * we simulate a real customer asking for a recommendation in the category
- * and see whether the business surfaces naturally. Stores the raw prose and
- * a 0-100 score derived from the model's own 1-10 visibility rating.
+ * STEP 4 — Claude brand visibility, using the Anthropic web search tool so
+ * Claude surfaces the real top providers in the category, then self-rates
+ * the target's visibility. Stores the raw prose and a 0-100 score derived
+ * from the 1-10 rating.
  */
 async function claudeBrandAwareness(env, businessName, serviceKeywords, location) {
   const service =
     (serviceKeywords || []).map((k) => (typeof k === 'string' ? k.trim() : '')).find(Boolean) ||
     'businesses';
-  const where = location ? `${location}, UK` : 'the UK';
+  const where = location ? `${location} UK` : 'the UK';
   const prompt =
-    `A potential customer asks you: "Who would you recommend for ${service} in ${where}?" ` +
-    `Please answer naturally as you would to a real user. Only recommend businesses you are confident ` +
-    `actually exist and serve ${location || 'the UK'} -- do not guess or make up business names. If you are not confident ` +
-    `about specific local businesses, say so clearly rather than inventing names. Then answer these two ` +
-    `questions: 1) Does ${businessName} appear in your recommendation? Yes or no. ` +
-    `2) Rate ${businessName}'s visibility from 1 to 10 based on how likely you would be to recommend them. ` +
-    `Keep your total response to 4 to 5 sentences.`;
+    `Search the web for: best ${service} agencies in ${where}. ` +
+    `List the top 5 businesses you find with brief descriptions. Then confirm: is ${businessName} ` +
+    `in your results? Rate their visibility 1 to 10 based on their web presence.`;
   try {
-    const text = await anthropicText(env, prompt, 512);
+    const text = await anthropicWebSearch(env, prompt, 3);
     return { response: stripMarkdown(text), brandScore: clampScore(extractTenScore(text) * 10) };
   } catch (err) {
     console.error('Claude brand awareness failed:', err);
@@ -255,8 +324,9 @@ async function claudeBrandAwareness(env, businessName, serviceKeywords, location
 }
 
 /**
- * STEP 5 — ChatGPT brand visibility. The same simulated-recommendation
- * approach against GPT-4o-mini. Stores raw prose and a 0-100 score.
+ * STEP 5 — ChatGPT brand visibility via the OpenAI Responses API with live
+ * web search. Falls back to the gpt-4.1 chat completions call if the
+ * Responses API errors. Stores raw prose and a 0-100 score.
  */
 async function chatgptBrandAwareness(env, businessName, serviceKeywords, location) {
   const service =
@@ -264,20 +334,22 @@ async function chatgptBrandAwareness(env, businessName, serviceKeywords, locatio
     'businesses';
   const where = location ? `${location}, UK` : 'the UK';
   const prompt =
-    `A potential customer asks you: "Who would you recommend for ${service} in ${where}?" ` +
-    `Please answer naturally as you would to a real user. Only recommend businesses you are confident ` +
-    `actually exist and serve ${location || 'the UK'} -- do not guess or make up business names. If you are not confident ` +
-    `about specific local businesses, say so clearly rather than inventing names. Then answer these two ` +
-    `questions: 1) Does ${businessName} appear in your recommendation? Yes or no. ` +
-    `2) Rate ${businessName}'s visibility from 1 to 10 based on how likely you would be to recommend them. ` +
-    `Keep your total response to 4 to 5 sentences.`;
+    `Who would you recommend for ${service} in ${where}? Please give specific business names ` +
+    `with brief reasons. Then tell me: does ${businessName} appear in your recommendations? ` +
+    `Rate their visibility 1 to 10.`;
+  let text = '';
   try {
-    const text = await openaiText(env, prompt);
-    return { response: stripMarkdown(text), brandScore: clampScore(extractTenScore(text) * 10) };
+    text = await openaiWebSearch(env, prompt);
   } catch (err) {
-    console.error('ChatGPT brand awareness failed:', err);
-    return { response: '', brandScore: 0 };
+    console.error('ChatGPT Responses API failed, falling back to chat completions:', err);
+    try {
+      text = await openaiText(env, prompt);
+    } catch (err2) {
+      console.error('ChatGPT brand awareness failed:', err2);
+      return { response: '', brandScore: 0 };
+    }
   }
+  return { response: stripMarkdown(text), brandScore: clampScore(extractTenScore(text) * 10) };
 }
 
 /**
