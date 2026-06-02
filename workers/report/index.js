@@ -609,6 +609,10 @@ async function generateRecommendations(env, ctx) {
       `Service keywords: ${(serviceKeywords || []).join(', ') || 'not specified'}. ` +
       `Location: ${location || 'not specified'}. ` +
       `Queries tested: ${(queries || []).join(', ')}. ` +
+      `When a location is provided, always evaluate whether Google Business Profile optimisation and ` +
+      `local map pack visibility should feature as recommendations -- these directly influence both ` +
+      `local Google rankings and AI search citation, and should be included if the business is not ` +
+      `clearly already ranking in the map pack for their key service terms. ` +
       `Return JSON array of 5 objects with: title, description (2 to 3 sentences, specific and actionable), ` +
       `priority ('high'|'medium'|'low'), effort ('quick'|'medium'|'significant'). ` +
       `Make specific recommendations about improving both Google rankings and AI visibility, focusing on ` +

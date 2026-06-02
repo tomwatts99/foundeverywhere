@@ -325,3 +325,11 @@ hr {
 .section--dark .btn--secondary:hover {
   --btn-bg: var(--color-dark-line);
 }
+
+/* ============================================================
+   Tidio live chat widget
+   Nudge the chat widget up so it doesn't obscure the footer.
+   ============================================================ */
+#tidio-chat-iframe {
+  bottom: 80px !important;
+}
