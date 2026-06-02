@@ -283,7 +283,10 @@ async function extractCompetitors(env, discoveryResults, location) {
     `From these Perplexity search results, extract the names of specific businesses that were ` +
     `recommended or mentioned as service providers. Location context: ${location || 'not specified'}. ` +
     `Only extract actual business names, not generic descriptions. If location was provided, ` +
-    `prioritise businesses that serve that location. Return as a JSON array of unique business ` +
+    `only include businesses that are explicitly mentioned in the search results as being based in or ` +
+    `serving that location -- exclude any national brands or businesses with no clear local connection. ` +
+    `If fewer than 8 local businesses are identified, return only those -- do not pad the list with ` +
+    `national or non-local businesses. Return as a JSON array of unique business ` +
     `names, maximum 8. Return only the JSON array.\n\n${combined}`;
   try {
     const text = await anthropicText(env, prompt, 512);
