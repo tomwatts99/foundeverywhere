@@ -395,7 +395,9 @@ const reportBusiness = report?.businessName ?? 'Your business';
             <p class="report__section-sub">{competitorsSub}</p>
             <ul class="competitor-list">
               {competitors.map((c: string) => (
-                <li class="competitor-pill">{c}</li>
+                <li>
+                  <a class="competitor-pill" href={`https://www.google.com/search?q=${encodeURIComponent(c)}`} target="_blank" rel="noopener noreferrer">{c}</a>
+                </li>
               ))}
             </ul>
           </section>
@@ -899,6 +901,7 @@ const reportBusiness = report?.businessName ?? 'Your business';
     flex-wrap: wrap;
     gap: 8px;
   }
+  .competitor-list li { margin: 0; }
   .competitor-pill {
     display: inline-block;
     margin: 0;
@@ -909,7 +912,12 @@ const reportBusiness = report?.businessName ?? 'Your business';
     border: 0.5px solid #E4E8EF;
     border-radius: 20px;
     padding: 6px 14px;
+    text-decoration: none;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
   }
+  .competitor-pill:hover { color: #0C7B82; border-color: #0C7B82; }
 
   /* ---------- Brand awareness ---------- */
   /* Section + cards are inline-styled in markup; only the responsive grid

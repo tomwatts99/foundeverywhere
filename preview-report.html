@@ -168,12 +168,12 @@
           These businesses appeared in AI results for Brighton when customers searched the service category.
         </p>
         <ul class="competitor-list">
-          <li class="competitor-pill">Seaside Web Studio</li>
-          <li class="competitor-pill">Pier Digital</li>
-          <li class="competitor-pill">Lanes Creative</li>
-          <li class="competitor-pill">Sussex Web Co</li>
-          <li class="competitor-pill">North Laine Digital</li>
-          <li class="competitor-pill">Brighton Pixel Works</li>
+          <li><a class="competitor-pill" href="https://www.google.com/search?q=Seaside%20Web%20Studio" target="_blank" rel="noopener noreferrer">Seaside Web Studio</a></li>
+          <li><a class="competitor-pill" href="https://www.google.com/search?q=Pier%20Digital" target="_blank" rel="noopener noreferrer">Pier Digital</a></li>
+          <li><a class="competitor-pill" href="https://www.google.com/search?q=Lanes%20Creative" target="_blank" rel="noopener noreferrer">Lanes Creative</a></li>
+          <li><a class="competitor-pill" href="https://www.google.com/search?q=Sussex%20Web%20Co" target="_blank" rel="noopener noreferrer">Sussex Web Co</a></li>
+          <li><a class="competitor-pill" href="https://www.google.com/search?q=North%20Laine%20Digital" target="_blank" rel="noopener noreferrer">North Laine Digital</a></li>
+          <li><a class="competitor-pill" href="https://www.google.com/search?q=Brighton%20Pixel%20Works" target="_blank" rel="noopener noreferrer">Brighton Pixel Works</a></li>
         </ul>
       </section>
 
@@ -490,6 +490,7 @@
     .report__competitors-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 20px; line-height: 1.25; letter-spacing: -0.01em; color: #0D1321; }
     .report__competitors .report__section-sub { margin-top: 6px; }
     .competitor-list { margin: 18px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+    .competitor-list li { margin: 0; }
     .competitor-pill {
       display: inline-block;
       margin: 0;
@@ -500,7 +501,12 @@
       border: 0.5px solid #E4E8EF;
       border-radius: 20px;
       padding: 6px 14px;
+      text-decoration: none;
+      transition:
+        border-color var(--duration-fast) var(--ease-out),
+        color var(--duration-fast) var(--ease-out);
     }
+    .competitor-pill:hover { color: #0C7B82; border-color: #0C7B82; }
 
     /* ---------- Brand awareness ---------- */
     /* Section + cards are inline-styled in markup; only the responsive grid lives here. */
