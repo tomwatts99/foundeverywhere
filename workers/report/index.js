@@ -64,6 +64,32 @@ function extractJsonArray(text) {
   }
 }
 
+/** Pull the first {...} JSON object out of a model's text response. */
+function extractJsonObject(text) {
+  if (!text) return null;
+  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  const candidate = fenced ? fenced[1] : text;
+  const start = candidate.indexOf('{');
+  const end = candidate.lastIndexOf('}');
+  if (start === -1 || end === -1 || end < start) return null;
+  try {
+    return JSON.parse(candidate.slice(start, end + 1));
+  } catch {
+    return null;
+  }
+}
+
+/** Normalise US English spellings to UK English equivalents. */
+function toUkEnglish(text) {
+  if (text == null) return text;
+  return String(text)
+    .replace(/optimization/gi, 'optimisation')
+    .replace(/organize/gi, 'organise')
+    .replace(/analyze/gi, 'analyse')
+    .replace(/color/gi, 'colour')
+    .replace(/center/gi, 'centre');
+}
+
 function clampScore(v) {
   const n = Number(v);
   if (!Number.isFinite(n)) return 0;
@@ -275,7 +301,7 @@ async function runDiscovery(env, businessName, queries) {
  * STEP 3 — Competitor extraction. One Claude Haiku call over all four
  * Perplexity responses combined; returns the recommended business names.
  */
-async function extractCompetitors(env, discoveryResults, location) {
+async function extractCompetitors(env, discoveryResults, location, businessName) {
   const combined = (discoveryResults || [])
     .map((r, i) => `Result ${i + 1} (query: "${r.query}"):\n${r.response}`)
     .join('\n\n');
@@ -286,7 +312,11 @@ async function extractCompetitors(env, discoveryResults, location) {
     `only include businesses that are explicitly mentioned in the search results as being based in or ` +
     `serving that location -- exclude any national brands or businesses with no clear local connection. ` +
     `If fewer than 8 local businesses are identified, return only those -- do not pad the list with ` +
-    `national or non-local businesses. Return as a JSON array of unique business ` +
+    `national or non-local businesses. ` +
+    `Do not include the business being analysed in the results. The business being analysed is: ` +
+    `${businessName || 'unknown'}. If it appears in the Perplexity results, exclude it from the ` +
+    `returned array. ` +
+    `Return as a JSON array of unique business ` +
     `names, maximum 8. Return only the JSON array.\n\n${combined}`;
   try {
     const text = await anthropicText(env, prompt, 512);
@@ -455,9 +485,11 @@ async function runGoogleRankings(env, websiteUrl, serviceKeywords, location) {
     const googleResults = await Promise.all(
       keywords.map(async (keyword) => {
         // Append "agency" unless the keyword already implies a provider type,
-        // so generic service terms ("SEO") still surface agencies.
-        const hasProviderWord = /\b(agency|studio|services|company)\b/i.test(keyword);
-        const term = hasProviderWord ? keyword : `${keyword} agency`;
+        // so generic service terms ("SEO") still surface agencies. Normalise
+        // to UK English first so search queries match UK spellings.
+        const normalisedKeyword = toUkEnglish(keyword);
+        const hasProviderWord = /\b(agency|studio|services|company)\b/i.test(normalisedKeyword);
+        const term = hasProviderWord ? normalisedKeyword : `${normalisedKeyword} agency`;
         const q = location ? `${term} ${location}` : term;
         const url =
           `https://serpapi.com/search.json?q=${encodeURIComponent(q)}` +
@@ -536,21 +568,31 @@ async function callPerplexity(env, content) {
 
 /**
  * Extract 3–5 specific service keywords describing what the business does,
- * using a fast Claude Haiku call against the page metadata. These drive the
- * service-specific search queries every model is then tested against.
- * Returns [] on any failure — callers fall back to a generic check.
+ * plus the actual trading name of the business, using a fast Claude Haiku
+ * call against the page metadata. The keywords drive the service-specific
+ * search queries every model is then tested against; the business name is
+ * used in preference to the cleaned page title.
+ * Returns { keywords: [], businessName: null } on any failure.
  */
 async function extractServiceKeywords(env, { businessName, pageTitle, metaDescription, headingText, location }) {
   try {
     const prompt =
-      `Based on this website information, extract 3 to 5 specific service keywords or phrases that describe ` +
-      `what this business does. Return as a JSON array of strings. Only return the JSON array, nothing else.\n` +
-      `Business name: ${businessName || 'unknown'}\n` +
+      `Based on this website information, extract two things:\n` +
+      `1. "businessName": the actual trading name of the business -- the name as it would appear in a ` +
+      `directory listing -- separately from any tagline or service description. If the page title is a ` +
+      `tagline or descriptor (e.g. "Salesforce Consultants for Nonprofits") rather than the trading name, ` +
+      `infer the real business name from the rest of the content; if it genuinely cannot be determined, ` +
+      `use an empty string.\n` +
+      `2. "keywords": 3 to 5 specific service keywords or phrases that describe what this business does.\n` +
+      `Return ONLY a JSON object of the form ` +
+      `{"businessName": "...", "keywords": ["...", "..."]}, nothing else.\n` +
+      `Business name hint: ${businessName || 'unknown'}\n` +
       `Page title: ${pageTitle || 'unknown'}\n` +
       `Meta description: ${metaDescription || 'unknown'}\n` +
       `Page heading: ${headingText || 'unknown'}\n` +
       `Location: ${location || 'not specified'}\n` +
-      `Example output: ["web design agency", "branding studio", "digital marketing", "WordPress development"]`;
+      `Example output: {"businessName": "Acme Studio", "keywords": ["web design agency", ` +
+      `"branding studio", "digital marketing", "WordPress development"]}`;
 
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -568,15 +610,20 @@ async function extractServiceKeywords(env, { businessName, pageTitle, metaDescri
     if (!res.ok) throw new Error(`Anthropic keywords ${res.status}`);
     const data = await res.json();
     const text = data?.content?.map((b) => b.text).join('') || '';
-    const arr = extractJsonArray(text);
-    if (!Array.isArray(arr)) return [];
-    return arr
+    const obj = extractJsonObject(text);
+    const rawKeywords = obj && Array.isArray(obj.keywords) ? obj.keywords : [];
+    const keywords = rawKeywords
       .map((k) => (typeof k === 'string' ? k.trim() : ''))
       .filter(Boolean)
+      // Normalise US English spellings to UK English equivalents.
+      .map((k) => toUkEnglish(k))
       .slice(0, 5);
+    const extractedName =
+      obj && typeof obj.businessName === 'string' ? obj.businessName.trim() : '';
+    return { keywords, businessName: extractedName || null };
   } catch (err) {
     console.error('Keyword extraction failed:', err);
-    return [];
+    return { keywords: [], businessName: null };
   }
 }
 
@@ -872,15 +919,19 @@ async function handleGenerateReport(request, env) {
   const pageTitle = meta.title || '';
   const metaDescription = meta.description || '';
   const headingText = meta.heading || '';
-  const businessName =
+  const cleanedTitle =
     cleanBusinessName(meta.title) || hostnameFromUrl(websiteUrl) || 'this business';
-  const serviceKeywords = await extractServiceKeywords(env, {
-    businessName,
-    pageTitle,
-    metaDescription,
-    headingText,
-    location,
-  });
+  const { keywords: serviceKeywords, businessName: extractedBusinessName } =
+    await extractServiceKeywords(env, {
+      businessName: cleanedTitle,
+      pageTitle,
+      metaDescription,
+      headingText,
+      location,
+    });
+  // Prefer the trading name Claude extracted; fall back to the cleaned page
+  // title only when no business name was returned.
+  const businessName = extractedBusinessName || cleanedTitle;
 
   /* STEP 2 — live discovery via Perplexity (the only honest signal). Four
      unbranded queries; hard boolean appearance check per query. */
@@ -894,7 +945,7 @@ async function handleGenerateReport(request, env) {
   /* STEPS 3–5 — Google rankings + competitor extraction + both brand checks. */
   const [googleData, competitors, claude, chatgpt] = await Promise.all([
     googlePromise,
-    extractCompetitors(env, discoveryResults, location),
+    extractCompetitors(env, discoveryResults, location, businessName),
     claudeBrandAwareness(env, businessName, serviceKeywords, location),
     chatgptBrandAwareness(env, businessName, serviceKeywords, location),
   ]);
