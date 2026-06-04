@@ -802,7 +802,7 @@ function buildEmailHtml({ firstName, businessName, overallScore, reportUrl, plat
             <tr>
               <td style="padding:8px 40px 0;font-size:16px;line-height:1.6;color:#0D1321;">
                 <p style="margin:16px 0 0;">Hi ${firstName},</p>
-                <p style="margin:16px 0 0;">Your free AI Visibility Report for <strong>${businessName}</strong> is ready.</p>
+                <p style="margin:16px 0 0;">Your free AI Visibility and Google Search Report for <strong>${businessName}</strong> is ready.</p>
               </td>
             </tr>
             <tr>

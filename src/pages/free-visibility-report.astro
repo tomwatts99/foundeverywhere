@@ -18,12 +18,12 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
 const REPORT_INCLUDES = [
   {
-    title: 'Overall search and AI score',
+    title: 'Overall AI and search score',
     body: 'A single score out of 100 showing how visible your business is across AI search systems.',
   },
   {
     title: 'Google rankings and AI breakdown',
-    body: 'Individual results from Claude, Perplexity, and ChatGPT showing exactly where you appear and where you do not.',
+    body: 'Individual results from Claude, Perplexity, ChatGPT and Google search showing exactly where you appear and where you do not.',
   },
   {
     title: 'Who is ranking and appearing instead of you',
@@ -31,7 +31,7 @@ const REPORT_INCLUDES = [
   },
   {
     title: 'Five recommendations',
-    body: 'Specific, prioritised actions you can take to improve your AI visibility - ranked by impact and effort.',
+    body: 'Specific, prioritised actions you can take to improve your AI visibility and search - ranked by impact and effort.',
   },
 ];
 ---
@@ -157,7 +157,7 @@ const REPORT_INCLUDES = [
   <section class="report-includes">
     <div class="container">
       <p class="report-includes__eyebrow">What you get</p>
-      <h2 class="report-includes__title">A complete picture of your AI visibility</h2>
+      <h2 class="report-includes__title">A complete picture of your AI and search visibility</h2>
       <div class="report-includes__grid">
         {REPORT_INCLUDES.map((item) => (
           <div class="includes-card">
