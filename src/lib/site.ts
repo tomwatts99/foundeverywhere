@@ -56,6 +56,7 @@ export const NAV: ReadonlyArray<NavItem> = [
       { href: '/industries/automotive/',            label: 'Automotive' },
       { href: '/industries/hospitality/',           label: 'Hospitality' },
       { href: '/industries/professional-services/', label: 'Professional services' },
+      { href: '/industries/trades/',                label: 'Trades' },
     ],
   },
   { href: '/insights/',     label: 'Insights' },
@@ -93,6 +94,7 @@ export const FOOTER_NAV: ReadonlyArray<{
       { href: '/industries/automotive/',            label: 'Automotive' },
       { href: '/industries/hospitality/',           label: 'Hospitality' },
       { href: '/industries/professional-services/', label: 'Professional services' },
+      { href: '/industries/trades/',                label: 'Trades' },
     ],
   },
   {

@@ -1,0 +1,736 @@
+---
+export const prerender = true;
+
+/**
+ * industries/trades.astro: industry landing page for local trade
+ * businesses (builders, plumbers, electricians, carpenters, roofers).
+ *
+ * Schema flow: FAQPage + BreadcrumbList (Home > Industries > Trades)
+ * + a ProfessionalService LocalBusiness node, all folded into the <head>
+ * @graph via schemaExtras.
+ */
+import Page from '../../layouts/Page.astro';
+import FAQItem from '../../components/ui/FAQItem.astro';
+import CTABlock from '../../components/sections/CTABlock.astro';
+import { faqPageSchema, breadcrumbSchema } from '../../lib/schema';
+import { SITE } from '../../lib/site';
+
+const PROBLEM_CARDS = [
+  {
+    title: 'Out of the map pack, out of sight',
+    body: 'If you are not in the top three local results, most people never see you. They call the businesses that are.',
+  },
+  {
+    title: 'Half-finished profiles',
+    body: 'Most trade businesses have a Google profile with no photos, few reviews, and details that do not match their website.',
+  },
+  {
+    title: 'AI is shortlisting without you',
+    body: 'When someone asks ChatGPT for the best plumber nearby, it names specific businesses. If yours is not one, the job goes elsewhere.',
+  },
+] as const;
+
+const STATS = [
+  { value: '46%', label: 'of all Google searches have local intent - someone looking for a business near them' },
+  { value: '88%', label: 'of local searches on mobile result in a call or visit within 24 hours' },
+  { value: '#1',  label: 'trades is one of the highest-intent search categories - people searching are ready to buy' },
+] as const;
+
+const FEATURES = [
+  {
+    num: '01',
+    title: 'Map pack and local rankings',
+    body: 'The top three local results - the map pack - is where the jobs are. We optimise your site and profile to get you there, and track exactly where you rank across your area street by street, so you always know where you are winning and where you are losing work.',
+  },
+  {
+    num: '02',
+    title: 'Google Business Profile',
+    body: 'Your Google Business Profile is the single most important thing you have for local search. We fill in every gap - categories, services, photos, opening hours, service areas - and keep it updated so it works for you instead of sitting half-finished.',
+  },
+  {
+    num: '03',
+    title: 'Consistent business details (NAP)',
+    body: 'Your name, address, and phone number need to match everywhere they appear online. When they do not, Google trusts you less and you rank lower. We audit every listing, fix the mismatches, and build new ones so your details are consistent across the web.',
+  },
+  {
+    num: '04',
+    title: 'Reviews that bring in calls',
+    body: 'Reviews are what make someone pick you over the next name on the list. We set up a simple way to ask every customer at the right moment, keep an eye on what comes in, and show your best reviews on your website automatically.',
+  },
+  {
+    num: '05',
+    title: 'Photos and proof of work',
+    body: 'People hire trades they can see doing the job. We make sure your profile and site show real photos of completed work - the before and afters, the finished jobs - because that is what turns a search into a phone call.',
+  },
+  {
+    num: '06',
+    title: 'AI and LLM visibility',
+    body: 'More and more people ask ChatGPT and Perplexity to recommend a plumber, builder, or electrician near them. We give your business the signals these tools look for, so when they hand over a shortlist, your name is on it - no tender, no quote war, just the first call.',
+  },
+] as const;
+
+const AUDIENCE = [
+  {
+    title: 'Sole traders',
+    body: 'One-van plumbers, electricians, and carpenters who get most work by word of mouth and want a steady stream of local jobs coming in directly.',
+  },
+  {
+    title: 'Small trade firms',
+    body: 'Builders, roofers, and contractors with a few teams who need to keep the diary full and stop losing local work to competitors who show up first.',
+  },
+  {
+    title: 'Multi-trade and service areas',
+    body: 'Businesses covering several towns or trades who need to be visible and ranking in every area they serve, not just the one their office sits in.',
+  },
+] as const;
+
+const TRADES_FAQS = [
+  {
+    question: 'I get all my work through word of mouth. Do I really need this?',
+    answer:
+      'Word of mouth is great, but it is not predictable and it does not scale. When a referral is busy or a regular customer moves away, the work dries up. Showing up in local search and AI results gives you a second stream of jobs coming in directly, so you are not relying on one source.',
+  },
+  {
+    question: 'What is the map pack and why does it matter?',
+    answer:
+      'The map pack is the box of three local businesses with a map that shows at the top of Google when someone searches for a trade near them. Those three get the bulk of the calls. If you are not in it, most people never scroll far enough to find you. Getting you into the map pack is the core of what we do.',
+  },
+  {
+    question: 'How long before I see more calls?',
+    answer:
+      'Profile and review improvements can show within a few weeks. Local rankings usually improve over two to three months as your details are made consistent and the work builds up. Most trades start noticing more enquiries within the first couple of months.',
+  },
+  {
+    question: 'Do AI tools really recommend tradespeople?',
+    answer:
+      'Yes, and more every month. Ask ChatGPT or Perplexity for the best plumber or builder in a town and it will name actual businesses. Those names come from reviews, listings, and structured data. We make sure your business sends the right signals to be one of them.',
+  },
+  {
+    question: 'My Google profile is a mess. Can you sort it out?',
+    answer:
+      'Yes. Most trade businesses we work with start with an incomplete profile - no photos, missing services, wrong hours. We fill in every gap, add your work photos, set up your service areas, and keep it updated so it actually brings in calls.',
+  },
+  {
+    question: 'How do I know where I currently rank?',
+    answer:
+      'Start with the free visibility report. It shows exactly where you rank in local search and AI tools, and which competitors are showing up instead of you. No jargon - just a clear picture of where you stand and what to fix.',
+  },
+];
+
+const pageUrl = `${SITE.url}/industries/trades/`;
+const localBusiness = {
+  '@type': 'ProfessionalService',
+  '@id': `${pageUrl}#service`,
+  name: 'Found Everywhere - Trades SEO & LLM Visibility',
+  url: pageUrl,
+  parentOrganization: { '@id': `${SITE.url}/#organization` },
+  areaServed: 'United Kingdom',
+  serviceType: 'Local SEO and AI search visibility for trade businesses',
+  audience: {
+    '@type': 'BusinessAudience',
+    name: 'Builders, plumbers, electricians, carpenters, and roofers',
+  },
+};
+const schemaExtras = [
+  faqPageSchema(TRADES_FAQS, pageUrl),
+  breadcrumbSchema(
+    [
+      { name: 'Home',       item: `${SITE.url}/` },
+      { name: 'Industries', item: `${SITE.url}/industries/` },
+      { name: 'Trades',     item: pageUrl },
+    ],
+    pageUrl,
+  ),
+  localBusiness,
+];
+---
+
+<Page
+  title="SEO and LLM Visibility for Trades - Builders, Plumbers, Electricians | Found Everywhere"
+  description="Local SEO, Google Business Profile, and AI search visibility for builders, plumbers, electricians, carpenters, and roofers. Get into the map pack and win the jobs going to competitors who show up first."
+  path="/industries/trades/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="tr-hero" aria-labelledby="tr-hero-title">
+    <div class="container">
+      <p class="tr-hero__eyebrow">Trades</p>
+      <h1 id="tr-hero-title" class="tr-hero__title">If you're not showing up locally, you're losing jobs to someone who is</h1>
+      <p class="tr-hero__lead">
+        When someone needs a plumber or builder they search online and pick
+        from the first results they see. Found Everywhere makes sure that's
+        you.
+      </p>
+      <div class="tr-hero__cta">
+        <a href="/free-visibility-report/" class="tr-btn tr-btn--primary">
+          Get your free visibility report <span aria-hidden="true" class="tr-btn__arrow">&#x2197;</span>
+        </a>
+        <a href="/how-it-works/" class="tr-btn tr-btn--ghost">How it works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. THE PROBLEM ============ -->
+  <section class="tr-problem" aria-labelledby="tr-problem-title">
+    <div class="container">
+      <div class="tr-problem__grid">
+        <div class="tr-problem__copy">
+          <p class="tr-eyebrow">The problem</p>
+          <h2 id="tr-problem-title" class="tr-h2">If they can't find you, they call someone else</h2>
+          <p class="tr-problem__body">
+            When a pipe bursts or a job needs doing, nobody asks around for
+            a week. They pull out their phone, search, and call one of the
+            first names they see. If that name is not yours, the job is
+            gone - and you never even knew it existed.
+          </p>
+          <p class="tr-problem__body">
+            The trades winning that work are not the ones with the biggest
+            vans or the flashiest websites. They are the ones in the top
+            three local results, with photos and reviews on their profile,
+            getting recommended when someone asks an AI tool for the best
+            plumber or builder nearby. Most trade businesses are not set up
+            for any of that. That is the gap we close.
+          </p>
+        </div>
+        <div class="tr-problem__cards">
+          {PROBLEM_CARDS.map((c) => (
+            <div class="tr-pcard">
+              <h3 class="tr-pcard__title">{c.title}</h3>
+              <p class="tr-pcard__body">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. THE OPPORTUNITY ============ -->
+  <section class="tr-opp" aria-labelledby="tr-opp-title">
+    <div class="container">
+      <p class="tr-eyebrow tr-eyebrow--center">The opportunity</p>
+      <h2 id="tr-opp-title" class="tr-h2 tr-h2--center">People searching for a trade are ready to buy</h2>
+      <p class="tr-opp__body">
+        Nobody searches for an emergency electrician for fun. When someone
+        looks for a trade near them, they have a job that needs doing and
+        money ready to spend. That makes trades one of the highest-intent
+        searches there is. Get in front of those people at the moment they
+        are looking, and you do not need to convince anyone - you just need
+        to be the one they can find and trust.
+      </p>
+      <div class="tr-stats">
+        {STATS.map((s) => (
+          <div class="tr-stat">
+            <div class="tr-stat__value">{s.value}</div>
+            <div class="tr-stat__label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. WHAT WE DO ============ -->
+  <section class="tr-do" aria-labelledby="tr-do-title">
+    <div class="container">
+      <p class="tr-eyebrow">What we do</p>
+      <h2 id="tr-do-title" class="tr-h2">Everything you need to be the first call</h2>
+      <ul class="tr-features" role="list">
+        {FEATURES.map((f) => (
+          <li class="tr-feature">
+            <span class="tr-feature__num">{f.num}</span>
+            <h3 class="tr-feature__title">{f.title}</h3>
+            <p class="tr-feature__body">{f.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 5. WHO THIS IS FOR (dark) ============ -->
+  <section class="tr-who" aria-labelledby="tr-who-title">
+    <div class="container">
+      <p class="tr-eyebrow tr-eyebrow--center">Who this is for</p>
+      <h2 id="tr-who-title" class="tr-h2 tr-h2--center tr-h2--light">Built for trades who want the phone to ring</h2>
+      <div class="tr-who__grid">
+        {AUDIENCE.map((a) => (
+          <article class="tr-who-card">
+            <h3 class="tr-who-card__title">{a.title}</h3>
+            <p class="tr-who-card__body">{a.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. PRICING ============ -->
+  <section class="tr-pricing" aria-labelledby="tr-pricing-title">
+    <div class="container">
+      <p class="tr-eyebrow tr-eyebrow--center">Investment</p>
+      <h2 id="tr-pricing-title" class="tr-h2 tr-h2--center">Clear pricing, no surprises</h2>
+      <p class="tr-pricing__body">
+        We start with a full local SEO and AI visibility audit so you know
+        exactly where you stand, then move into monthly management to keep
+        you ranking and the calls coming in. Everything is plain English and
+        reported clearly every month. No jargon, no lock-in tricks.
+      </p>
+
+      <div class="tr-plans">
+        <article class="tr-plan">
+          <p class="tr-plan__eyebrow">Start here</p>
+          <h3 class="tr-plan__title">Trades visibility audit</h3>
+          <p class="tr-plan__price">From £497</p>
+          <p class="tr-plan__desc">Full local SEO audit, Google Business Profile review, listings audit, AI visibility test, and a prioritised fix list. Delivered within two weeks.</p>
+          <ul class="tr-plan__checks" role="list">
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Map pack rank tracking included</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Google Business Profile audit</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>AI visibility across 8 platforms</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Plain English report</span></li>
+          </ul>
+          <a href="/contact/" class="tr-plan__cta">Book your audit <span aria-hidden="true">&#x2197;</span></a>
+        </article>
+
+        <article class="tr-plan tr-plan--featured">
+          <p class="tr-plan__eyebrow">Ongoing</p>
+          <h3 class="tr-plan__title">Monthly visibility management</h3>
+          <p class="tr-plan__price">From £697/mo</p>
+          <p class="tr-plan__desc">Full monthly management of local SEO, your Google Business Profile, listings, review generation, and AI visibility tracking. Clear monthly reporting.</p>
+          <ul class="tr-plan__checks" role="list">
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Profile management included</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Review generation and monitoring</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>AI citation tracking</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Monthly performance report</span></li>
+          </ul>
+          <a href="/contact/" class="tr-plan__cta">Talk to us <span aria-hidden="true">&#x2197;</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. FAQ ============ -->
+  <section class="tr-faq" aria-labelledby="tr-faq-title">
+    <div class="container">
+      <p class="tr-eyebrow">Common questions</p>
+      <h2 id="tr-faq-title" class="tr-h2">What trades ask us</h2>
+      <div class="tr-faq__list">
+        {TRADES_FAQS.map((faq) => (
+          <FAQItem question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. CTA ============ -->
+  <CTABlock
+    title="Find out where you rank - for free"
+    lead="See exactly where you show up in local search and AI tools, and who is getting the calls instead of you."
+  />
+
+</Page>
+
+<style>
+  /* Shared section atoms */
+  .tr-eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .tr-eyebrow--center { text-align: center; }
+  .tr-h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .tr-h2--center { text-align: center; }
+  .tr-h2--light { color: #FFFFFF; line-height: 1.2; }
+
+  /* ============ 1. HERO ============ */
+  .tr-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .tr-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .tr-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .tr-hero__lead {
+    margin: 20px auto 0;
+    max-width: 580px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .tr-hero__cta {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .tr-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 13px 22px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+  .tr-btn--primary { color: #FFFFFF; background: #0C7B82; border: 1px solid #0C7B82; }
+  .tr-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
+  .tr-btn--ghost {
+    color: #FFFFFF;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .tr-btn--ghost:hover { border-color: rgba(255, 255, 255, 0.55); }
+  .tr-btn__arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .tr-btn--primary:hover .tr-btn__arrow { transform: translate(2px, -2px); }
+
+  /* ============ 2. THE PROBLEM ============ */
+  .tr-problem { background: #FFFFFF; padding-block: 96px; }
+  .tr-problem .container { max-width: 960px; }
+  .tr-problem__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .tr-problem__body {
+    margin: 16px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .tr-problem__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .tr-pcard {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-left: 3px solid #EF4444;
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .tr-pcard__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .tr-pcard__body {
+    margin: 6px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 3. THE OPPORTUNITY ============ */
+  .tr-opp { background: #F7F9FC; padding-block: 96px; }
+  .tr-opp .container { max-width: 960px; }
+  .tr-opp__body {
+    margin: 24px auto 0;
+    max-width: 680px;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .tr-stats {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .tr-stat {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .tr-stat__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .tr-stat__label {
+    margin-top: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 4. WHAT WE DO ============ */
+  .tr-do { background: #FFFFFF; padding-block: 96px; }
+  .tr-do .container { max-width: 960px; }
+  .tr-features {
+    list-style: none;
+    padding: 0;
+    margin: 48px 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .tr-feature__num {
+    display: block;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    letter-spacing: 0.08em;
+  }
+  .tr-feature__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .tr-feature__body {
+    margin: 8px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 5. WHO THIS IS FOR (dark) ============ */
+  .tr-who { background: #0D1826; padding-block: 96px; }
+  .tr-who .container { max-width: 960px; }
+  .tr-who__grid {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .tr-who-card {
+    background: #0A1520;
+    border: 0.5px solid #1E3A4A;
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .tr-who-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+  }
+  .tr-who-card__body {
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============ 6. PRICING ============ */
+  .tr-pricing { background: #F7F9FC; padding-block: 96px; }
+  .tr-pricing .container { max-width: 800px; }
+  .tr-pricing__body {
+    margin: 24px auto 0;
+    max-width: 580px;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .tr-plans {
+    margin: 48px auto 0;
+    max-width: 720px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .tr-plan {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: left;
+  }
+  .tr-plan--featured { border: 1.5px solid #0C7B82; }
+  .tr-plan__eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .tr-plan__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .tr-plan__price {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .tr-plan__desc {
+    margin: 12px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .tr-plan__checks {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .tr-plan__checks li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #64748B;
+  }
+  .tr-plan__checks svg { color: #0C7B82; flex-shrink: 0; }
+  .tr-plan__cta {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 24px;
+    padding: 12px 16px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    color: #FFFFFF;
+    background: #0C7B82;
+    border: 1px solid #0C7B82;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+  .tr-plan__cta:hover { background: #0A6970; border-color: #0A6970; }
+  .tr-plan__cta span {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .tr-plan__cta:hover span { transform: translate(2px, -2px); }
+
+  /* ============ 7. FAQ ============ */
+  .tr-faq { background: #FFFFFF; padding-block: 96px; }
+  .tr-faq .container { max-width: 800px; }
+  .tr-faq__list {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 56rem) {
+    .tr-problem__grid { grid-template-columns: 1fr; gap: 40px; }
+    .tr-stats { grid-template-columns: 1fr; }
+    .tr-features { grid-template-columns: 1fr; gap: 28px; }
+    .tr-who__grid { grid-template-columns: 1fr; }
+    .tr-plans { grid-template-columns: 1fr; max-width: 28rem; }
+  }
+  @media (max-width: 48rem) {
+    .tr-hero    { padding-block: 72px; }
+    .tr-problem { padding-block: 72px; }
+    .tr-opp     { padding-block: 72px; }
+    .tr-do      { padding-block: 72px; }
+    .tr-who     { padding-block: 72px; }
+    .tr-pricing { padding-block: 72px; }
+    .tr-faq     { padding-block: 72px; }
+  }
+</style>
