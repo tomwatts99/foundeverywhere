@@ -46,6 +46,8 @@ export const NAV: ReadonlyArray<NavItem> = [
       { href: '/services/visibility-that-compounds/',       label: 'Visibility that compounds' },
       { href: '/services/local-seo/',      label: 'Local SEO and Google Business Profile' },
       { href: '/services/expert-content/', label: 'Expert content' },
+      { href: '/services/web-design/',     label: 'Web Design' },
+      { href: '/services/paid-search-social/', label: 'Paid Search & Social' },
     ],
   },
   { href: '/how-it-works/', label: 'How it works' },
@@ -79,6 +81,8 @@ export const FOOTER_NAV: ReadonlyArray<{
       { href: '/services/visibility-that-compounds/', label: 'Visibility that compounds' },
       { href: '/services/local-seo/',                 label: 'Local SEO' },
       { href: '/services/expert-content/',            label: 'Expert content' },
+      { href: '/services/web-design/',                label: 'Web Design' },
+      { href: '/services/paid-search-social/',        label: 'Paid Search & Social' },
     ],
   },
   {
