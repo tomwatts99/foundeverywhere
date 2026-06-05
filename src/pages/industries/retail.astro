@@ -1,0 +1,742 @@
+---
+export const prerender = true;
+
+/**
+ * industries/retail.astro: industry landing page for independent
+ * retailers and local shops competing against national chains and
+ * online giants.
+ *
+ * Schema flow: FAQPage + BreadcrumbList (Home > Industries > Retail)
+ * + a ProfessionalService LocalBusiness node, all folded into the <head>
+ * @graph via schemaExtras.
+ */
+import Page from '../../layouts/Page.astro';
+import FAQItem from '../../components/ui/FAQItem.astro';
+import CTABlock from '../../components/sections/CTABlock.astro';
+import { faqPageSchema, breadcrumbSchema } from '../../lib/schema';
+import { SITE } from '../../lib/site';
+
+const PROBLEM_CARDS = [
+  {
+    title: 'Outspent by the nationals',
+    body: 'Chains and online giants have marketing budgets you cannot match. Try to compete on their terms and you lose every time.',
+  },
+  {
+    title: 'Invisible at the moment of intent',
+    body: 'Shoppers who want to buy local still search online first. If your shop does not appear, they walk into the chain that does.',
+  },
+  {
+    title: 'Missing from AI answers',
+    body: 'When someone asks AI where to buy something nearby, it names specific shops. Most independents have never built the signals to be one of them.',
+  },
+] as const;
+
+const STATS = [
+  { value: '76%', label: 'of people who search for something nearby on their phone visit a business within a day' },
+  { value: '200%+', label: 'growth in "near me" shopping searches over the last five years' },
+  { value: '7x',  label: 'more clicks for independent retailers with a complete Google Business Profile' },
+] as const;
+
+const FEATURES = [
+  {
+    num: '01',
+    title: 'Local SEO',
+    body: 'We optimise your website and local presence so your shop appears when someone nearby searches for what you sell. The right keywords, structure, and technical foundations to capture high-intent local searches and turn them into footfall.',
+  },
+  {
+    num: '02',
+    title: 'Map pack and Google Business Profile',
+    body: 'The local map pack is where footfall is won. We optimise every element of your Google Business Profile - categories, products, photos, posts, hours, and attributes - and keep it current so you appear in the top three when shoppers are ready to visit.',
+  },
+  {
+    num: '03',
+    title: 'AI and LLM visibility',
+    body: 'When someone asks ChatGPT or Perplexity where to buy something in your town, we make sure your shop appears. Schema markup, entity signals, and structured content that give AI systems what they need to recommend you by name.',
+  },
+  {
+    num: '04',
+    title: 'Review generation and management',
+    body: 'Reviews are how a shopper decides between you and the chain down the road - and they drive rankings too. We implement a review generation process that reaches customers at the right moment, monitors what comes in, and helps you respond to build a strong reputation.',
+  },
+  {
+    num: '05',
+    title: 'Local mentions and citations',
+    body: 'Mentions across local press, listings, and community sites feed both Google and AI visibility - and they are an edge nationals rarely bother with. We build consistent citations and earn the local references that mark you out as part of the area.',
+  },
+  {
+    num: '06',
+    title: 'Consistent business details (NAP)',
+    body: 'Your name, address, and phone number need to match everywhere they appear online. When they do not, Google trusts you less and you rank lower. We audit every listing, fix the mismatches, and build new ones so your details are consistent across the web.',
+  },
+] as const;
+
+const AUDIENCE = [
+  {
+    title: 'Independent shops',
+    body: 'High-street and neighbourhood stores that rely on local footfall and want to be the first result when nearby shoppers search for what they sell.',
+  },
+  {
+    title: 'Specialist and boutique retailers',
+    body: 'Shops with a distinctive range - homeware, lifestyle, food and drink, gifts - whose customers travel to find them once they know they exist.',
+  },
+  {
+    title: 'Multi-location independents',
+    body: 'Small retail groups with a handful of shops who need to be visible and ranking in every town they trade in, not just their flagship.',
+  },
+] as const;
+
+const RETAIL_FAQS = [
+  {
+    question: 'We are a small shop. How can we possibly outrank the big chains?',
+    answer:
+      'Local search is the one place the budget gap does not decide the winner. Google ranks local results on relevance, proximity, reviews, and the strength of your profile - not on how much you spend nationally. With the right signals, an independent shop regularly outranks chains in its own town. That is exactly the level playing field we help you win on.',
+  },
+  {
+    question: 'What is the map pack and why does it matter for a shop?',
+    answer:
+      'The map pack is the box of three local businesses with a map that shows at the top of Google when someone searches for something nearby. Those three get the bulk of the visits because shoppers on their phones want somewhere close they can go to now. Getting your shop into the map pack is central to driving direct footfall.',
+  },
+  {
+    question: 'Do people really ask AI tools where to shop?',
+    answer:
+      'Increasingly, yes. Ask ChatGPT or Perplexity where to buy something in a town and it will name specific local shops. Those names come from reviews, listings, and structured data. We make sure your shop sends the right signals to be recommended - reaching customers before they have even opened Google.',
+  },
+  {
+    question: 'How long before we see more customers through the door?',
+    answer:
+      'Profile and review improvements can show within a few weeks. Local map pack rankings usually improve over two to three months as your profile, reviews, and citations build. Most independent retailers start noticing more visits and enquiries within the first couple of months.',
+  },
+  {
+    question: 'Our Google profile is out of date. Can you sort it out?',
+    answer:
+      'Yes. Most shops we work with start with an incomplete or outdated profile - wrong hours, no products, few photos. We fill in every gap, add your products and photos, keep your hours accurate, and manage it on an ongoing basis so it actually brings people in.',
+  },
+  {
+    question: 'How do we know where we currently stand?',
+    answer:
+      'Start with the free visibility report. It shows exactly where your shop appears across Google and AI tools, which competitors are showing up instead, and what to prioritise first. No jargon - just a clear picture of where you stand and what to fix.',
+  },
+];
+
+const pageUrl = `${SITE.url}/industries/retail/`;
+const localBusiness = {
+  '@type': 'ProfessionalService',
+  '@id': `${pageUrl}#service`,
+  name: 'Found Everywhere - Retail SEO & LLM Visibility',
+  url: pageUrl,
+  parentOrganization: { '@id': `${SITE.url}/#organization` },
+  areaServed: 'United Kingdom',
+  serviceType: 'Local SEO and AI search visibility for independent retailers',
+  audience: {
+    '@type': 'BusinessAudience',
+    name: 'Independent retailers and local shops',
+  },
+};
+const schemaExtras = [
+  faqPageSchema(RETAIL_FAQS, pageUrl),
+  breadcrumbSchema(
+    [
+      { name: 'Home',       item: `${SITE.url}/` },
+      { name: 'Industries', item: `${SITE.url}/industries/` },
+      { name: 'Retail',     item: pageUrl },
+    ],
+    pageUrl,
+  ),
+  localBusiness,
+];
+---
+
+<Page
+  title="SEO and LLM Visibility for Independent Retailers | Found Everywhere"
+  description="Local SEO, Google Business Profile, and AI search visibility for independent retailers and local shops. Outrank the chains locally, get into the map pack, and win the footfall that goes to whoever shows up first."
+  path="/industries/retail/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="re-hero" aria-labelledby="re-hero-title">
+    <div class="container">
+      <p class="re-hero__eyebrow">Retail</p>
+      <h1 id="re-hero-title" class="re-hero__title">Independent retailers who show up online win customers that chains miss</h1>
+      <p class="re-hero__lead">
+        When someone searches for a local shop or asks AI where to buy
+        something nearby, the businesses that appear get the footfall. Found
+        Everywhere makes sure that's you.
+      </p>
+      <div class="re-hero__cta">
+        <a href="/free-visibility-report/" class="re-btn re-btn--primary">
+          Get your free visibility report <span aria-hidden="true" class="re-btn__arrow">&#x2197;</span>
+        </a>
+        <a href="/how-it-works/" class="re-btn re-btn--ghost">How it works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. THE PROBLEM ============ -->
+  <section class="re-problem" aria-labelledby="re-problem-title">
+    <div class="container">
+      <div class="re-problem__grid">
+        <div class="re-problem__copy">
+          <p class="re-eyebrow">The problem</p>
+          <h2 id="re-problem-title" class="re-h2">You cannot outspend the chains. You can outrank them.</h2>
+          <p class="re-problem__body">
+            National chains and online giants have marketing budgets an
+            independent shop will never match. Go head to head on their terms
+            and you lose. But the high street is not where this is decided
+            any more - the search results are. And that is a fight you can
+            win.
+          </p>
+          <p class="re-problem__body">
+            People genuinely want to shop local, but they search online first
+            to find where to go. The shops that appear in the map pack, in the
+            reviews, and in AI recommendations get the visit. Local search
+            ranks on relevance and reputation, not budget - so the right
+            signals put your shop above businesses many times your size. Most
+            independents have never built those signals. That is the gap we
+            close.
+          </p>
+        </div>
+        <div class="re-problem__cards">
+          {PROBLEM_CARDS.map((c) => (
+            <div class="re-pcard">
+              <h3 class="re-pcard__title">{c.title}</h3>
+              <p class="re-pcard__body">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. THE OPPORTUNITY ============ -->
+  <section class="re-opp" aria-labelledby="re-opp-title">
+    <div class="container">
+      <p class="re-eyebrow re-eyebrow--center">The opportunity</p>
+      <h2 id="re-opp-title" class="re-h2 re-h2--center">People want to shop local. Help them find you.</h2>
+      <p class="re-opp__body">
+        Someone searching for a shop near them is not browsing for fun - they
+        want to buy, and soon. That intent is the single biggest advantage
+        independent retailers have over the nationals: local shoppers are
+        actively looking for somewhere close to go. Appear at that moment - in
+        Google, in the map pack, in AI-generated answers - and you turn a
+        search into a customer through your door. Stay invisible and they
+        visit whoever did show up.
+      </p>
+      <div class="re-stats">
+        {STATS.map((s) => (
+          <div class="re-stat">
+            <div class="re-stat__value">{s.value}</div>
+            <div class="re-stat__label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. WHAT WE DO ============ -->
+  <section class="re-do" aria-labelledby="re-do-title">
+    <div class="container">
+      <p class="re-eyebrow">What we do</p>
+      <h2 id="re-do-title" class="re-h2">Everything your shop needs to be found first</h2>
+      <ul class="re-features" role="list">
+        {FEATURES.map((f) => (
+          <li class="re-feature">
+            <span class="re-feature__num">{f.num}</span>
+            <h3 class="re-feature__title">{f.title}</h3>
+            <p class="re-feature__body">{f.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 5. WHO THIS IS FOR (dark) ============ -->
+  <section class="re-who" aria-labelledby="re-who-title">
+    <div class="container">
+      <p class="re-eyebrow re-eyebrow--center">Who this is for</p>
+      <h2 id="re-who-title" class="re-h2 re-h2--center re-h2--light">Built for independents ready to take on the chains</h2>
+      <div class="re-who__grid">
+        {AUDIENCE.map((a) => (
+          <article class="re-who-card">
+            <h3 class="re-who-card__title">{a.title}</h3>
+            <p class="re-who-card__body">{a.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. PRICING ============ -->
+  <section class="re-pricing" aria-labelledby="re-pricing-title">
+    <div class="container">
+      <p class="re-eyebrow re-eyebrow--center">Investment</p>
+      <h2 id="re-pricing-title" class="re-h2 re-h2--center re-h2--pricing">Straightforward pricing, no surprises</h2>
+      <p class="re-pricing__body">
+        Retail visibility work is scoped as part of our audit and retainer
+        services. We start with a full SEO and AI visibility audit so you know
+        exactly where your shop stands, then move into monthly management if it
+        makes sense.
+      </p>
+
+      <div class="re-plans">
+        <article class="re-plan">
+          <p class="re-plan__eyebrow">Start here</p>
+          <h3 class="re-plan__title">SEO and visibility audit</h3>
+          <p class="re-plan__price">From £497</p>
+          <p class="re-plan__desc">Full technical SEO audit, GBP and map pack review, AI visibility test across 8 platforms, and prioritised fix list. Delivered within two weeks.</p>
+          <ul class="re-plan__checks" role="list">
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Local rank tracking included</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>GBP and map pack audit</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>AI visibility across 8 platforms</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Plain English report</span></li>
+          </ul>
+          <a href="/contact/" class="re-plan__cta">Book your audit <span aria-hidden="true">&#x2197;</span></a>
+        </article>
+
+        <article class="re-plan re-plan--featured">
+          <p class="re-plan__eyebrow">Ongoing</p>
+          <h3 class="re-plan__title">Monthly visibility management</h3>
+          <p class="re-plan__price">From £697/mo</p>
+          <p class="re-plan__desc">Full monthly management of local SEO, GBP and map pack, review generation, local citations, and AI visibility tracking. Clear monthly reporting.</p>
+          <ul class="re-plan__checks" role="list">
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>GBP and map pack management</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Review generation and monitoring</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Local citation building included</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Monthly performance report</span></li>
+          </ul>
+          <a href="/contact/" class="re-plan__cta">Talk to us <span aria-hidden="true">&#x2197;</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. FAQ ============ -->
+  <section class="re-faq" aria-labelledby="re-faq-title">
+    <div class="container">
+      <p class="re-eyebrow">Common questions</p>
+      <h2 id="re-faq-title" class="re-h2">What independent retailers ask us</h2>
+      <div class="re-faq__list">
+        {RETAIL_FAQS.map((faq) => (
+          <FAQItem question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. CTA ============ -->
+  <CTABlock
+    title="See where your shop ranks - for free"
+    lead="Find out exactly where you appear across Google and AI tools, who is showing up instead, and what to prioritise first."
+  />
+
+</Page>
+
+<style>
+  /* Shared section atoms */
+  .re-eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .re-eyebrow--center { text-align: center; }
+  .re-h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .re-h2--center { text-align: center; }
+  .re-h2--light { color: #FFFFFF; line-height: 1.2; }
+  /* Pricing heading is a touch smaller per spec (32px). */
+  .re-h2--pricing { font-size: clamp(26px, 1.4rem + 1.4vw, 32px); }
+
+  /* ============ 1. HERO ============ */
+  .re-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .re-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .re-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .re-hero__lead {
+    margin: 20px auto 0;
+    max-width: 580px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .re-hero__cta {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .re-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 13px 22px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+  .re-btn--primary { color: #FFFFFF; background: #0C7B82; border: 1px solid #0C7B82; }
+  .re-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
+  .re-btn--ghost {
+    color: #FFFFFF;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .re-btn--ghost:hover { border-color: rgba(255, 255, 255, 0.55); }
+  .re-btn__arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .re-btn--primary:hover .re-btn__arrow { transform: translate(2px, -2px); }
+
+  /* ============ 2. THE PROBLEM ============ */
+  .re-problem { background: #FFFFFF; padding-block: 96px; }
+  .re-problem .container { max-width: 960px; }
+  .re-problem__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .re-problem__body {
+    margin: 16px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .re-problem__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .re-pcard {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-left: 3px solid #EF4444;
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .re-pcard__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .re-pcard__body {
+    margin: 6px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 3. THE OPPORTUNITY ============ */
+  .re-opp { background: #F7F9FC; padding-block: 96px; }
+  .re-opp .container { max-width: 960px; }
+  .re-opp__body {
+    margin: 24px auto 0;
+    max-width: 680px;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .re-stats {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .re-stat {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .re-stat__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .re-stat__label {
+    margin-top: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 4. WHAT WE DO ============ */
+  .re-do { background: #FFFFFF; padding-block: 96px; }
+  .re-do .container { max-width: 960px; }
+  .re-features {
+    list-style: none;
+    padding: 0;
+    margin: 48px 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .re-feature__num {
+    display: block;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    letter-spacing: 0.08em;
+  }
+  .re-feature__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .re-feature__body {
+    margin: 8px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 5. WHO THIS IS FOR (dark) ============ */
+  .re-who { background: #0D1826; padding-block: 96px; }
+  .re-who .container { max-width: 960px; }
+  .re-who__grid {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .re-who-card {
+    background: #0A1520;
+    border: 0.5px solid #1E3A4A;
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .re-who-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+  }
+  .re-who-card__body {
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============ 6. PRICING ============ */
+  .re-pricing { background: #F7F9FC; padding-block: 96px; }
+  .re-pricing .container { max-width: 800px; }
+  .re-pricing__body {
+    margin: 24px auto 0;
+    max-width: 580px;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .re-plans {
+    margin: 48px auto 0;
+    max-width: 720px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .re-plan {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: left;
+  }
+  .re-plan--featured { border: 1.5px solid #0C7B82; }
+  .re-plan__eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .re-plan__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .re-plan__price {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .re-plan__desc {
+    margin: 12px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .re-plan__checks {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .re-plan__checks li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #64748B;
+  }
+  .re-plan__checks svg { color: #0C7B82; flex-shrink: 0; }
+  .re-plan__cta {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 24px;
+    padding: 12px 16px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    color: #FFFFFF;
+    background: #0C7B82;
+    border: 1px solid #0C7B82;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+  .re-plan__cta:hover { background: #0A6970; border-color: #0A6970; }
+  .re-plan__cta span {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .re-plan__cta:hover span { transform: translate(2px, -2px); }
+
+  /* ============ 7. FAQ ============ */
+  .re-faq { background: #FFFFFF; padding-block: 96px; }
+  .re-faq .container { max-width: 800px; }
+  .re-faq__list {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 56rem) {
+    .re-problem__grid { grid-template-columns: 1fr; gap: 40px; }
+    .re-stats { grid-template-columns: 1fr; }
+    .re-features { grid-template-columns: 1fr; gap: 28px; }
+    .re-who__grid { grid-template-columns: 1fr; }
+    .re-plans { grid-template-columns: 1fr; max-width: 28rem; }
+  }
+  @media (max-width: 48rem) {
+    .re-hero    { padding-block: 72px; }
+    .re-problem { padding-block: 72px; }
+    .re-opp     { padding-block: 72px; }
+    .re-do      { padding-block: 72px; }
+    .re-who     { padding-block: 72px; }
+    .re-pricing { padding-block: 72px; }
+    .re-faq     { padding-block: 72px; }
+  }
+</style>
