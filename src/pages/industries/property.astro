@@ -1,0 +1,741 @@
+---
+export const prerender = true;
+
+/**
+ * industries/property.astro: industry landing page for property
+ * businesses (estate agents, letting agents, property management).
+ *
+ * Schema flow: FAQPage + BreadcrumbList (Home > Industries > Property)
+ * + a ProfessionalService node, all folded into the <head> @graph via
+ * schemaExtras.
+ */
+import Page from '../../layouts/Page.astro';
+import FAQItem from '../../components/ui/FAQItem.astro';
+import CTABlock from '../../components/sections/CTABlock.astro';
+import { faqPageSchema, breadcrumbSchema } from '../../lib/schema';
+import { SITE } from '../../lib/site';
+
+const PROBLEM_CARDS = [
+  {
+    title: 'Out of the map pack, out of the running',
+    body: 'Estate agency is one of the most competitive local searches there is. The top three results take the vast majority of clicks - everyone else is invisible.',
+  },
+  {
+    title: 'No social proof on display',
+    body: 'Vendors and landlords choose on trust. Without visible reviews and a consistent online presence, you give them no reason to pick you over the agent next door.',
+  },
+  {
+    title: 'Absent from AI recommendations',
+    body: 'When someone asks an AI tool for the best agent in their town, it names specific agencies. Most are never mentioned because they have never built the signals.',
+  },
+] as const;
+
+const STATS = [
+  { value: '72%', label: 'of home sellers research agents online before making contact' },
+  { value: '60%+', label: 'growth in "estate agent near me" searches over the last three years' },
+  { value: 'AI',  label: 'recommendations are increasingly winning instructions without a multi-agent pitch' },
+] as const;
+
+const FEATURES = [
+  {
+    num: '01',
+    title: 'Local SEO',
+    body: 'We optimise your website and local presence so your agency appears when someone in your patch searches to sell, let, or buy. The right keywords, structure, and technical foundations to capture high-intent searches across every area you cover.',
+  },
+  {
+    num: '02',
+    title: 'Map pack and Google Business Profile',
+    body: 'The local map pack is where instructions are won. We optimise every element of your Google Business Profile - categories, services, photos, posts, and attributes - and manage it on an ongoing basis so you appear in the top three and stay there.',
+  },
+  {
+    num: '03',
+    title: 'AI and LLM visibility',
+    body: 'When a vendor asks ChatGPT or Perplexity for the best estate agent in their town, we make sure your agency appears. Schema markup, entity signals, and structured content that give AI systems what they need to recommend you by name.',
+  },
+  {
+    num: '04',
+    title: 'Review generation and management',
+    body: 'Reviews are the single strongest signal a vendor or landlord looks for - and they drive rankings too. We implement a review generation process that reaches clients at the right moment, monitors what comes in, and helps you respond to build a strong public reputation.',
+  },
+  {
+    num: '05',
+    title: 'Third-party mentions and citations',
+    body: 'Mentions across local press, directories, and property portals feed both Google and AI visibility. We build consistent citations and earn the third-party references that establish your agency as an authority in its area.',
+  },
+  {
+    num: '06',
+    title: 'Technical SEO and performance',
+    body: 'Property sites are heavy with listings, images, and integrations - and that often means slow, poorly structured pages. We audit and fix your technical foundations - PageSpeed, Core Web Vitals, schema, and on-page SEO - so your site supports your visibility rather than holding it back.',
+  },
+] as const;
+
+const AUDIENCE = [
+  {
+    title: 'Estate agents',
+    body: 'Independent and multi-branch sales agents who need to win instructions directly - by appearing first when vendors research who to sell with.',
+  },
+  {
+    title: 'Letting agents',
+    body: 'Agencies competing for landlords and tenants in busy rental markets, where map pack visibility and reviews decide who gets the call.',
+  },
+  {
+    title: 'Property management',
+    body: 'Management companies looking to build credibility and visibility with landlords, blocks, and investors searching for a managing agent they can trust.',
+  },
+] as const;
+
+const PROPERTY_FAQS = [
+  {
+    question: 'We already advertise on the major property portals. Do we still need this?',
+    answer:
+      'Portals are valuable for marketing individual listings, but they do not win you instructions - they advertise stock you already have. Search and AI visibility is what gets a vendor or landlord to choose your agency in the first place, before they ever list with you. The two work together.',
+  },
+  {
+    question: 'How long does it take to see results?',
+    answer:
+      'Technical fixes and GBP improvements can show within weeks. Local map pack rankings typically improve over two to three months as your profile, reviews, and citations build. AI visibility improvements can show within weeks as systems re-crawl and update.',
+  },
+  {
+    question: 'What is the map pack and why does it matter so much for agents?',
+    answer:
+      'The map pack is the box of three local businesses with a map that shows at the top of Google for searches like "estate agent in Brighton". Estate agency is fiercely competitive, and those three results take the overwhelming majority of clicks. Getting your agency into the map pack is central to what we do.',
+  },
+  {
+    question: 'Do AI tools really recommend estate agents?',
+    answer:
+      'Yes, and increasingly so. Ask ChatGPT or Perplexity for the best agent in a town and it will name specific agencies. Those names come from reviews, citations, and structured data. We make sure your agency sends the right signals to be one of them - so you get instructed without a multi-agent pitch.',
+  },
+  {
+    question: 'We already rank reasonably well on Google. Is there still value in working with you?',
+    answer:
+      'Almost certainly yes. Most agency sites that rank reasonably well are still invisible in AI search, have incomplete schema, and have technical issues that cap their rankings. Get in touch and we will tell you honestly what the opportunity looks like for your agency.',
+  },
+  {
+    question: 'Can you handle visibility across multiple branches or areas?',
+    answer:
+      'Yes. We track and optimise rankings for every area and branch you cover, not just your head office location, so you are visible across your whole patch rather than in a single postcode.',
+  },
+];
+
+const pageUrl = `${SITE.url}/industries/property/`;
+const localBusiness = {
+  '@type': 'ProfessionalService',
+  '@id': `${pageUrl}#service`,
+  name: 'Found Everywhere - Property SEO & LLM Visibility',
+  url: pageUrl,
+  parentOrganization: { '@id': `${SITE.url}/#organization` },
+  areaServed: 'United Kingdom',
+  serviceType: 'Local SEO and AI search visibility for estate and letting agents',
+  audience: {
+    '@type': 'BusinessAudience',
+    name: 'Estate agents, letting agents, and property management companies',
+  },
+};
+const schemaExtras = [
+  faqPageSchema(PROPERTY_FAQS, pageUrl),
+  breadcrumbSchema(
+    [
+      { name: 'Home',       item: `${SITE.url}/` },
+      { name: 'Industries', item: `${SITE.url}/industries/` },
+      { name: 'Property',   item: pageUrl },
+    ],
+    pageUrl,
+  ),
+  localBusiness,
+];
+---
+
+<Page
+  title="SEO and LLM Visibility for Estate and Letting Agents | Found Everywhere"
+  description="Local SEO, Google Business Profile management, and AI search visibility for estate agents, letting agents, and property management companies. Get into the map pack and win instructions before the pitch."
+  path="/industries/property/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="pr-hero" aria-labelledby="pr-hero-title">
+    <div class="container">
+      <p class="pr-hero__eyebrow">Property</p>
+      <h1 id="pr-hero-title" class="pr-hero__title">Your next vendor or tenant is searching online before they ever call anyone</h1>
+      <p class="pr-hero__lead">
+        Whether someone is selling, buying, or renting, they research agents
+        online first. Found Everywhere makes sure your agency appears where it
+        counts - on Google, in the map pack, and in AI recommendations.
+      </p>
+      <div class="pr-hero__cta">
+        <a href="/free-visibility-report/" class="pr-btn pr-btn--primary">
+          Get your free visibility report <span aria-hidden="true" class="pr-btn__arrow">&#x2197;</span>
+        </a>
+        <a href="/how-it-works/" class="pr-btn pr-btn--ghost">How it works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. THE PROBLEM ============ -->
+  <section class="pr-problem" aria-labelledby="pr-problem-title">
+    <div class="container">
+      <div class="pr-problem__grid">
+        <div class="pr-problem__copy">
+          <p class="pr-eyebrow">The problem</p>
+          <h2 id="pr-problem-title" class="pr-h2">Vendors decide who to trust long before they call</h2>
+          <p class="pr-problem__body">
+            By the time a vendor or landlord picks up the phone, they have
+            already done their research. They have searched, read reviews,
+            and formed a shortlist. The agencies on that shortlist are the
+            ones that showed up - in the map pack, in the reviews, and
+            increasingly in AI recommendations. The rest were never in the
+            running.
+          </p>
+          <p class="pr-problem__body">
+            Estate agency is one of the most competitive local search
+            categories there is, and the top three results take the vast
+            majority of clicks. The agencies winning instructions are not
+            necessarily the biggest names - they are the ones with the
+            strongest visibility and social proof. Most have not built that
+            deliberately. That is the gap we close.
+          </p>
+        </div>
+        <div class="pr-problem__cards">
+          {PROBLEM_CARDS.map((c) => (
+            <div class="pr-pcard">
+              <h3 class="pr-pcard__title">{c.title}</h3>
+              <p class="pr-pcard__body">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. THE OPPORTUNITY ============ -->
+  <section class="pr-opp" aria-labelledby="pr-opp-title">
+    <div class="container">
+      <p class="pr-eyebrow pr-eyebrow--center">The opportunity</p>
+      <h2 id="pr-opp-title" class="pr-h2 pr-h2--center">High intent. High value. Won before the pitch.</h2>
+      <p class="pr-opp__body">
+        Someone searching for an estate or letting agent is not browsing.
+        They have a property to sell, let, or manage and they are choosing who
+        to trust with it. That intent makes property one of the
+        highest-value categories in local search. The agency that appears
+        first - in Google, in the map pack, in AI-generated answers - gets
+        instructed, often without ever being pitched against. The ones that
+        do not appear never get the chance.
+      </p>
+      <div class="pr-stats">
+        {STATS.map((s) => (
+          <div class="pr-stat">
+            <div class="pr-stat__value">{s.value}</div>
+            <div class="pr-stat__label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. WHAT WE DO ============ -->
+  <section class="pr-do" aria-labelledby="pr-do-title">
+    <div class="container">
+      <p class="pr-eyebrow">What we do</p>
+      <h2 id="pr-do-title" class="pr-h2">Everything an agency needs to win instructions</h2>
+      <ul class="pr-features" role="list">
+        {FEATURES.map((f) => (
+          <li class="pr-feature">
+            <span class="pr-feature__num">{f.num}</span>
+            <h3 class="pr-feature__title">{f.title}</h3>
+            <p class="pr-feature__body">{f.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 5. WHO THIS IS FOR (dark) ============ -->
+  <section class="pr-who" aria-labelledby="pr-who-title">
+    <div class="container">
+      <p class="pr-eyebrow pr-eyebrow--center">Who this is for</p>
+      <h2 id="pr-who-title" class="pr-h2 pr-h2--center pr-h2--light">Built for agencies that want to win more instructions</h2>
+      <div class="pr-who__grid">
+        {AUDIENCE.map((a) => (
+          <article class="pr-who-card">
+            <h3 class="pr-who-card__title">{a.title}</h3>
+            <p class="pr-who-card__body">{a.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. PRICING ============ -->
+  <section class="pr-pricing" aria-labelledby="pr-pricing-title">
+    <div class="container">
+      <p class="pr-eyebrow pr-eyebrow--center">Investment</p>
+      <h2 id="pr-pricing-title" class="pr-h2 pr-h2--center pr-h2--pricing">Straightforward pricing, no surprises</h2>
+      <p class="pr-pricing__body">
+        Property visibility work is scoped as part of our audit and retainer
+        services. We start with a full SEO and AI visibility audit so you know
+        exactly where your agency stands, then move into monthly management if
+        it makes sense.
+      </p>
+
+      <div class="pr-plans">
+        <article class="pr-plan">
+          <p class="pr-plan__eyebrow">Start here</p>
+          <h3 class="pr-plan__title">SEO and visibility audit</h3>
+          <p class="pr-plan__price">From £497</p>
+          <p class="pr-plan__desc">Full technical SEO audit, GBP and map pack review, AI visibility test across 8 platforms, and prioritised fix list. Delivered within two weeks.</p>
+          <ul class="pr-plan__checks" role="list">
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Local rank tracking included</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>GBP and map pack audit</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>AI visibility across 8 platforms</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Plain English report</span></li>
+          </ul>
+          <a href="/contact/" class="pr-plan__cta">Book your audit <span aria-hidden="true">&#x2197;</span></a>
+        </article>
+
+        <article class="pr-plan pr-plan--featured">
+          <p class="pr-plan__eyebrow">Ongoing</p>
+          <h3 class="pr-plan__title">Monthly visibility management</h3>
+          <p class="pr-plan__price">From £697/mo</p>
+          <p class="pr-plan__desc">Full monthly management of local SEO, GBP and map pack, review generation, citations, and AI visibility tracking. Clear monthly reporting.</p>
+          <ul class="pr-plan__checks" role="list">
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>GBP and map pack management</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Review generation and monitoring</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Citation building included</span></li>
+            <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Monthly performance report</span></li>
+          </ul>
+          <a href="/contact/" class="pr-plan__cta">Talk to us <span aria-hidden="true">&#x2197;</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. FAQ ============ -->
+  <section class="pr-faq" aria-labelledby="pr-faq-title">
+    <div class="container">
+      <p class="pr-eyebrow">Common questions</p>
+      <h2 id="pr-faq-title" class="pr-h2">What agencies ask us</h2>
+      <div class="pr-faq__list">
+        {PROPERTY_FAQS.map((faq) => (
+          <FAQItem question={faq.question} answer={faq.answer} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. CTA ============ -->
+  <CTABlock
+    title="See where your agency ranks - for free"
+    lead="Find out exactly where you show up in local search and AI tools, who is appearing instead, and what to fix first."
+  />
+
+</Page>
+
+<style>
+  /* Shared section atoms */
+  .pr-eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .pr-eyebrow--center { text-align: center; }
+  .pr-h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 1.5rem + 1.6vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+    text-wrap: balance;
+  }
+  .pr-h2--center { text-align: center; }
+  .pr-h2--light { color: #FFFFFF; line-height: 1.2; }
+  /* Pricing heading is a touch smaller per spec (32px). */
+  .pr-h2--pricing { font-size: clamp(26px, 1.4rem + 1.4vw, 32px); }
+
+  /* ============ 1. HERO ============ */
+  .pr-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 96px;
+  }
+  .pr-hero__eyebrow {
+    margin: 0 0 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .pr-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(34px, 1.6rem + 3.6vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .pr-hero__lead {
+    margin: 20px auto 0;
+    max-width: 580px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+  .pr-hero__cta {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .pr-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 13px 22px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+  .pr-btn--primary { color: #FFFFFF; background: #0C7B82; border: 1px solid #0C7B82; }
+  .pr-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
+  .pr-btn--ghost {
+    color: #FFFFFF;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .pr-btn--ghost:hover { border-color: rgba(255, 255, 255, 0.55); }
+  .pr-btn__arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .pr-btn--primary:hover .pr-btn__arrow { transform: translate(2px, -2px); }
+
+  /* ============ 2. THE PROBLEM ============ */
+  .pr-problem { background: #FFFFFF; padding-block: 96px; }
+  .pr-problem .container { max-width: 960px; }
+  .pr-problem__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .pr-problem__body {
+    margin: 16px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .pr-problem__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .pr-pcard {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-left: 3px solid #EF4444;
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .pr-pcard__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .pr-pcard__body {
+    margin: 6px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 3. THE OPPORTUNITY ============ */
+  .pr-opp { background: #F7F9FC; padding-block: 96px; }
+  .pr-opp .container { max-width: 960px; }
+  .pr-opp__body {
+    margin: 24px auto 0;
+    max-width: 680px;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .pr-stats {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .pr-stat {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .pr-stat__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .pr-stat__label {
+    margin-top: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 4. WHAT WE DO ============ */
+  .pr-do { background: #FFFFFF; padding-block: 96px; }
+  .pr-do .container { max-width: 960px; }
+  .pr-features {
+    list-style: none;
+    padding: 0;
+    margin: 48px 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .pr-feature__num {
+    display: block;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+    color: #0C7B82;
+    letter-spacing: 0.08em;
+  }
+  .pr-feature__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .pr-feature__body {
+    margin: 8px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+
+  /* ============ 5. WHO THIS IS FOR (dark) ============ */
+  .pr-who { background: #0D1826; padding-block: 96px; }
+  .pr-who .container { max-width: 960px; }
+  .pr-who__grid {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .pr-who-card {
+    background: #0A1520;
+    border: 0.5px solid #1E3A4A;
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .pr-who-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+  }
+  .pr-who-card__body {
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============ 6. PRICING ============ */
+  .pr-pricing { background: #F7F9FC; padding-block: 96px; }
+  .pr-pricing .container { max-width: 800px; }
+  .pr-pricing__body {
+    margin: 24px auto 0;
+    max-width: 580px;
+    text-align: center;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .pr-plans {
+    margin: 48px auto 0;
+    max-width: 720px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .pr-plan {
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: left;
+  }
+  .pr-plan--featured { border: 1.5px solid #0C7B82; }
+  .pr-plan__eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: #0C7B82;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .pr-plan__title {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #0D1321;
+  }
+  .pr-plan__price {
+    margin: 8px 0 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #0C7B82;
+  }
+  .pr-plan__desc {
+    margin: 12px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
+  .pr-plan__checks {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pr-plan__checks li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #64748B;
+  }
+  .pr-plan__checks svg { color: #0C7B82; flex-shrink: 0; }
+  .pr-plan__cta {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 24px;
+    padding: 12px 16px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    color: #FFFFFF;
+    background: #0C7B82;
+    border: 1px solid #0C7B82;
+    border-radius: 8px;
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+  .pr-plan__cta:hover { background: #0A6970; border-color: #0A6970; }
+  .pr-plan__cta span {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .pr-plan__cta:hover span { transform: translate(2px, -2px); }
+
+  /* ============ 7. FAQ ============ */
+  .pr-faq { background: #FFFFFF; padding-block: 96px; }
+  .pr-faq .container { max-width: 800px; }
+  .pr-faq__list {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 56rem) {
+    .pr-problem__grid { grid-template-columns: 1fr; gap: 40px; }
+    .pr-stats { grid-template-columns: 1fr; }
+    .pr-features { grid-template-columns: 1fr; gap: 28px; }
+    .pr-who__grid { grid-template-columns: 1fr; }
+    .pr-plans { grid-template-columns: 1fr; max-width: 28rem; }
+  }
+  @media (max-width: 48rem) {
+    .pr-hero    { padding-block: 72px; }
+    .pr-problem { padding-block: 72px; }
+    .pr-opp     { padding-block: 72px; }
+    .pr-do      { padding-block: 72px; }
+    .pr-who     { padding-block: 72px; }
+    .pr-pricing { padding-block: 72px; }
+    .pr-faq     { padding-block: 72px; }
+  }
+</style>
