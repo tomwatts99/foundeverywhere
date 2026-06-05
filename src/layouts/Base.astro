@@ -152,6 +152,13 @@ const ld = graph(
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
     <slot />
-    <script src="//code.tidio.co/lwftxrlidrfr2qh7kvpy9fnqt4sctnr0.js" async></script>
+    <script is:inline>
+      window.addEventListener('load', function() {
+        var s = document.createElement('script');
+        s.src = '//code.tidio.co/lwftxrlidrfr2qh7kvpy9fnqt4sctnr0.js';
+        s.async = true;
+        document.body.appendChild(s);
+      });
+    </script>
   </body>
 </html>
