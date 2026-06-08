@@ -16,14 +16,14 @@ export const HOME_FAQS: ReadonlyArray<FAQ> = [
       'LLM visibility means your website appears as a cited source when people use AI tools like ChatGPT, Perplexity, or Gemini to search for your services. We implement the technical signals (schema markup, structured content, and entity consistency) that these systems use to decide what to recommend.',
   },
   {
-    question: 'How long does an audit take?',
+    question: 'How long does it take to get started?',
     answer:
-      'Most audits are turned around within two weeks. You receive a full report with every issue scored by impact, a prioritised fix list, and a before score you can benchmark against.',
+      'Get in touch and we will talk through your situation. We scope every engagement individually so timelines depend on what you need - we will give you a clear picture from the first conversation.',
   },
   {
-    question: 'Do I need ongoing work or just a one-off fix?',
+    question: 'How does the service work?',
     answer:
-      'The audit and fix is a standalone service: many clients start there. Ongoing retainers make sense once the foundations are solid and you want to monitor AI search visibility, track rankings, and keep your schema current as the standards evolve.',
+      'Everything we do is ongoing. We start by getting the foundations right - technical SEO, site speed, structured data - then move into the continuous work that compounds over time: AI visibility tracking, local SEO management, content, and rankings. Get in touch and we will talk through where to start.',
   },
   {
     question: 'Will this work for my industry?',
