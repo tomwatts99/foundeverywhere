@@ -135,7 +135,8 @@ const schemaExtras = [
         No fluff, no sales emails. Just practical insights on SEO and AI
         visibility when we publish them.
       </p>
-      <form class="ins-news__form" action="/#" method="post">
+      <!-- Formspree: placeholder form ID below — replace with the real ID from a free formspree.io account (sends to hello@foundeverywhere.co.uk) -->
+      <form class="ins-news__form" id="ins-news-form" action="https://formspree.io/f/xpwzgwka" method="post">
         <label class="sr-only" for="ins-email">Email address</label>
         <input
           class="ins-news__input"
@@ -151,8 +152,40 @@ const schemaExtras = [
         </button>
       </form>
       <p class="ins-news__note">No spam. Unsubscribe any time.</p>
+      <p class="ins-news__body" id="ins-news-status" role="status" aria-live="polite" hidden></p>
     </div>
   </section>
+
+  <script is:inline>
+    (function () {
+      var form = document.getElementById('ins-news-form');
+      if (!form) return;
+      var status = document.getElementById('ins-news-status');
+      var note = form.parentElement.querySelector('.ins-news__note');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        status.hidden = true;
+        fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        }).then(function (res) {
+          if (res.ok) {
+            form.hidden = true;
+            if (note) note.hidden = true;
+            status.textContent = "Thanks - we'll be in touch when we publish something new.";
+            status.hidden = false;
+          } else {
+            status.textContent = "Something went wrong. Please try again, or email hello@foundeverywhere.co.uk.";
+            status.hidden = false;
+          }
+        }).catch(function () {
+          status.textContent = "Something went wrong. Please try again, or email hello@foundeverywhere.co.uk.";
+          status.hidden = false;
+        });
+      });
+    })();
+  </script>
 
 </Page>
 
