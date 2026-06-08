@@ -121,7 +121,7 @@
     .ui-btn:active { transform: translateY(1px); }
     .ui-btn--primary { background: #0C7B82; color: #FFFFFF; border-color: #0C7B82; }
     .ui-btn--primary:hover { background: #0A6970; border-color: #0A6970; }
-    .ui-btn--ghost   { background: transparent; color: #0C7B82; border-color: #0C7B82; }
+    .ui-btn--ghost   { background: transparent; color: #0A6A70; border-color: #0C7B82; }
     .ui-btn--ghost:hover { background: #E0F4F5; }
 
     /* ---------- Badge ---------- */
@@ -134,7 +134,7 @@
       white-space: nowrap; vertical-align: middle;
     }
     .ui-badge--teal    { background: #E0F4F5; color: #085D63; }
-    .ui-badge--neutral { background: #F7F9FC; color: #64748B; border-color: #E4E8EF; }
+    .ui-badge--neutral { background: #F7F9FC; color: #525D6B; border-color: #E4E8EF; }
 
     /* ---------- ServiceCard ---------- */
     .ui-card {
@@ -162,7 +162,7 @@
     }
     .ui-card__num {
       font-family: var(--font-mono); font-weight: 500;
-      font-size: 10px; line-height: 1; color: #0C7B82;
+      font-size: 10px; line-height: 1; color: #0A6A70;
       text-transform: uppercase; letter-spacing: 0.08em;
     }
     .ui-card__title {
@@ -171,12 +171,12 @@
     }
     .ui-card__desc {
       margin: 0; font-family: var(--font-body); font-weight: 400;
-      font-size: 13px; line-height: 1.55; color: #64748B;
+      font-size: 13px; line-height: 1.55; color: #525D6B;
     }
     .ui-card__cta {
       margin-top: auto; padding-top: 16px;
       display: inline-flex; align-items: center; gap: 6px;
-      font-family: var(--font-display); font-weight: 500; font-size: 13px; color: #0C7B82;
+      font-family: var(--font-display); font-weight: 500; font-size: 13px; color: #0A6A70;
     }
     .ui-card__arrow { transition: transform var(--duration-base) var(--ease-out); }
     .ui-card:hover .ui-card__arrow { transform: translateX(3px); }
@@ -194,7 +194,7 @@
       font-size: 15px; line-height: 1.4; color: #0D1321;
       transition: color var(--duration-fast) var(--ease-out);
     }
-    .ui-faq__summary:hover { color: #0C7B82; }
+    .ui-faq__summary:hover { color: #0A6A70; }
     .ui-faq__q { flex: 1; text-wrap: balance; }
     .ui-faq__chevron {
       flex-shrink: 0;
@@ -204,17 +204,17 @@
       transform: translateY(-2px) rotate(45deg);
       transform-origin: center;
       transition: transform var(--duration-base) var(--ease-out);
-      color: #64748B;
+      color: #525D6B;
     }
-    .ui-faq__summary:hover .ui-faq__chevron { color: #0C7B82; }
+    .ui-faq__summary:hover .ui-faq__chevron { color: #0A6A70; }
     .ui-faq[open] .ui-faq__chevron {
-      transform: translateY(2px) rotate(225deg); color: #0C7B82;
+      transform: translateY(2px) rotate(225deg); color: #0A6A70;
     }
     .ui-faq__answer { padding: 0 0 24px; max-width: 60ch; }
     .ui-faq__answer p {
       margin: 0;
       font-family: var(--font-body); font-weight: 400;
-      font-size: 14px; line-height: 1.65; color: #64748B;
+      font-size: 14px; line-height: 1.65; color: #525D6B;
     }
 
     /* ---------- StatItem ---------- */
@@ -225,10 +225,10 @@
     }
     .ui-stat__label {
       font-family: var(--font-body); font-weight: 400;
-      font-size: 12px; line-height: 1.45; color: #64748B;
+      font-size: 12px; line-height: 1.45; color: #525D6B;
     }
     .ui-stat--light .ui-stat__value { color: #FFFFFF; }
-    .ui-stat--light .ui-stat__label { color: #64748B; }
+    .ui-stat--light .ui-stat__label { color: #525D6B; }
   </style>
 </head>
 <body>
@@ -246,7 +246,7 @@
       <div class="kit__board">
         <div class="kit__row">
           <span class="kit__label">primary</span>
-          <a href="#" class="ui-btn ui-btn--primary">Book an audit</a>
+          <a href="/contact/" class="ui-btn ui-btn--primary">Book a free consultation</a>
           <a href="#" class="ui-btn ui-btn--primary">Get started</a>
         </div>
         <div class="kit__row">

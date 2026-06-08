@@ -90,7 +90,7 @@
             <li class="nav__item"><a href="/results/"      class="nav__link">Results</a></li>
             <li class="nav__item"><a href="/about/"        class="nav__link">About</a></li>
           </ul>
-          <div class="nav__cta"><a href="/contact/" class="btn">Book an audit</a></div>
+          <div class="nav__cta"><a href="/free-visibility-report/" class="btn">Free report</a></div>
         </nav>
       </details>
     </div>
@@ -128,12 +128,12 @@
             <span class="hiw-stage__num" aria-hidden="true">02</span>
             <div class="hiw-stage__content">
               <p class="hiw-stage__when">Week 2</p>
-              <h2 class="hiw-stage__title">Report and walkthrough</h2>
-              <p class="hiw-stage__body">You get a full audit report - every issue documented, scored by impact, and explained in plain English. Then we walk you through it on a 30 minute call. No jargon. No upselling. Just a clear explanation of what we found, what it means, and what we recommend.</p>
+              <h2 class="hiw-stage__title">Report and recommendations</h2>
+              <p class="hiw-stage__body">You get a full audit report - every issue documented, scored by impact, and explained in plain English. No jargon. Just a clear explanation of what we found, what it means, and what we recommend.</p>
               <ul class="hiw-stage__points" role="list">
                 <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Prioritised fix list by impact</span></li>
                 <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Plain English throughout</span></li>
-                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>30 minute walkthrough call</span></li>
+                <li class="hiw-point"><span class="hiw-point__dot" aria-hidden="true"></span><span>Honest recommendations</span></li>
               </ul>
             </div>
           </li>
@@ -371,8 +371,8 @@
       }
       .nav__dropdown-link { padding: 10px 16px; border-radius: 8px; color: #0D1321; }
       .nav__dropdown-link:hover,
-      .nav__dropdown-link:focus-visible { background: #F7F9FC; color: #0C7B82; }
-      .nav__dropdown-link[aria-current="page"] { color: #0C7B82; background: #F7F9FC; }
+      .nav__dropdown-link:focus-visible { background: #F7F9FC; color: #0A6A70; }
+      .nav__dropdown-link[aria-current="page"] { color: #0A6A70; background: #F7F9FC; }
     }
     @media (max-width: 48rem) {
       .nav__toggle { display: inline-flex; }
@@ -412,7 +412,7 @@
       font-family: var(--font-display); font-weight: 500;
       font-size: 15px; line-height: 1.4; color: #0D1321;
     }
-    .ui-faq__summary:hover { color: #0C7B82; }
+    .ui-faq__summary:hover { color: #0A6A70; }
     .ui-faq__q { flex: 1; text-wrap: balance; }
     .ui-faq__chevron {
       flex-shrink: 0; width: 9px; height: 9px;
@@ -421,21 +421,21 @@
       transform: translateY(-2px) rotate(45deg);
       transform-origin: center;
       transition: transform var(--duration-base) var(--ease-out);
-      color: #64748B;
+      color: #525D6B;
     }
     .ui-faq[open] .ui-faq__chevron {
-      transform: translateY(2px) rotate(225deg); color: #0C7B82;
+      transform: translateY(2px) rotate(225deg); color: #0A6A70;
     }
     .ui-faq__answer { padding: 0 0 24px; max-width: 60ch; }
     .ui-faq__answer p {
       margin: 0;
       font-family: var(--font-body); font-weight: 400;
-      font-size: 14px; line-height: 1.65; color: #64748B;
+      font-size: 14px; line-height: 1.65; color: #525D6B;
     }
 
     /* ---------- 1. HERO ---------- */
     .hiw-hero { background: #0D1826; color: #FFFFFF; text-align: center; padding-block: 96px; }
-    .hiw-hero__eyebrow { margin: 0 0 20px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .hiw-hero__eyebrow { margin: 0 0 20px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #3FA9B0; text-transform: uppercase; letter-spacing: 0.1em; }
     .hiw-hero__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(34px, 1.6rem + 3.6vw, 52px); line-height: 1.1; letter-spacing: -0.02em; color: #FFFFFF; text-wrap: balance; }
     .hiw-hero__lead { margin: 20px auto 0; max-width: 560px; font-family: var(--font-body); font-weight: 400; font-size: 17px; line-height: 1.65; color: #94A3B8; text-wrap: pretty; }
 
@@ -446,28 +446,28 @@
     .hiw-stage { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: start; }
     .hiw-stage + .hiw-stage { margin-top: 80px; padding-top: 80px; border-top: 1px solid #E4E8EF; }
     .hiw-stage__num { font-family: var(--font-display); font-weight: 700; font-size: 80px; line-height: 1; letter-spacing: -0.03em; color: #E0F4F5; }
-    .hiw-stage__when { margin: 0 0 12px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .hiw-stage__when { margin: 0 0 12px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0A6A70; text-transform: uppercase; letter-spacing: 0.1em; }
     .hiw-stage__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(24px, 1.3rem + 1.4vw, 32px); line-height: 1.15; letter-spacing: -0.02em; color: #0D1321; }
-    .hiw-stage__body { margin: 16px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 17px; line-height: 1.75; color: #64748B; text-wrap: pretty; }
+    .hiw-stage__body { margin: 16px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 17px; line-height: 1.75; color: #525D6B; text-wrap: pretty; }
     .hiw-stage__points { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-    .hiw-point { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; font-family: var(--font-body); font-weight: 400; font-size: 15px; line-height: 1.5; color: #64748B; }
+    .hiw-point { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; font-family: var(--font-body); font-weight: 400; font-size: 15px; line-height: 1.5; color: #525D6B; }
     .hiw-point__dot { width: 7px; height: 7px; border-radius: 50%; background: #0C7B82; margin-top: 0.5em; }
 
     /* ---------- 3. DIFFERENTIATORS ---------- */
     .hiw-diff { background: #F7F9FC; padding-block: 96px; }
     .hiw-diff .container { max-width: 960px; }
     .hiw-diff__head { text-align: center; max-width: 36rem; margin: 0 auto 48px; }
-    .hiw-diff__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .hiw-diff__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0A6A70; text-transform: uppercase; letter-spacing: 0.1em; }
     .hiw-diff__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 1.5rem + 1.6vw, 36px); line-height: 1.15; letter-spacing: -0.02em; color: #0D1321; text-wrap: balance; }
     .hiw-diff__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     .hiw-diff-card { background: #FFFFFF; border: 0.5px solid #E4E8EF; border-radius: 16px; padding: 32px; }
     .hiw-diff-card__title { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.3; letter-spacing: -0.01em; color: #0D1321; }
-    .hiw-diff-card__body { margin: 10px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 15px; line-height: 1.65; color: #64748B; text-wrap: pretty; }
+    .hiw-diff-card__body { margin: 10px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 15px; line-height: 1.65; color: #525D6B; text-wrap: pretty; }
 
     /* ---------- 4. FAQ ---------- */
     .hiw-faq { background: #FFFFFF; padding-block: 96px; }
     .hiw-faq .container { max-width: 800px; }
-    .hiw-faq__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0C7B82; text-transform: uppercase; letter-spacing: 0.1em; }
+    .hiw-faq__eyebrow { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; line-height: 1; color: #0A6A70; text-transform: uppercase; letter-spacing: 0.1em; }
     .hiw-faq__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 1.5rem + 1.6vw, 36px); line-height: 1.15; letter-spacing: -0.02em; color: #0D1321; text-wrap: balance; }
     .hiw-faq__list { margin-top: 48px; display: flex; flex-direction: column; gap: 8px; }
 
@@ -494,13 +494,13 @@
       margin: 12px auto 0; max-width: 36rem;
       font-family: var(--font-body); font-weight: 400;
       font-size: 16px; line-height: 1.6;
-      color: rgba(255, 255, 255, 0.8); text-wrap: pretty;
+      color: rgba(255, 255, 255, 0.95); text-wrap: pretty;
     }
     .cta__btn {
       display: inline-flex; align-items: center; gap: 0.45rem;
       margin-top: 32px; padding: 11px 24px;
       font-family: var(--font-display); font-weight: 600; font-size: 14px; line-height: 1;
-      color: #0C7B82; background: #FFFFFF;
+      color: #0A6A70; background: #FFFFFF;
       border: 1px solid #FFFFFF; border-radius: 8px;
       text-decoration: none;
       transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
@@ -523,7 +523,7 @@
     .footer__col-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-3); }
     .footer__col-list li + li { margin-top: 0; }
     .footer__link { color: var(--color-dark-text); font-size: var(--text-sm); }
-    .footer__link:hover { color: var(--color-accent); }
+    .footer__link:hover { color: #3FA9B0; }
     .footer__link.mono { font-family: var(--font-mono); }
     .footer__legal { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); padding-top: var(--space-5); font-size: var(--text-xs); color: var(--color-dark-muted); font-family: var(--font-mono); letter-spacing: var(--tracking-mono); }
     .footer__copy { margin: 0; }

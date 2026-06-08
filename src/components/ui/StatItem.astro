@@ -5,7 +5,7 @@
  * Brief:
  *   value  Outfit 700 28px
  *   label  Inter  400 12px
- *   light=true → value white, label #64748B (for dark surfaces)
+ *   light=true → value white, label #525D6B (for dark surfaces)
  */
 export interface Props {
   value: string;
@@ -41,10 +41,10 @@ const { value, label, light = false } = Astro.props;
     font-weight: 400;
     font-size: 12px;
     line-height: 1.45;
-    color: #64748B;
+    color: #525D6B;
   }
 
   /* On dark surfaces */
   .ui-stat--light .ui-stat__value { color: #FFFFFF; }
-  .ui-stat--light .ui-stat__label { color: #64748B; }
+  .ui-stat--light .ui-stat__label { color: #525D6B; }
 </style>

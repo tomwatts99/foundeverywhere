@@ -48,7 +48,7 @@ const { question, answer } = Astro.props;
     color: #0D1321;
     transition: color var(--duration-fast) var(--ease-out);
   }
-  .ui-faq__summary:hover { color: #0C7B82; }
+  .ui-faq__summary:hover { color: #0A6A70; }
 
   .ui-faq__q { flex: 1; text-wrap: balance; }
 
@@ -62,13 +62,13 @@ const { question, answer } = Astro.props;
     transform: translateY(-2px) rotate(45deg);
     transform-origin: center;
     transition: transform var(--duration-base) var(--ease-out);
-    color: #64748B;
+    color: #525D6B;
   }
-  .ui-faq__summary:hover .ui-faq__chevron { color: #0C7B82; }
+  .ui-faq__summary:hover .ui-faq__chevron { color: #0A6A70; }
   .ui-faq[open] .ui-faq__chevron {
     /* Brief: rotate 180° on open. 45 + 180 = 225. */
     transform: translateY(2px) rotate(225deg);
-    color: #0C7B82;
+    color: #0A6A70;
   }
 
   /* ---------- Answer ---------- */
@@ -82,6 +82,6 @@ const { question, answer } = Astro.props;
     font-weight: 400;
     font-size: 14px;
     line-height: 1.65;
-    color: #64748B;
+    color: #525D6B;
   }
 </style>
