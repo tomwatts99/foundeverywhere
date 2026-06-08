@@ -68,39 +68,18 @@ const ld = graph(
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-    {/* Resource hints */}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    {/* Fonts: non-blocking load. The stylesheet is preloaded as a style and
-        swapped to rel=stylesheet on load so it never blocks first paint;
-        <noscript> covers the no-JS case. display=swap avoids CLS. */}
-
-    {/* Critical heading font: preload the Outfit 700 woff2 straight from the
-        Google Fonts CDN so the LCP heading paints without waiting on the
-        stylesheet round-trip. Matches the gstatic latin face the stylesheet
-        below resolves to. NOTE: gstatic rotates its version folder + file
-        hash on font updates; if this 404s, refresh the URL from
-        https://fonts.googleapis.com/css2?family=Outfit:wght@700&display=swap. */}
+    {/* Fonts are self-hosted under /public/fonts and declared via
+        @font-face in global.css (no third-party DNS, no gstatic 404 risk).
+        Preload only the LCP heading face (Outfit 700, latin) so the hero
+        heading paints without waiting on the stylesheet; font-display:swap
+        handles the rest. */}
     <link
       rel="preload"
       as="font"
       type="font/woff2"
-      href="https://fonts.gstatic.com/s/outfit/v11/QGYyz_MVcBeNP4NjuGObqx1XmO1I4TC0C4G-EiAou6Y.woff2"
+      href="/fonts/outfit-700-latin.woff2"
       crossorigin
     />
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
-      />
-    </noscript>
 
     {/* Primary meta */}
     <title>{fullTitle}</title>

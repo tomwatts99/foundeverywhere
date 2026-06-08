@@ -7,10 +7,23 @@
   <meta name="description" content="We fix the technical foundations that hold your site back. Core Web Vitals, crawlability, site structure, and internal linking done properly for UK businesses." />
   <meta name="theme-color" content="#0C7B82" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet" href="src/styles/global.css" />
+  <style id="self-hosted-fonts">
+    @font-face { font-family: 'Outfit'; font-style: normal; font-weight: 500; font-display: swap; src: url('public/fonts/outfit-500-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    @font-face { font-family: 'Outfit'; font-style: normal; font-weight: 500; font-display: swap; src: url('public/fonts/outfit-500-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'Outfit'; font-style: normal; font-weight: 600; font-display: swap; src: url('public/fonts/outfit-600-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    @font-face { font-family: 'Outfit'; font-style: normal; font-weight: 600; font-display: swap; src: url('public/fonts/outfit-600-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'Outfit'; font-style: normal; font-weight: 700; font-display: swap; src: url('public/fonts/outfit-700-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    @font-face { font-family: 'Outfit'; font-style: normal; font-weight: 700; font-display: swap; src: url('public/fonts/outfit-700-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('public/fonts/inter-400-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('public/fonts/inter-400-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('public/fonts/inter-500-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('public/fonts/inter-500-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url('public/fonts/jetbrains-mono-400-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url('public/fonts/jetbrains-mono-400-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+    @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 500; font-display: swap; src: url('public/fonts/jetbrains-mono-500-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+    @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 500; font-display: swap; src: url('public/fonts/jetbrains-mono-500-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  </style>
 
   <!-- FAQPage + BreadcrumbList JSON-LD: preview only. Astro emits these via
        schemaExtras inside Base.astro's single @graph. -->
@@ -68,7 +81,7 @@
               <li><a href="/services/seo-audit/"      class="nav__dropdown-link">SEO audit</a></li>
               <li><a href="/services/llm-visibility/" class="nav__dropdown-link">LLM visibility</a></li>
               <li><a href="/services/technical-seo/"  class="nav__dropdown-link" aria-current="page">Technical SEO</a></li>
-              <li><a href="/services/visibility-that-compounds/"       class="nav__dropdown-link">Visibility that compounds</a></li>
+              <li><a href="/services/ongoing-seo-and-visibility/"       class="nav__dropdown-link">Ongoing SEO &amp; Visibility</a></li>
               <li><a href="/services/local-seo/"      class="nav__dropdown-link">Local SEO and Google Business Profile</a></li>
               <li><a href="/services/expert-content/" class="nav__dropdown-link">Expert content</a></li>
               <li><a href="/services/web-design/"     class="nav__dropdown-link">Web Design</a></li>
@@ -105,7 +118,7 @@
         <h1 id="ts-hero-title" class="ts-hero__title">The foundations everything else sits on</h1>
         <p class="ts-hero__lead">Most SEO problems are technical problems. Slow pages, crawl errors, broken structure, missing schema. We find them, fix them, and make sure they stay fixed.</p>
         <div class="ts-hero__cta">
-          <a href="/contact/" class="ts-btn ts-btn--primary">Get your free audit <span aria-hidden="true" class="ts-btn__arrow">&#x2197;</span></a>
+          <a href="/contact/" class="ts-btn ts-btn--primary">Book a free consultation <span aria-hidden="true" class="ts-btn__arrow">&#x2197;</span></a>
           <a href="/services/" class="ts-btn ts-btn--ghost">See all services</a>
         </div>
       </div>
@@ -199,9 +212,8 @@
 
           <!-- RIGHT: sticky card -->
           <aside class="ts-card" aria-label="Technical SEO summary">
-            <p class="ts-card__eyebrow">Investment</p>
-            <p class="ts-card__price">From £597</p>
-            <p class="ts-card__turnaround">Delivered within 2 weeks</p>
+            <p class="ts-card__priced-title">Priced for your business</p>
+            <p class="ts-card__priced-sub">We scope every engagement based on your situation and goals. Get in touch and we'll tell you exactly what's involved.</p>
 
             <hr class="ts-card__divider" />
 
@@ -211,7 +223,7 @@
               <li><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg><span>Any platform, any stack</span></li>
             </ul>
 
-            <a href="/contact/" class="ts-card__cta">Get your free audit <span aria-hidden="true" class="ts-card__cta-arrow">&#x2197;</span></a>
+            <a href="/contact/" class="ts-card__cta">Book a free consultation <span aria-hidden="true" class="ts-card__cta-arrow">&#x2197;</span></a>
 
             <p class="ts-card__note">Not sure where to start? Get in touch and we will tell you honestly what your site needs.</p>
           </aside>
@@ -268,7 +280,7 @@
       <div class="container">
         <h2 id="cta-title" class="cta__title">Ready to be found everywhere?</h2>
         <p class="cta__lead">Free audit. No commitment. Just clarity on where you stand.</p>
-        <a href="/contact/" class="cta__btn">Get your free audit <span aria-hidden="true" class="cta__btn-arrow">&#x2197;</span></a>
+        <a href="/contact/" class="cta__btn">Book a free consultation <span aria-hidden="true" class="cta__btn-arrow">&#x2197;</span></a>
       </div>
     </section>
   </main>
@@ -290,7 +302,7 @@
             <li><a href="/services/seo-audit/"                 class="footer__link">SEO audit</a></li>
             <li><a href="/services/llm-visibility/"            class="footer__link">LLM visibility</a></li>
             <li><a href="/services/technical-seo/"             class="footer__link">Technical SEO</a></li>
-            <li><a href="/services/visibility-that-compounds/" class="footer__link">Visibility that compounds</a></li>
+            <li><a href="/services/ongoing-seo-and-visibility/" class="footer__link">Ongoing SEO &amp; Visibility</a></li>
             <li><a href="/services/local-seo/"                 class="footer__link">Local SEO</a></li>
             <li><a href="/services/expert-content/"            class="footer__link">Expert content</a></li>
             <li><a href="/services/web-design/"                class="footer__link">Web Design</a></li>
@@ -518,6 +530,8 @@
     .ts-card__cta:hover { background: #0A6970; border-color: #0A6970; }
     .ts-card__cta-arrow { display: inline-block; transition: transform var(--duration-base) var(--ease-out); }
     .ts-card__cta:hover .ts-card__cta-arrow { transform: translate(2px, -2px); }
+    .ts-card__priced-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.2; letter-spacing: -0.01em; color: #0D1321; }
+    .ts-card__priced-sub { margin: 10px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 14px; line-height: 1.6; color: #64748B; text-wrap: pretty; }
     .ts-card__note { margin: 12px 0 0; font-family: var(--font-body); font-weight: 400; font-size: 12px; line-height: 1.55; color: #64748B; text-wrap: pretty; }
 
     /* ---------- 3. WHY IT MATTERS (dark) ---------- */

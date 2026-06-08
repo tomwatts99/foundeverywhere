@@ -131,8 +131,8 @@ const schemaExtras = [
 
         <!-- RIGHT COLUMN -->
         <aside class="lseo-card" aria-label="Local SEO audit summary">
-          <h2 class="lseo-card__title">Local SEO audit</h2>
-          <p class="lseo-card__price">From £297</p>
+          <p class="lseo-card__priced-title">Priced for your business</p>
+          <p class="lseo-card__priced-sub">We scope every engagement based on your situation and goals. Get in touch and we'll tell you exactly what's involved.</p>
 
           <ul class="lseo-card__checks" role="list">
             <li>
@@ -145,7 +145,7 @@ const schemaExtras = [
             </li>
             <li>
               <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8 3.5 3.5L13 4"/></svg>
-              <span>Delivered within 2 weeks</span>
+              <span>Clear, prioritised fix list</span>
             </li>
           </ul>
 
@@ -307,6 +307,24 @@ const schemaExtras = [
     border-radius: 16px;
     padding: 32px;
     align-self: start;
+  }
+  .lseo-card__priced-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .lseo-card__priced-sub {
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
   }
   .lseo-card__title {
     margin: 0;

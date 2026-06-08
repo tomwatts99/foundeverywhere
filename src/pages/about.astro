@@ -11,8 +11,11 @@ export const prerender = true;
  * tight.
  */
 import Page from '../layouts/Page.astro';
+import { Image } from 'astro:assets';
 import CTABlock from '../components/sections/CTABlock.astro';
 import Testimonials from '../components/sections/Testimonials.astro';
+import tomPhoto from '../assets/tom.webp';
+import markPhoto from '../assets/mark.webp';
 
 const VALUES = [
   {
@@ -77,12 +80,12 @@ const VALUES = [
     <div class="container">
       <div class="bio__inner">
         <div class="bio__media">
-          <img
+          <Image
             class="bio__photo"
-            src="/images/tom.webp"
+            src={tomPhoto}
             alt="Portrait of Tom Watts"
-            width="200"
-            height="200"
+            width={200}
+            height={200}
             loading="lazy"
             decoding="async"
           />
@@ -135,12 +138,12 @@ const VALUES = [
           </div>
         </div>
         <div class="bio__media">
-          <img
+          <Image
             class="bio__photo"
-            src="/images/mark.webp"
+            src={markPhoto}
             alt="Portrait of Mark Reynolds"
-            width="200"
-            height="200"
+            width={200}
+            height={200}
             loading="lazy"
             decoding="async"
           />

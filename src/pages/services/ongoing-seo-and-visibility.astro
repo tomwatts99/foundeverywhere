@@ -2,7 +2,7 @@
 export const prerender = true;
 
 /**
- * services/visibility-that-compounds.astro: detail page for the
+ * services/ongoing-seo-and-visibility.astro: detail page for the
  * ongoing SEO + LLM visibility retainer.
  *
  * Schema flow: FAQPage built from the same VC_FAQS source rendered
@@ -81,14 +81,14 @@ const VC_FAQS = [
   },
 ];
 
-const pageUrl = `${SITE.url}/services/visibility-that-compounds/`;
+const pageUrl = `${SITE.url}/services/ongoing-seo-and-visibility/`;
 const schemaExtras = [
   faqPageSchema(VC_FAQS, pageUrl),
   breadcrumbSchema(
     [
       { name: 'Home',                     item: `${SITE.url}/` },
       { name: 'Services',                 item: `${SITE.url}/services/` },
-      { name: 'Visibility That Compounds', item: pageUrl },
+      { name: 'Ongoing SEO & Visibility', item: pageUrl },
     ],
     pageUrl,
   ),
@@ -98,7 +98,7 @@ const schemaExtras = [
 <Page
   title="Ongoing SEO and LLM Visibility Management UK | Found Everywhere"
   description="Monthly SEO and AI visibility management that compounds over time. Rankings that do not slip, AI citations that grow, and clear reporting every month."
-  path="/services/visibility-that-compounds/"
+  path="/services/ongoing-seo-and-visibility/"
   schemaExtras={schemaExtras}
   bleed
 >
@@ -106,7 +106,7 @@ const schemaExtras = [
   <!-- ============ 1. HERO ============ -->
   <section class="vc-hero" aria-labelledby="vc-hero-title">
     <div class="container">
-      <p class="vc-hero__eyebrow">Visibility that compounds</p>
+      <p class="vc-hero__eyebrow">Ongoing SEO &amp; Visibility</p>
       <h1 id="vc-hero-title" class="vc-hero__title">SEO and AI visibility that keeps working</h1>
       <p class="vc-hero__lead">
         Most businesses do the work once and wonder why results slip.
@@ -116,7 +116,7 @@ const schemaExtras = [
       </p>
       <div class="vc-hero__cta">
         <a href="/contact/" class="vc-btn vc-btn--primary">
-          Talk to us <span aria-hidden="true" class="vc-btn__arrow">&#x2197;</span>
+          Book a free consultation <span aria-hidden="true" class="vc-btn__arrow">&#x2197;</span>
         </a>
         <a href="/services/" class="vc-btn vc-btn--ghost">See all services</a>
       </div>
@@ -158,9 +158,8 @@ const schemaExtras = [
 
         <!-- RIGHT COLUMN -->
         <aside class="vc-card" aria-label="Retainer summary">
-          <p class="vc-card__eyebrow">Investment</p>
-          <p class="vc-card__price">From £497/mo</p>
-          <p class="vc-card__turnaround">Minimum 3 month engagement</p>
+          <p class="vc-card__priced-title">Priced for your business</p>
+          <p class="vc-card__priced-sub">We scope every engagement based on your situation and goals. Get in touch and we'll tell you exactly what's involved.</p>
 
           <hr class="vc-card__divider" />
 
@@ -184,7 +183,7 @@ const schemaExtras = [
           </ul>
 
           <a href="/contact/" class="vc-card__cta">
-            Talk to us
+            Book a free consultation
             <span aria-hidden="true" class="vc-card__cta-arrow">&#x2197;</span>
           </a>
 
@@ -480,6 +479,25 @@ const schemaExtras = [
     transition: transform var(--duration-base) var(--ease-out);
   }
   .vc-card__cta:hover .vc-card__cta-arrow { transform: translate(2px, -2px); }
+
+  .vc-card__priced-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: #0D1321;
+  }
+  .vc-card__priced-sub {
+    margin: 10px 0 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748B;
+    text-wrap: pretty;
+  }
 
   .vc-card__note {
     margin: 12px 0 0;
