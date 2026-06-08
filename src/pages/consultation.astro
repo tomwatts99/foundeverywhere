@@ -1,0 +1,425 @@
+---
+export const prerender = true;
+
+/**
+ * consultation.astro: book-a-free-consultation page.
+ *
+ * Modelled on contact.astro but focused entirely on booking a call.
+ * The form posts to Formspree via JSON fetch (no redirect); success and
+ * failure are handled inline. NOT linked from the main navigation.
+ *
+ * Schema flow: a BreadcrumbList (Home > Book a free consultation) flows
+ * through schemaExtras into the single <head> @graph.
+ */
+import Page from '../layouts/Page.astro';
+import { breadcrumbSchema } from '../lib/schema';
+import { SITE } from '../lib/site';
+
+const POINTS = [
+  "No obligation - it's a conversation, not a sales pitch",
+  "We'll review your visibility before the call so we come prepared",
+  "You'll leave with a clear picture of where you stand and what to prioritise",
+] as const;
+
+const pageUrl = `${SITE.url}/consultation/`;
+const schemaExtras = [
+  breadcrumbSchema(
+    [
+      { name: 'Home', item: `${SITE.url}/` },
+      { name: 'Book a free consultation', item: pageUrl },
+    ],
+    pageUrl,
+  ),
+];
+---
+
+<Page
+  title="Book a free consultation | Found Everywhere"
+  description="Book a free consultation with Found Everywhere. We'll review your current search and AI visibility and tell you exactly where you stand and what to do next."
+  path="/consultation/"
+  schemaExtras={schemaExtras}
+  bleed
+>
+  <!-- ============ 1. HERO ============ -->
+  <section class="cons-hero" aria-labelledby="cons-title">
+    <div class="container">
+      <p class="cons-hero__eyebrow">Free consultation</p>
+      <h1 id="cons-title" class="cons-hero__title">Book a free consultation</h1>
+      <p class="cons-hero__lead">
+        Tell us about your business and we'll be in touch to arrange a call. We'll review
+        your search and AI visibility beforehand so the conversation is focused and useful
+        from the start.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 2. POINTS + FORM ============ -->
+  <section class="cons-body">
+    <div class="container cons-body__inner">
+
+      <ul class="cons-points" role="list">
+        {POINTS.map((point) => (
+          <li>
+            <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 8 3.5 3.5L13 4" />
+            </svg>
+            <span>{point}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div class="cons-form-col">
+        <form
+          class="cons-card"
+          id="cons-form"
+          action="https://formspree.io/f/xwvjozkj"
+          method="post"
+          aria-label="Consultation request form"
+          novalidate
+        >
+          <h2 class="cons-card__heading">Request your consultation</h2>
+
+          <input type="hidden" name="_subject" value="New consultation request" />
+
+          <div class="field">
+            <label class="field__label" for="cons-name">Full name</label>
+            <input class="field__input" type="text" id="cons-name" name="name" autocomplete="name" required />
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cons-email">Email address</label>
+            <input class="field__input" type="email" id="cons-email" name="email" autocomplete="email" required />
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cons-url">Business website URL</label>
+            <input class="field__input" type="url" id="cons-url" name="websiteUrl" placeholder="https://yourdomain.co.uk" autocomplete="url" required />
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cons-message">Anything you'd like us to know before the call?</label>
+            <textarea
+              class="field__input field__textarea"
+              id="cons-message"
+              name="message"
+              rows="4"
+              placeholder="Optional - a sentence or two is plenty."
+            ></textarea>
+          </div>
+
+          <button class="cons-submit" type="submit" id="cons-submit-btn">
+            <span class="cons-submit__label">Request your consultation</span>
+            <span aria-hidden="true" class="cons-submit__arrow">&#x2197;</span>
+          </button>
+
+          <p class="cons-error" id="cons-error" role="alert" hidden></p>
+
+          <p class="cons-card__privacy">
+            By submitting this form you agree to our <a href="/privacy/">Privacy Policy</a> and
+            consent to Found Everywhere contacting you by email about your consultation request
+            and related services. We will never share your data with third parties. You can
+            unsubscribe at any time.
+          </p>
+        </form>
+
+        <div class="cons-success" id="cons-success" role="status">
+          <svg class="cons-success__check" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true">
+            <circle cx="24" cy="24" r="23" fill="none" stroke="#0C7B82" stroke-width="2" />
+            <path d="M15 24.5l6 6 12-13" fill="none" stroke="#0C7B82" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <h2 class="cons-success__title">Request received</h2>
+          <p class="cons-success__body">Thanks - we'll be in touch within one working day to arrange your call.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</Page>
+
+<style>
+  /* ============================================================
+     1. HERO
+     ============================================================ */
+  .cons-hero {
+    background: #0D1826;
+    color: #FFFFFF;
+    text-align: center;
+    padding-block: 80px;
+  }
+  .cons-hero__eyebrow {
+    margin: 0 0 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: #3FA9B0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .cons-hero__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(32px, 1.6rem + 3vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+    text-wrap: balance;
+  }
+  .cons-hero__lead {
+    margin: 16px auto 0;
+    max-width: 560px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.65;
+    color: #94A3B8;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     2. BODY: POINTS + FORM
+     ============================================================ */
+  .cons-body {
+    background: #FFFFFF;
+    padding-block: 80px;
+  }
+  .cons-body__inner {
+    max-width: 600px;
+  }
+
+  /* ---------- Supporting points ---------- */
+  .cons-points {
+    list-style: none;
+    margin: 0 0 40px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+    color: #475569;
+  }
+  .cons-points li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    text-wrap: pretty;
+  }
+  .cons-points svg {
+    color: #0A6A70;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  /* ---------- Form card ---------- */
+  .cons-card {
+    background: #FFFFFF;
+    border: 0.5px solid #E4E8EF;
+    border-radius: 16px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .cons-card__heading {
+    margin: 0 0 4px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.2;
+    color: #0D1321;
+  }
+
+  /* ---------- Field (mirrors contact page) ---------- */
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field__label {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #0D1321;
+  }
+  .field__input {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    color: #0D1321;
+    background: #FFFFFF;
+    border: 1px solid #E4E8EF;
+    border-radius: 8px;
+    transition: border-color var(--duration-fast) var(--ease-out),
+                box-shadow var(--duration-fast) var(--ease-out);
+  }
+  .field__input::placeholder { color: #525D6B; }
+  .field__input:focus,
+  .field__input:focus-visible {
+    outline: none;
+    border-color: #0C7B82;
+    box-shadow: 0 0 0 3px rgba(12, 123, 130, 0.15);
+  }
+  .field__textarea {
+    resize: vertical;
+    min-height: calc(4 * 1.5em + 20px);
+    font-family: var(--font-body);
+  }
+
+  /* ---------- Submit ---------- */
+  .cons-submit {
+    width: 100%;
+    margin-top: 8px;
+    padding: 14px 24px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    color: #FFFFFF;
+    background: #0C7B82;
+    border: 1px solid #0C7B82;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    transition: background-color var(--duration-fast) var(--ease-out),
+                border-color var(--duration-fast) var(--ease-out),
+                transform var(--duration-fast) var(--ease-out);
+  }
+  .cons-submit:hover { background: #0A6970; border-color: #0A6970; }
+  .cons-submit:active { transform: translateY(1px); }
+  .cons-submit[disabled] { opacity: 0.65; cursor: progress; }
+  .cons-submit__arrow {
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .cons-submit:hover .cons-submit__arrow { transform: translate(2px, -2px); }
+
+  /* ---------- Privacy + error ---------- */
+  .cons-card__privacy {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 12px;
+    line-height: 1.5;
+    color: #525D6B;
+    text-wrap: pretty;
+  }
+  .cons-card__privacy a {
+    color: #0A6A70;
+    text-decoration: underline;
+  }
+  .cons-error {
+    margin: 12px 0 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.5;
+    color: #DC2626;
+    text-align: center;
+  }
+  .cons-error[hidden] { display: none; }
+
+  /* ---------- Success panel (replaces the form) ---------- */
+  .cons-form-col { display: flex; flex-direction: column; }
+  .cons-success {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: #FFFFFF;
+    border: 0.5px solid #E4E8EF;
+    border-radius: 16px;
+    padding: 48px 40px;
+    opacity: 0;
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+  .cons-success.is-visible { display: flex; }
+  .cons-success.is-shown { opacity: 1; }
+  .cons-success__check { margin-bottom: 20px; }
+  .cons-success__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.2;
+    color: #0D1321;
+  }
+  .cons-success__body {
+    margin: 12px 0 0;
+    max-width: 36ch;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    color: #475569;
+    text-wrap: pretty;
+  }
+
+  /* ============================================================
+     MOBILE
+     ============================================================ */
+  @media (max-width: 48rem) {
+    .cons-hero { padding-block: 64px; }
+    .cons-body { padding-block: 56px; }
+    .cons-card { padding: 28px; }
+    .cons-success { padding: 36px 28px; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var form = document.getElementById('cons-form');
+    if (!form) return;
+    var successEl = document.getElementById('cons-success');
+    var errorEl = document.getElementById('cons-error');
+    var btn = document.getElementById('cons-submit-btn');
+    var btnLabel = btn ? btn.querySelector('.cons-submit__label') : null;
+    var original = btnLabel ? btnLabel.textContent : 'Request your consultation';
+
+    function showError(msg) {
+      if (errorEl) {
+        errorEl.textContent = msg;
+        errorEl.removeAttribute('hidden');
+      }
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (errorEl) errorEl.setAttribute('hidden', '');
+
+      if (!form.checkValidity()) {
+        showError('Please add your name, email, and website so we can prepare for the call.');
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+      if (btnLabel) btnLabel.textContent = 'Sending…';
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      }).then(function (res) {
+        if (res.ok) {
+          form.style.display = 'none';
+          if (successEl) {
+            successEl.classList.add('is-visible');
+            requestAnimationFrame(function () { successEl.classList.add('is-shown'); });
+          }
+        } else {
+          showError('Something went wrong. Please try again, or email hello@foundeverywhere.co.uk.');
+          if (btn) btn.disabled = false;
+          if (btnLabel) btnLabel.textContent = original;
+        }
+      }).catch(function () {
+        showError('Something went wrong. Please try again, or email hello@foundeverywhere.co.uk.');
+        if (btn) btn.disabled = false;
+        if (btnLabel) btnLabel.textContent = original;
+      });
+    });
+  })();
+</script>
