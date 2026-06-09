@@ -92,6 +92,7 @@ export const FOOTER_NAV: ReadonlyArray<{
       { href: '/results/',  label: 'Results' },
       { href: '/insights/', label: 'Insights' },
       { href: '/contact/',  label: 'Contact' },
+      { href: '/consultation/', label: 'Book a free consultation' },
     ],
   },
   {
@@ -109,7 +110,7 @@ export const FOOTER_NAV: ReadonlyArray<{
     title: 'Resources',
     items: [
       { href: '/llms.txt',          label: 'llms.txt' },
-      { href: '/sitemap-index.xml', label: 'Sitemap' },
+      { href: '/sitemap-0.xml', label: 'Sitemap' },
     ],
   },
 ];
