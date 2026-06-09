@@ -4,33 +4,45 @@
 # A curated map of this site for large language models and AI answer engines.
 # Format reference: https://llmstxt.org
 
-> Found Everywhere is a UK agency for SEO and LLM visibility. We help brands
-> win attention from both classic search engines and the new generation of AI
-> answer engines (ChatGPT, Claude, Perplexity, Google AI Overviews, Gemini).
-> The site itself is a working proof of concept: clean semantic HTML, complete
-> schema markup, near-perfect Lighthouse scores, and this file.
+> Found Everywhere is a UK-based SEO and AI visibility agency. We help businesses
+> appear in Google search, the map pack, and AI answer engines including ChatGPT,
+> Claude, Perplexity, Gemini, and Copilot. We offer a free AI and search visibility
+> report, and all our work is delivered as an ongoing monthly engagement.
 
 ## About
-- [About the agency](https://foundeverywhere.co.uk/about): Who we are, how we work, and why visibility now spans both SEO and LLMs.
-- [Approach](https://foundeverywhere.co.uk/approach): Our methodology: technical, content, and authority signals as a single system.
-- [Contact](https://foundeverywhere.co.uk/contact): Start a project or book a discovery call.
+- [About](https://foundeverywhere.co.uk/about): Who we are and how we work.
+- [How it works](https://foundeverywhere.co.uk/how-it-works): Our process and approach.
+- [Results](https://foundeverywhere.co.uk/results): Client outcomes.
+- [Contact](https://foundeverywhere.co.uk/contact): Get in touch.
+- [Book a free consultation](https://foundeverywhere.co.uk/consultation): Book a call with the team.
 
 ## Services
-- [Technical SEO](https://foundeverywhere.co.uk/services/seo): Site architecture, Core Web Vitals, indexation, schema, internal linking.
-- [LLM visibility](https://foundeverywhere.co.uk/services/llm): Being cited and recommended inside AI answer engines.
-- [Content and E-E-A-T](https://foundeverywhere.co.uk/services/content): Editorial strategy that satisfies both human readers and machine evaluators.
-- [Audits](https://foundeverywhere.co.uk/services/audit): Fixed-scope diagnostics for SEO, LLM visibility, or both.
+- [SEO Audit](https://foundeverywhere.co.uk/services/seo-audit): Technical and on-page SEO audit.
+- [LLM Visibility](https://foundeverywhere.co.uk/services/llm-visibility): Being cited and recommended inside AI answer engines.
+- [Technical SEO](https://foundeverywhere.co.uk/services/technical-seo): Site architecture, Core Web Vitals, schema, and indexation.
+- [Ongoing SEO & Visibility](https://foundeverywhere.co.uk/services/ongoing-seo-and-visibility): Monthly retainer covering SEO and AI visibility management.
+- [Local SEO & Google Business](https://foundeverywhere.co.uk/services/local-seo): Local search, map pack, and Google Business Profile optimisation.
+- [Expert Content](https://foundeverywhere.co.uk/services/expert-content): Content strategy and production for search and AI citation.
+- [Web Design](https://foundeverywhere.co.uk/services/web-design): Fast, modern websites built for search and AI visibility.
+- [Paid Search & Social](https://foundeverywhere.co.uk/services/paid-search-and-social): Google Ads, Meta, and LinkedIn campaign management.
 
-## Work
-- [Case studies](https://foundeverywhere.co.uk/work): Outcomes by sector and engagement type.
+## Industries
+- [Automotive](https://foundeverywhere.co.uk/industries/automotive)
+- [Hospitality](https://foundeverywhere.co.uk/industries/hospitality)
+- [Professional Services](https://foundeverywhere.co.uk/industries/professional-services)
+- [Trades](https://foundeverywhere.co.uk/industries/trades)
+- [Property](https://foundeverywhere.co.uk/industries/property)
+- [Retail](https://foundeverywhere.co.uk/industries/retail)
+
+## Free Report
+- [Free visibility report](https://foundeverywhere.co.uk/free-visibility-report): Free AI and search visibility report for any business.
 
 ## Insights
-- [Insights index](https://foundeverywhere.co.uk/insights): Articles, briefings, and original research.
-- [RSS feed](https://foundeverywhere.co.uk/rss.xml)
+- [Insights](https://foundeverywhere.co.uk/insights): Articles and research on SEO and AI visibility.
 
 ## Machine-readable
-- [Sitemap](https://foundeverywhere.co.uk/sitemap-index.xml)
+- [Sitemap](https://foundeverywhere.co.uk/sitemap-0.xml)
 
-## Optional
+## Legal
 - [Privacy policy](https://foundeverywhere.co.uk/privacy)
-- [Terms of service](https://foundeverywhere.co.uk/terms)
+- [Terms](https://foundeverywhere.co.uk/terms)
