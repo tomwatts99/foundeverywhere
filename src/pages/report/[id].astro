@@ -59,7 +59,7 @@ type Report = {
 
 let report: Report | null = null;
 
-// PRIMARY PATH — read straight from the KV binding.
+// PRIMARY PATH - read straight from the KV binding.
 //
 // This page is itself a Cloudflare Pages Function, so it binds the SAME
 // `REPORTS` namespace the Worker writes to and reads it in-process. No
@@ -81,7 +81,7 @@ if (id && runtimeEnv?.REPORTS) {
   }
 }
 
-// FALLBACK PATH — HTTP fetch to the Worker. Used in local dev (where the
+// FALLBACK PATH - HTTP fetch to the Worker. Used in local dev (where the
 // KV binding may be absent) or if the binding is not configured.
 if (!report && id) {
   const API_ORIGIN = import.meta.env.PUBLIC_API_ORIGIN || 'https://foundeverywhere.co.uk';
@@ -129,7 +129,7 @@ const overallColour = scoreColour(overall);
 const overallPct = Math.max(0, Math.min(1, overall / 100));
 const overallOffset = RING_CIRC * (1 - overallPct);
 
-// Live discovery — four unbranded searches; hard boolean appearance check.
+// Live discovery - four unbranded searches; hard boolean appearance check.
 const discoveryResults: DiscoveryResult[] = Array.isArray(report?.discoveryResults)
   ? report!.discoveryResults
   : [];
@@ -141,7 +141,7 @@ const appearanceCount =
 const appearanceColour =
   appearanceCount === 0 ? '#C81E1E' : appearanceCount <= 2 ? '#B45309' : '#0C7B82';
 
-// Google rankings — null when SerpAPI was unavailable for this report.
+// Google rankings - null when SerpAPI was unavailable for this report.
 const googleResults: GoogleResult[] | null = Array.isArray(report?.googleResults)
   ? report!.googleResults
   : null;
@@ -160,13 +160,13 @@ function googleTier(g: GoogleResult): 'top' | 'mid' | 'low' | 'none' {
   return 'low';
 }
 
-// Competitors appearing instead — from Perplexity's live search only.
+// Competitors appearing instead - from Perplexity's live search only.
 const competitors = Array.isArray(report?.competitors) ? report!.competitors : [];
 const competitorsSub = report?.location
   ? `These businesses appeared in AI results for ${report.location} when customers searched the service category.`
   : 'These businesses appeared in AI results when customers searched the service category.';
 
-// Brand awareness — what Claude / ChatGPT know from training data.
+// Brand awareness - what Claude / ChatGPT know from training data.
 const brandScore = Math.round(report?.brandScore ?? 0);
 const chatgptBrandScore = Math.round(report?.chatgptBrandScore ?? 0);
 const claudeBrandResponse =
@@ -174,13 +174,13 @@ const claudeBrandResponse =
 const chatgptBrandResponse =
   report?.chatgptBrandResponse || 'No response was returned for this check.';
 
-// Brand-section subheading — names the category, location and business.
+// Brand-section subheading - names the category, location and business.
 const brandService = (report?.serviceKeywords || []).find((k) => !!k) || 'your service category';
 const brandWhere = report?.location ? ` in ${report.location}` : '';
 const brandSub = `We asked Claude and ChatGPT who they would recommend for ${brandService}${brandWhere} and checked whether ${report?.businessName ?? 'your business'} appeared.`;
 
 /**
- * Fix 3 — parse an AI brand response into a clean numbered list. Splits on
+ * Fix 3 - parse an AI brand response into a clean numbered list. Splits on
  * newlines, keeps only lines that start with a number, strips markdown
  * links and citation markers, and separates each item into a bold business
  * NAME and a slate DESCRIPTION. Claude wraps names in **bold**; for ChatGPT
@@ -419,7 +419,7 @@ const reportBusiness = report?.businessName ?? 'Your business';
                 {claudeItems.map((item, i) => (
                   <li style="margin:0;display:flex;gap:8px;align-items:baseline;">
                     <span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:#525D6B;flex-shrink:0;">{i + 1}.</span>
-                    <span style="line-height:1.6;"><span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:#0D1321;">{item.name}</span>{item.desc && <span style="font-family:'Inter',sans-serif;font-size:14px;color:#525D6B;"> &mdash; {item.desc}</span>}</span>
+                    <span style="line-height:1.6;"><span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:#0D1321;">{item.name}</span>{item.desc && <span style="font-family:'Inter',sans-serif;font-size:14px;color:#525D6B;"> - {item.desc}</span>}</span>
                   </li>
                 ))}
               </ol>
@@ -447,7 +447,7 @@ const reportBusiness = report?.businessName ?? 'Your business';
                 {chatgptItems.map((item, i) => (
                   <li style="margin:0;display:flex;gap:8px;align-items:baseline;">
                     <span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:#525D6B;flex-shrink:0;">{i + 1}.</span>
-                    <span style="line-height:1.6;"><span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:#0D1321;">{item.name}</span>{item.desc && <span style="font-family:'Inter',sans-serif;font-size:14px;color:#525D6B;"> &mdash; {item.desc}</span>}</span>
+                    <span style="line-height:1.6;"><span style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:#0D1321;">{item.name}</span>{item.desc && <span style="font-family:'Inter',sans-serif;font-size:14px;color:#525D6B;"> - {item.desc}</span>}</span>
                   </li>
                 ))}
               </ol>
@@ -508,13 +508,13 @@ const reportBusiness = report?.businessName ?? 'Your business';
 </Page>
 
 <script>
-  // Download PDF — uses the browser print dialog + @media print stylesheet.
+  // Download PDF - uses the browser print dialog + @media print stylesheet.
   const printBtn = document.getElementById('report-print');
   if (printBtn) {
     printBtn.addEventListener('click', () => window.print());
   }
 
-  // Copy report link — writes the current URL to the clipboard and shows
+  // Copy report link - writes the current URL to the clipboard and shows
   // transient confirmation feedback.
   const copyBtn = document.getElementById('report-copy');
   if (copyBtn) {
@@ -1058,7 +1058,7 @@ const reportBusiness = report?.businessName ?? 'Your business';
   }
 
   /* ============================================================
-     PRINT — clean PDF output via the browser print dialog
+     PRINT - clean PDF output via the browser print dialog
      ============================================================ */
   @media print {
     :global(header.nav),

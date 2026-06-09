@@ -121,7 +121,7 @@ function stripMarkdown(text) {
 }
 
 /**
- * STEP 2 query set — exactly 4 UNBRANDED DISCOVERY QUERIES built from the
+ * STEP 2 query set - exactly 4 UNBRANDED DISCOVERY QUERIES built from the
  * service keywords and (optional) location. No business name: this is how
  * a customer searches when they do NOT yet know the business exists.
  */
@@ -153,7 +153,7 @@ function clamp10(v) {
  * Pull a 1-10 self-assessed score out of a brand-awareness reply. Tries
  * the most explicit phrasings first ("8/10", "8 out of 10"), then a
  * number following scale/rate/confidence/score. Returns 0 when no number
- * is found — honest: no signal means no score.
+ * is found - honest: no signal means no score.
  */
 function extractTenScore(text) {
   if (!text) return 0;
@@ -275,10 +275,10 @@ async function openaiWebSearch(env, prompt) {
 }
 
 /**
- * STEP 2 — Live discovery (the only honest signal). Run each unbranded
+ * STEP 2 - Live discovery (the only honest signal). Run each unbranded
  * query through Perplexity (sonar). For each, store the query, the full
  * response, and a hard case-insensitive check of whether the business
- * name appears. No estimation, no AI guessing — a boolean match only.
+ * name appears. No estimation, no AI guessing - a boolean match only.
  */
 async function runDiscovery(env, businessName, queries) {
   const nameLower = (businessName || '').toLowerCase().trim();
@@ -298,7 +298,7 @@ async function runDiscovery(env, businessName, queries) {
 }
 
 /**
- * STEP 3 — Competitor extraction. One Claude Haiku call over all four
+ * STEP 3 - Competitor extraction. One Claude Haiku call over all four
  * Perplexity responses combined; returns the recommended business names.
  */
 async function extractCompetitors(env, discoveryResults, location, businessName) {
@@ -334,7 +334,7 @@ async function extractCompetitors(env, discoveryResults, location, businessName)
 
 /**
  * Build the brand-recommendation prompt. The prompt asks ONLY for the top
- * providers in the category — the business being tested is never mentioned,
+ * providers in the category - the business being tested is never mentioned,
  * so its appearance is an unbiased signal. Claude gets a "name in bold"
  * instruction; ChatGPT does not (bold is applied on the display side).
  */
@@ -394,7 +394,7 @@ function brandScoreFromAppearance(appeared, position) {
 }
 
 /**
- * STEP 4 — Claude brand visibility via the Anthropic web search tool. Asks
+ * STEP 4 - Claude brand visibility via the Anthropic web search tool. Asks
  * only for the category's top providers (no business name in the prompt),
  * then checks programmatically whether the business appears and scores by
  * appearance + position. Stores the list prose, the 0-100 score, and an
@@ -419,7 +419,7 @@ async function claudeBrandAwareness(env, businessName, serviceKeywords, location
 }
 
 /**
- * STEP 5 — ChatGPT brand visibility via the OpenAI Responses API with live
+ * STEP 5 - ChatGPT brand visibility via the OpenAI Responses API with live
  * web search (falls back to gpt-4.1 chat completions). Same no-business
  * prompt + appearance/position scoring as Claude. Stores prose, 0-100 score,
  * and an `appeared` boolean.
@@ -449,7 +449,7 @@ async function chatgptBrandAwareness(env, businessName, serviceKeywords, locatio
 }
 
 /**
- * Domains to exclude from Google "who is ranking" results — directories and
+ * Domains to exclude from Google "who is ranking" results - directories and
  * social platforms, not actual competitor agencies.
  */
 const EXCLUDED_RESULT_DOMAINS = [
@@ -466,10 +466,10 @@ const EXCLUDED_RESULT_DOMAINS = [
 ];
 
 /**
- * NEW STEP — Google rankings via SerpAPI. For the top 3 service keywords,
+ * NEW STEP - Google rankings via SerpAPI. For the top 3 service keywords,
  * check where the submitted domain ranks in UK Google organic results and
  * capture the top 3 organic results per query (who IS ranking). The whole
- * thing is wrapped so any failure degrades gracefully to null — the report
+ * thing is wrapped so any failure degrades gracefully to null - the report
  * still generates without Google data.
  */
 async function runGoogleRankings(env, websiteUrl, serviceKeywords, location) {
@@ -511,8 +511,8 @@ async function runGoogleRankings(env, websiteUrl, serviceKeywords, location) {
           }
         }
         const found = position !== null;
-        // Drop directories / social platforms — these are not competitor
-        // agencies — then keep the top 3 real results.
+        // Drop directories / social platforms - these are not competitor
+        // agencies - then keep the top 3 real results.
         const topResults = organic
           .filter((r) => {
             const link = String(r?.link || '').toLowerCase();
@@ -628,7 +628,7 @@ async function extractServiceKeywords(env, { businessName, pageTitle, metaDescri
 }
 
 /**
- * STEP 7 — Recommendations. One Claude Haiku call over the full picture;
+ * STEP 7 - Recommendations. One Claude Haiku call over the full picture;
  * focuses on the gap between this business and the competitors that appear
  * instead of it. Returns exactly 5 actionable items.
  */
@@ -691,7 +691,7 @@ function defaultRecommendations() {
     {
       title: 'Create category-defining service and location pages',
       description:
-        'Publish pages that directly answer the category searches customers actually use — e.g. "[service] in [town]" — with clear evidence, FAQs and structured content AI systems can extract and cite when recommending a provider.',
+        'Publish pages that directly answer the category searches customers actually use - e.g. "[service] in [town]" - with clear evidence, FAQs and structured content AI systems can extract and cite when recommending a provider.',
       priority: 'high',
       effort: 'medium',
     },
@@ -886,7 +886,7 @@ async function handleGenerateReport(request, env) {
   const location = (payload.location || '').toString().trim();
   const email = (payload.email || '').toString().trim().toLowerCase();
 
-  // Business name and sector are no longer collected from the form — they
+  // Business name and sector are no longer collected from the form - they
   // are inferred from the website's own page content (see below). Location
   // is optional.
   if (!firstName || !websiteUrl || !email) {
@@ -913,7 +913,7 @@ async function handleGenerateReport(request, env) {
   }
   await env.REPORT_REQUESTS.put(rateKey, '1', { expirationTtl: 60 * 60 * 24 });
 
-  /* STEP 1 — infer the business from the site's own page content, then
+  /* STEP 1 - infer the business from the site's own page content, then
      extract the specific services it offers (drives the discovery queries). */
   const meta = await fetchSiteMeta(websiteUrl);
   const pageTitle = meta.title || '';
@@ -933,7 +933,7 @@ async function handleGenerateReport(request, env) {
   // title only when no business name was returned.
   const businessName = extractedBusinessName || cleanedTitle;
 
-  /* STEP 2 — live discovery via Perplexity (the only honest signal). Four
+  /* STEP 2 - live discovery via Perplexity (the only honest signal). Four
      unbranded queries; hard boolean appearance check per query. */
   const discoveryQueries = buildDiscoveryQueries(serviceKeywords, location);
   // Kick off Google rankings (SerpAPI) in parallel with the AI discovery work.
@@ -942,7 +942,7 @@ async function handleGenerateReport(request, env) {
   const appearanceCount = discoveryResults.filter((r) => r.appeared).length;
   const discoveryScore = (appearanceCount / 4) * 100; // 0, 25, 50, 75 or 100
 
-  /* STEPS 3–5 — Google rankings + competitor extraction + both brand checks. */
+  /* STEPS 3–5 - Google rankings + competitor extraction + both brand checks. */
   const [googleData, competitors, claude, chatgpt] = await Promise.all([
     googlePromise,
     extractCompetitors(env, discoveryResults, location, businessName),
@@ -957,7 +957,7 @@ async function handleGenerateReport(request, env) {
   const chatgptBrandScore = chatgpt.brandScore;
   const chatgptAppeared = chatgpt.appeared;
 
-  /* STEP 6 — overall score. With Google data: discovery 40%, Google 35%,
+  /* STEP 6 - overall score. With Google data: discovery 40%, Google 35%,
      each brand 12.5%. Without it: discovery 60%, each brand 20%. */
   const round1 = (n) => Math.round(n * 10) / 10;
   const hasGoogle = googleScore !== null && googleScore !== undefined;
@@ -967,7 +967,7 @@ async function handleGenerateReport(request, env) {
       )
     : round1(discoveryScore * 0.6 + brandScore * 0.2 + chatgptBrandScore * 0.2);
 
-  /* STEP 7 — recommendations focused on the discovery/competitor gap. */
+  /* STEP 7 - recommendations focused on the discovery/competitor gap. */
   const recommendations = await generateRecommendations(env, {
     businessName,
     discoveryScore,
@@ -982,7 +982,7 @@ async function handleGenerateReport(request, env) {
     queries: discoveryQueries,
   });
 
-  /* STEP 8 — persist (30 day TTL) + email. */
+  /* STEP 8 - persist (30 day TTL) + email. */
   const id = crypto.randomUUID();
   const report = {
     id,
@@ -1039,7 +1039,7 @@ async function handleGenerateReport(request, env) {
     platforms: emailPlatforms,
   });
 
-  /* STEP 9 — respond. */
+  /* STEP 9 - respond. */
   return json(
     {
       success: true,
@@ -1112,7 +1112,7 @@ function extractHeading(html) {
 
 /**
  * Turn a raw page <title> into a clean business name: drop everything
- * after the first separator (| - – — :) and cap at 50 chars.
+ * after the first separator (| - – - :) and cap at 50 chars.
  */
 function cleanBusinessName(rawTitle) {
   if (!rawTitle) return null;
@@ -1134,7 +1134,7 @@ function hostnameFromUrl(rawUrl) {
   }
 }/**
  * Fetch a URL and pull its title, description and first H1. Returns
- * { title, description, heading } with null fields on any failure —
+ * { title, description, heading } with null fields on any failure -
  * never throws.
  */
 async function fetchSiteMeta(rawUrl) {
@@ -1199,13 +1199,13 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
-/** Internal notification email — plain, scannable detail table. */
+/** Internal notification email - plain, scannable detail table. */
 function buildContactNotificationHtml(d) {
   const rows = [
     ['Name', `${d.firstName} ${d.lastName}`.trim()],
     ['Email', d.email],
-    ['Website', d.websiteUrl || '—'],
-    ['How can we help', d.helpWith || '—'],
+    ['Website', d.websiteUrl || '-'],
+    ['How can we help', d.helpWith || '-'],
     ['Message', d.message],
   ]
     .map(
@@ -1247,13 +1247,13 @@ function buildContactNotificationHtml(d) {
 </html>`;
 }
 
-/** Confirmation email to the submitter — branded, matches the report email. */
+/** Confirmation email to the submitter - branded, matches the report email. */
 function buildContactConfirmationHtml(d) {
   const summary = [
     ['Name', `${d.firstName} ${d.lastName}`.trim()],
     ['Email', d.email],
-    ['Website', d.websiteUrl || '—'],
-    ['How can we help', d.helpWith || '—'],
+    ['Website', d.websiteUrl || '-'],
+    ['How can we help', d.helpWith || '-'],
     ['Message', d.message],
   ]
     .map(
@@ -1291,7 +1291,7 @@ function buildContactConfirmationHtml(d) {
             </tr>
             <tr>
               <td style="padding:28px 40px 32px;border-top:1px solid #E4E8EF;font-size:12px;line-height:1.6;color:#94A3B8;text-align:center;">
-                Found Everywhere &mdash; <a href="https://foundeverywhere.co.uk" style="color:#94A3B8;">foundeverywhere.co.uk</a>
+                Found Everywhere - <a href="https://foundeverywhere.co.uk" style="color:#94A3B8;">foundeverywhere.co.uk</a>
               </td>
             </tr>
           </table>
@@ -1302,7 +1302,7 @@ function buildContactConfirmationHtml(d) {
 </html>`;
 }
 
-/** Fire one Resend email; never throws — returns true/false. */
+/** Fire one Resend email; never throws - returns true/false. */
 async function sendResendEmail(env, payload) {
   try {
     const res = await fetch('https://api.resend.com/emails', {
