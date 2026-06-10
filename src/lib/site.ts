@@ -8,7 +8,7 @@ export const SITE = {
   legalName: 'Found Everywhere Ltd',
   tagline: 'SEO and LLM visibility, built for the search era after search.',
   description:
-    'Found Everywhere is a UK agency for SEO and LLM visibility. We help brands win attention from both classic search engines and the new generation of AI answer engines.',
+    'We audit and optimise websites to rank in Google and get cited by ChatGPT, Claude, Perplexity, Gemini, and Copilot. Technical SEO and AI search visibility for UK businesses.',
   url: 'https://foundeverywhere.co.uk',
   locale: 'en_GB',
   language: 'en-GB',
