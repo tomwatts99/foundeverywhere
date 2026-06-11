@@ -163,13 +163,17 @@ const ld = graph(
             if (sessionStorage.getItem(KEY) === '1') return; /* stay hidden this session */
           } catch (e) {}
           bar.hidden = false;
-          /* Flag the body so the Tidio launcher lifts clear of the bar. */
+          /* Flag the body + global state so the Tidio launcher lifts clear of the bar. */
           document.body.classList.add('has-cta-bar');
+          window.__feCtaBarVisible = true;
+          if (window.feApplyTidioOffset) window.feApplyTidioOffset();
           var close = bar.querySelector('[data-cta-dismiss]');
           if (close) {
             close.addEventListener('click', function () {
               bar.hidden = true;
               document.body.classList.remove('has-cta-bar');
+              window.__feCtaBarVisible = false;
+              if (window.feApplyTidioOffset) window.feApplyTidioOffset();
               try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
             });
           }
@@ -178,12 +182,34 @@ const ld = graph(
     )}
 
     <script is:inline>
-      window.addEventListener('load', function() {
-        var s = document.createElement('script');
-        s.src = '//code.tidio.co/lwftxrlidrfr2qh7kvpy9fnqt4sctnr0.js';
-        s.async = true;
-        document.body.appendChild(s);
-      });
+      (function () {
+        /* Lift the Tidio launcher clear of the footer / consultation bar.
+           Modern Tidio ignores host-page CSS on the widget, so we drive its
+           position through the official tidioChatApi.adjustStyles() API.
+           Tune these two values to taste (in px). */
+        var TIDIO_BOTTOM_DEFAULT = 80;   /* clears the footer */
+        var TIDIO_BOTTOM_WITH_BAR = 120; /* clears the consultation bar */
+
+        window.feApplyTidioOffset = function () {
+          if (!window.tidioChatApi || !window.tidioChatApi.adjustStyles) return;
+          var px = window.__feCtaBarVisible ? TIDIO_BOTTOM_WITH_BAR : TIDIO_BOTTOM_DEFAULT;
+          window.tidioChatApi.adjustStyles('#tidio { bottom: ' + px + 'px !important; }');
+        };
+
+        function onTidioReady() { window.feApplyTidioOffset(); }
+        if (window.tidioChatApi) {
+          window.tidioChatApi.on('ready', onTidioReady);
+        } else {
+          document.addEventListener('tidioChat-ready', onTidioReady);
+        }
+
+        window.addEventListener('load', function () {
+          var s = document.createElement('script');
+          s.src = '//code.tidio.co/lwftxrlidrfr2qh7kvpy9fnqt4sctnr0.js';
+          s.async = true;
+          document.body.appendChild(s);
+        });
+      })();
     </script>
   </body>
 </html>
