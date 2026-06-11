@@ -549,7 +549,7 @@ hr {
 }
 body.has-cta-bar #tidio-chat-iframe,
 body.has-cta-bar #tidio {
-  bottom: 90px !important;
+  bottom: 40px !important;
 }
 
 /* Hide the Tidio chat widget on mobile screens. */
