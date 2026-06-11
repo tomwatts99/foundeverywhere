@@ -71,6 +71,7 @@
             <li class="nav__item"><a href="/insights/"     class="nav__link">Insights</a></li>
             <li class="nav__item"><a href="/results/"      class="nav__link">Results</a></li>
             <li class="nav__item"><a href="/about/"        class="nav__link">About</a></li>
+            <li class="nav__item"><a href="/consultation/" class="nav__link">Book a consultation</a></li>
           </ul>
           <div class="nav__cta"><a href="/free-visibility-report/" class="btn">Free report</a></div>
         </nav>
@@ -660,6 +661,34 @@
             requestAnimationFrame(function () { successEl.classList.add('is-shown'); });
           }
         }, 700);
+      });
+    })();
+  </script>
+  <!-- ============ CONSULTATION CTA BAR ============ -->
+  <aside class="cta-bar" id="cta-bar" aria-label="Book a free consultation" hidden>
+    <div class="container cta-bar__inner">
+      <p class="cta-bar__text">Ready to improve your visibility?</p>
+      <div class="cta-bar__actions">
+        <a class="cta-bar__btn" href="/consultation/">Book a free consultation</a>
+        <button class="cta-bar__close" type="button" aria-label="Dismiss" data-cta-dismiss>
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="m4 4 8 8M12 4l-8 8"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+  <script>
+    (function () {
+      var bar = document.getElementById("cta-bar");
+      if (!bar) return;
+      var KEY = "feConsultBarDismissed";
+      try { if (sessionStorage.getItem(KEY) === "1") return; } catch (e) {}
+      bar.hidden = false;
+      document.body.classList.add("has-cta-bar");
+      var close = bar.querySelector("[data-cta-dismiss]");
+      if (close) close.addEventListener("click", function () {
+        bar.hidden = true;
+        document.body.classList.remove("has-cta-bar");
+        try { sessionStorage.setItem(KEY, "1"); } catch (e) {}
       });
     })();
   </script>

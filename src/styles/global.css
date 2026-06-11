@@ -431,9 +431,112 @@ hr {
 }
 
 /* ============================================================
+   Sitewide consultation CTA bar
+   Full-width bar pinned to the bottom of the viewport. The Tidio
+   launcher (already nudged up to clear the footer) is lifted further
+   while the bar is visible so the two never overlap.
+   ============================================================ */
+.cta-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-sticky);
+  background: var(--color-dark);
+  border-top: 1px solid var(--color-dark-line);
+  box-shadow: 0 -8px 24px rgba(13, 19, 38, 0.18);
+  padding-block: var(--space-3);
+  padding-bottom: max(var(--space-3), env(safe-area-inset-bottom));
+}
+.cta-bar[hidden] { display: none; }
+
+.cta-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+
+.cta-bar__text {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  color: var(--color-dark-text);
+  text-wrap: balance;
+}
+
+.cta-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.cta-bar__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+.cta-bar__btn:hover { background: var(--color-accent-hover); }
+
+.cta-bar__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--color-dark-muted);
+  cursor: pointer;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+}
+.cta-bar__close:hover {
+  color: var(--color-dark-text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Mobile: stack the text above the actions; keep the close button in
+   the top-right corner so the button can go full-width underneath. */
+@media (max-width: 40rem) {
+  .cta-bar__inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+    position: relative;
+    padding-right: var(--space-7);
+  }
+  .cta-bar__actions { width: 100%; }
+  .cta-bar__btn { width: 100%; }
+  .cta-bar__close {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+/* ============================================================
    Tidio live chat widget
    Nudge the chat widget up so it doesn't obscure the footer.
    ============================================================ */
 #tidio-chat-iframe {
   bottom: 80px !important;
+}
+/* When the consultation CTA bar is on screen, lift the launcher clear
+   of it (enough to clear the taller stacked layout on mobile too). */
+body.has-cta-bar #tidio-chat-iframe {
+  bottom: 168px !important;
 }

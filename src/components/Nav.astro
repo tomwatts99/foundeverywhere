@@ -94,6 +94,19 @@ const isCurrent = (href: string) =>
               )}
             </li>
           ))}
+
+          {/* Consultation link: sits as the final nav item so it falls
+              immediately before the "Free report" CTA on desktop and
+              alongside the other links in the mobile drawer. */}
+          <li class="nav__item">
+            <a
+              href="/consultation/"
+              class="nav__link"
+              aria-current={isCurrent('/consultation/') ? 'page' : undefined}
+            >
+              Book a consultation
+            </a>
+          </li>
         </ul>
 
         <div class="nav__cta">

@@ -48,6 +48,13 @@ const canonical = new URL(path, SITE.url).toString();
 const ogImageUrl = new URL(image, SITE.url).toString();
 const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
 
+/* The sitewide consultation CTA bar shows on every page EXCEPT the two
+   pages where the visitor has already converted or is mid-conversion:
+   the consultation page itself and the free report page. */
+const ctaPath = path.replace(/\/$/, '') || '/';
+const showConsultBar =
+  ctaPath !== '/consultation' && ctaPath !== '/free-visibility-report';
+
 const ld = graph(
   orgSchema(),
   websiteSchema(),
@@ -131,6 +138,45 @@ const ld = graph(
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
     <slot />
+
+    {showConsultBar && (
+      <aside class="cta-bar" id="cta-bar" aria-label="Book a free consultation" hidden>
+        <div class="container cta-bar__inner">
+          <p class="cta-bar__text">Ready to improve your visibility?</p>
+          <div class="cta-bar__actions">
+            <a class="cta-bar__btn" href="/consultation/">Book a free consultation</a>
+            <button class="cta-bar__close" type="button" aria-label="Dismiss" data-cta-dismiss>
+              <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                <path d="m4 4 8 8M12 4l-8 8" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <script is:inline>
+        (function () {
+          var bar = document.getElementById('cta-bar');
+          if (!bar) return;
+          var KEY = 'feConsultBarDismissed';
+          try {
+            if (sessionStorage.getItem(KEY) === '1') return; /* stay hidden this session */
+          } catch (e) {}
+          bar.hidden = false;
+          /* Flag the body so the Tidio launcher lifts clear of the bar. */
+          document.body.classList.add('has-cta-bar');
+          var close = bar.querySelector('[data-cta-dismiss]');
+          if (close) {
+            close.addEventListener('click', function () {
+              bar.hidden = true;
+              document.body.classList.remove('has-cta-bar');
+              try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+            });
+          }
+        })();
+      </script>
+    )}
+
     <script is:inline>
       window.addEventListener('load', function() {
         var s = document.createElement('script');
