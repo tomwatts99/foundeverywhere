@@ -301,6 +301,10 @@ const reportBusiness = report?.businessName ?? 'Your business';
             Scores are generated from live Google search data and AI systems. They may vary
             slightly as search results and AI responses evolve.
           </p>
+          <p class="report__top-cta">
+            Want us to handle this for you?{' '}
+            <a href="/consultation/">Book a free consultation <span aria-hidden="true">&#x2192;</span></a>
+          </p>
         </section>
 
         <!-- Live discovery -->
@@ -493,12 +497,12 @@ const reportBusiness = report?.businessName ?? 'Your business';
 
         <!-- CTA -->
         <section class="report__cta">
-          <h2 class="report__cta-title">Ready to improve your score?</h2>
+          <h2 class="report__cta-title">Your competitors are showing up. You're not. Let's fix that.</h2>
           <p class="report__cta-lead">
-            Found Everywhere can implement every recommendation in this report. Get in
-            touch and we will tell you exactly what is involved.
+            We've identified exactly what's holding your visibility back. Book a free
+            consultation and we'll walk you through what we'd do first.
           </p>
-          <a href="/contact/" class="report__cta-btn">
+          <a href="/consultation/" class="report__cta-btn">
             Book a free consultation <span aria-hidden="true" class="report__cta-arrow">&#x2197;</span>
           </a>
         </section>
@@ -696,6 +700,21 @@ const reportBusiness = report?.businessName ?? 'Your business';
     color: #525D6B;
     text-wrap: pretty;
   }
+  .report__top-cta {
+    margin: 18px 0 0;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.5;
+    color: #0C7B82;
+  }
+  .report__top-cta a {
+    color: #0C7B82;
+    font-weight: 600;
+    text-decoration: none;
+    transition: text-decoration-color var(--duration-fast) var(--ease-out);
+  }
+  .report__top-cta a:hover { text-decoration: underline; }
 
   /* ---------- Shared section headings ---------- */
   .report__section-title {
@@ -995,7 +1014,7 @@ const reportBusiness = report?.businessName ?? 'Your business';
   /* ---------- CTA ---------- */
   .report__cta {
     margin-top: 56px;
-    background: #0D1826;
+    background: #0C7B82;
     border-radius: 16px;
     padding: 40px;
     text-align: center;
@@ -1016,7 +1035,7 @@ const reportBusiness = report?.businessName ?? 'Your business';
     font-family: var(--font-body);
     font-size: 15px;
     line-height: 1.65;
-    color: #94A3B8;
+    color: #FFFFFF;
     text-wrap: pretty;
   }
   .report__cta-btn {
@@ -1029,12 +1048,12 @@ const reportBusiness = report?.businessName ?? 'Your business';
     font-weight: 600;
     font-size: 15px;
     color: #FFFFFF;
-    background: #0C7B82;
+    background: #0D1B2A;
     border-radius: 8px;
     text-decoration: none;
     transition: background-color var(--duration-fast) var(--ease-out);
   }
-  .report__cta-btn:hover { background: #0A6970; }
+  .report__cta-btn:hover { background: #16293D; }
   .report__cta-arrow {
     display: inline-block;
     transition: transform var(--duration-base) var(--ease-out);
