@@ -442,8 +442,8 @@ hr {
   right: 0;
   bottom: 0;
   z-index: var(--z-sticky);
-  background: var(--color-dark);
-  border-top: 1px solid var(--color-dark-line);
+  background: var(--color-accent);
+  border-top: 1px solid var(--color-accent-hover);
   box-shadow: 0 -8px 24px rgba(13, 19, 38, 0.18);
   padding-block: var(--space-3);
   padding-bottom: max(var(--space-3), env(safe-area-inset-bottom));
@@ -462,7 +462,7 @@ hr {
   font-family: var(--font-display);
   font-size: var(--text-md);
   font-weight: var(--weight-medium);
-  color: var(--color-dark-text);
+  color: #FFFFFF;
   text-wrap: balance;
 }
 
@@ -478,15 +478,15 @@ hr {
   align-items: center;
   justify-content: center;
   padding: var(--space-3) var(--space-5);
-  background: var(--color-accent);
-  color: var(--color-accent-ink);
+  background: #0D1B2A;
+  color: #FFFFFF;
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   border-radius: var(--radius-pill);
   white-space: nowrap;
   transition: background var(--duration-fast) var(--ease-out);
 }
-.cta-bar__btn:hover { background: var(--color-accent-hover); }
+.cta-bar__btn:hover { background: #16293D; }
 
 .cta-bar__close {
   display: inline-flex;
@@ -498,33 +498,41 @@ hr {
   background: transparent;
   border: 0;
   border-radius: var(--radius-sm);
-  color: var(--color-dark-muted);
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition:
     color var(--duration-fast) var(--ease-out),
     background var(--duration-fast) var(--ease-out);
 }
 .cta-bar__close:hover {
-  color: var(--color-dark-text);
-  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.16);
 }
 
-/* Mobile: stack the text above the actions; keep the close button in
-   the top-right corner so the button can go full-width underneath. */
-@media (max-width: 40rem) {
+/* Mobile: centre the text, compact the bar, and pin the dismiss button
+   in the top-right corner so the CTA button can go full-width underneath. */
+@media (max-width: 48rem) {
+  .cta-bar {
+    padding-block: var(--space-2);
+    padding-bottom: max(var(--space-2), env(safe-area-inset-bottom));
+  }
   .cta-bar__inner {
     flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-3);
+    align-items: center;
+    text-align: center;
+    gap: var(--space-2);
     position: relative;
-    padding-right: var(--space-7);
+    padding-inline: var(--space-8);
   }
+  .cta-bar__text { font-size: var(--text-sm); }
   .cta-bar__actions { width: 100%; }
   .cta-bar__btn { width: 100%; }
   .cta-bar__close {
     position: absolute;
     top: 0;
     right: 0;
+    width: 2.75rem;
+    height: 2.75rem;
   }
 }
 
@@ -539,4 +547,11 @@ hr {
    of it (enough to clear the taller stacked layout on mobile too). */
 body.has-cta-bar #tidio-chat-iframe {
   bottom: 168px !important;
+}
+
+/* Hide the Tidio chat widget on mobile screens. */
+@media (max-width: 768px) {
+  #tidio-chat {
+    display: none !important;
+  }
 }
