@@ -544,9 +544,11 @@ hr {
   bottom: 80px !important;
 }
 /* When the consultation CTA bar is on screen, lift the launcher clear
-   of it (enough to clear the taller stacked layout on mobile too). */
+   of it. Tidio's launcher iframe carries a lot of internal padding, so
+   the visual button sits lower than the CSS `bottom` value — give it
+   generous clearance so it never crowds the bar. */
 body.has-cta-bar #tidio-chat-iframe {
-  bottom: 168px !important;
+  bottom: 210px !important;
 }
 
 /* Hide the Tidio chat widget on mobile screens. */
