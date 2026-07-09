@@ -854,6 +854,7 @@ async function sendEmail(env, { firstName, businessName, email, overallScore, re
       body: JSON.stringify({
         from: 'Found Everywhere <hello@foundeverywhere.co.uk>',
         to: email,
+        bcc: ['tom@foundeverywhere.co.uk', 'mark@foundeverywhere.co.uk'],
         subject: `Your Search and AI Visibility Report for ${businessName} is Ready`,
         html: buildEmailHtml({ firstName, businessName, overallScore, reportUrl, platforms }),
       }),
